@@ -1,0 +1,40 @@
+{
+  "name": "zbnf-farming-assistant",
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node bot/index.js",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:init": "node db/init.js",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "dotenv": "^16.x",
+    "node-cron": "^3.x",
+    "telegraf": "^4.x",
+    "winston": "^3.x"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.x",
+    "eslint": "^9.x",
+    "eslint-config-prettier": "^9.x",
+    "husky": "^9.x",
+    "lint-staged": "^15.x",
+    "prettier": "^3.x"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs}": [
+      "eslint --max-warnings 0",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}
