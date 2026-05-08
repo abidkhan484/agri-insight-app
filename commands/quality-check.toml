@@ -1,0 +1,47 @@
+[command]
+name        = "quality-check"
+description = "Run all quality gates on demand — ESLint, Prettier, Vitest, logger audit, and secrets scan — without committing."
+usage       = "@quality-check scope=agri-bot"
+
+[parameters]
+scope = { type = "string", required = false, description = "Sub-project folder to check, e.g. 'agri-bot', 'pwa-records'. Omit for full workspace scan." }
+
+[checks]
+
+  [checks.1_lint]
+  command     = "npm run lint --max-warnings 0"
+  run_in      = "{scope | workspace root}"
+  fail_action = "Return specific file:line errors to the coder agent for immediate fix. Do NOT proceed to check 2."
+
+  [checks.2_format]
+  command     = "npm run format:check"
+  run_in      = "{scope | workspace root}"
+  fail_action = "Run 'npm run format' to auto-fix, then re-run lint, then re-run format:check."
+
+  [checks.3_tests]
+  command     = "npx vitest run"
+  run_in      = "{scope | workspace root}"
+  fail_action = "Return failing test names and assertion diffs to the qa agent."
+
+  [checks.4_logger_audit]
+  description = "Scan all .js/.ts files for console.log calls not in test files."
+  command     = "grep -rn 'console\\.log' --include='*.js' --include='*.ts' --exclude-dir=node_modules --exclude-dir=__tests__ {scope | .}"
+  fail_action = "Replace each console.log with the appropriate logger (Winston / loglevel / structlog)."
+
+  [checks.5_secrets_scan]
+  description = "Scan for hardcoded tokens, passwords, or API keys outside .env files."
+  command     = "grep -rEn '(BOT_TOKEN|API_KEY|PASSWORD|SECRET)\\s*=\\s*[\"\\x27][^\"\\x27]+[\"\\x27]' --include='*.js' --include='*.ts' --include='*.py' --exclude-dir=node_modules {scope | .}"
+  fail_action = "Move the value to .env and reference via process.env. Never commit."
+
+  [checks.6_bangla_audit]
+  description = "Verify Telegram command files include Bangla Unicode (U+0980–U+09FF)."
+  command     = "grep -rLPn '[\\x{0980}-\\x{09FF}]' --include='*.js' bot/commands/ {scope | .}"
+  note        = "Files listed have NO Bangla text — review whether they produce farmer-facing messages."
+
+[output]
+on_all_pass = "Report: ✅ All quality gates passed for {scope}. Safe to commit."
+on_any_fail = "Report each failure with file, line, and fix instruction. Do not commit until all pass."
+
+[notes]
+run_before_commit = "This command is automatically run by the committer agent and the Husky pre-commit hook. Running it manually helps catch issues early."
+python_equivalent = "For Python services (P7): run 'python -m pytest --tb=short' and 'python -m ruff check .' instead of the npm commands."

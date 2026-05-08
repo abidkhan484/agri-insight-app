@@ -1,0 +1,52 @@
+[command]
+name        = "add-phase"
+description = "Scaffold a completely new phase (P9+) — creates task file, skill file, registers it in the index, and updates root docs."
+usage       = "@add-phase id=P9 name='SMS Fallback Alerts' tool-letter=I depends-on=P1"
+
+[parameters]
+id          = { type = "string", required = true,  description = "Phase ID, e.g. P9" }
+name        = { type = "string", required = true,  description = "Human-readable name, e.g. 'SMS Fallback Alerts'" }
+tool_letter = { type = "string", required = true,  description = "Tool letter for the index table, e.g. I" }
+depends_on  = { type = "string", required = false, description = "Phase this one depends on, e.g. P1. Leave blank if independent." }
+description = { type = "string", required = false, description = "One-sentence description of what this phase delivers." }
+
+[scaffold_steps]
+"1_task_file"  = "Copy tasks/p8-community-farmer-network.md → tasks/{id_lower}-{name_slug}.md. Update title, weight, objective, prerequisites, subtasks, acceptance criteria, and estimated effort."
+"2_skill_file" = "Create skills/{id_lower}-{name_slug}/SKILL.md. Use skills/p8-community-farmer-network/SKILL.md as the template. Update name, description, triggers, tech choices, and all 5 agent sections."
+"3_index"      = "Add a row to tasks/_index.md priority table: '| {id} | {name} | {tool_letter} | Why after {depends_on}? |'"
+"4_agents_md"  = "Add a row to the Skills table in AGENTS.md: '| `{id_lower}-{name_slug}` | {description} |'"
+"5_claude_md"  = "Add any new tech stack entries to the Tech Stack table in CLAUDE.md."
+"6_gitignore"  = "Add any new build outputs, data volumes, or generated files to .gitignore."
+"7_readme"     = "Add a row to the Tools table in README.md: '| {id} | {name} | {description} |'"
+
+[steps]
+
+  [steps.1_coder]
+  agent       = "coder"
+  instruction = "Scaffold the new phase {id} — {name}. Complete all scaffold_steps above, then implement the first subtask from the new task file."
+  gate        = "All 7 scaffold files exist and are consistent. First subtask implemented."
+
+  [steps.2_qa]
+  agent       = "qa"
+  instruction = "Write initial Vitest (or pytest) tests for {id} — {name}. At minimum: one happy-path test and one edge-case test per new service."
+  gate        = "Tests pass."
+
+  [steps.3_reviewer]
+  agent       = "reviewer"
+  instruction = "Review scaffold files for consistency: skill file triggers match realistic prompts; task acceptance criteria are verifiable; no OWASP issues in new code."
+  gate        = "Scaffold is internally consistent. Security clean."
+
+  [steps.4_doc_updater]
+  agent       = "doc-updater"
+  instruction = "Update docs/architecture.md with the new component. Update docs/farmer-guide-bn-en.md if the phase has farmer-facing features."
+  gate        = "architecture.md and farmer guide updated."
+
+  [steps.5_committer]
+  agent       = "committer"
+  instruction = "Lint → format → test. Commit: 'feat({id_lower}): scaffold {id} — {name}'"
+  gate        = "All quality gates pass."
+
+[notes]
+weight_convention = "Set weight in YAML frontmatter to {id_number} × 10 (e.g. P9 → weight: 90)."
+skill_triggers    = "Skill triggers must include the plain English phrases someone would type to invoke this phase — test them mentally before saving."
+bangla_first      = "All new farmer-facing Telegram messages and PWA labels: Bangla primary, English secondary."

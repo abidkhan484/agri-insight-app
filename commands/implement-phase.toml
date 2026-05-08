@@ -1,0 +1,44 @@
+[command]
+name        = "implement-phase"
+description = "Run the full 5-agent pipeline (coder → qa → reviewer → doc-updater → committer) for a single P-task phase."
+usage       = "@implement-phase phase=P1"
+
+[parameters]
+phase = { type = "string", required = true,  description = "Phase identifier, e.g. P0, P1, P2 … P8" }
+scope = { type = "string", required = false, description = "Optional narrowing — e.g. 'bot commands only'. Omit for full phase." }
+
+[steps]
+
+  [steps.1_coder]
+  agent       = "coder"
+  instruction = "Implement {phase}{scope_clause}. Read tasks/{phase_slug}.md fully, then skills/{phase_slug}/SKILL.md, then skills/zbnf-formulation/SKILL.md if farming logic is involved."
+  reads       = ["tasks/{phase_slug}.md", "skills/{phase_slug}/SKILL.md", "skills/zbnf-formulation/SKILL.md", "CLAUDE.md"]
+  gate        = "All subtasks in the task checklist checked off; ESLint-clean code; no console.log; Winston/loglevel/structlog used."
+
+  [steps.2_qa]
+  agent       = "qa"
+  instruction = "Write and run Vitest tests for {phase}. Verify all ZBNF formulation outputs against exact values in skills/zbnf-formulation/SKILL.md. Check Bangla text presence and logger calls."
+  reads       = ["skills/zbnf-formulation/SKILL.md", "tasks/{phase_slug}.md"]
+  gate        = "All tests pass. ZBNF ratio assertions green. Coverage reasonable."
+
+  [steps.3_reviewer]
+  agent       = "reviewer"
+  instruction = "Security and quality review for {phase}. Check OWASP minimums, Winston present in every service file, .env-only secrets, Bangla-first UI strings, and parameterized SQL."
+  reads       = ["CLAUDE.md", "AGENTS.md"]
+  gate        = "Zero OWASP violations. No hardcoded secrets. Logger present everywhere."
+
+  [steps.4_doc_updater]
+  agent       = "doc-updater"
+  instruction = "Update docs for {phase}: README.md (new commands/features), docs/architecture.md (if new service or table), docs/farmer-guide-bn-en.md (user-facing features in Bangla + English), and tick off completed items in tasks/{phase_slug}.md."
+  reads       = ["docs/architecture.md", "docs/farmer-guide-bn-en.md", "README.md"]
+  gate        = "All three doc files updated. Task checklist reflects completion."
+
+  [steps.5_committer]
+  agent       = "committer"
+  instruction = "Run ESLint (zero warnings), Prettier check, then Vitest. If all pass, commit with conventional message: 'feat({phase_lower}): implement {phase} — {short_description}'."
+  gate        = "npm run lint exits 0. npm run format:check exits 0. npx vitest run exits 0."
+
+[notes]
+build_order  = "Always implement phases sequentially: P0 → P1 → P2 → P3 → P4. P5 and P6 are independent after P0."
+never_skip   = "Never skip the pre-commit gate. Never pass --no-verify."
+zbnf_warning = "If phase touches any formulation (ratios, schedules, thresholds) — coder MUST read skills/zbnf-formulation/SKILL.md first."

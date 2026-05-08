@@ -91,6 +91,7 @@ Track your current position in `.session/progress.json` (managed by `scripts/upd
 
 | File / Folder | Purpose |
 |---------------|---------|
+| `commands/*.toml` | Machine-readable command registry — define workflow, parameters, and steps for every major operation |
 | `tasks/pN-*.md` | Granular implementation checklist for each phase — read before coding |
 | `skills/pN-*/SKILL.md` | Full implementation workflow with code snippets — agents read this |
 | `skills/zbnf-formulation/SKILL.md` | All ZBNF ratios and Bangla glossary — always check before farming logic |

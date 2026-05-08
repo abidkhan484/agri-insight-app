@@ -1,0 +1,33 @@
+[command]
+name        = "update-progress"
+description = "Update .session/progress.json to record a completed phase, set the current phase, and optionally add a note."
+usage       = "@update-progress completed=P1 current=P2 note='Bot live on Railway, pre-commit verified'"
+
+[parameters]
+completed = { type = "string", required = false, description = "Phase just finished, e.g. P1. Added to the completed[] array." }
+current   = { type = "string", required = false, description = "Phase now in progress, e.g. P2. Sets the current field." }
+note      = { type = "string", required = false, description = "Free-text note appended to the notes field." }
+
+[steps]
+
+  [steps.1_run_script]
+  command     = "node scripts/update-progress.js --completed {completed} --current {current} --note \"{note}\""
+  description = "Calls the update-progress script which reads and writes .session/progress.json atomically."
+  fallback    = "If the script fails, manually edit .session/progress.json — see schema below."
+
+[progress_json_schema]
+completed    = "Array of phase IDs that are fully implemented and committed, e.g. ['P0', 'P1']"
+current      = "The phase currently being worked on, e.g. 'P2'"
+last_updated = "ISO 8601 timestamp set automatically by the script"
+notes        = "Free-text notes — append-only, newest last"
+
+[example_state]
+completed    = ["P0", "P1"]
+current      = "P2"
+last_updated = "2026-05-08T10:00:00Z"
+notes        = "P1 complete. Railway deployment verified. Pre-commit hook working."
+
+[notes]
+auto_save  = "The Claude Code Stop hook (/.claude/hooks/session-start.js) reads this file and prints status at session start."
+gitignore  = ".session/ is in .gitignore — progress state is local only, not committed."
+when_to_run = "Run immediately after the committer agent succeeds for a phase, before starting the next phase."
