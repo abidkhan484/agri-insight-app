@@ -1,0 +1,26 @@
+{
+  "hooks": ".claude/hooks/hooks.json",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write",
+      "Edit",
+      "MultiEdit",
+      "Bash(npm run lint)",
+      "Bash(npm run format:check)",
+      "Bash(npm run test)",
+      "Bash(npm run build)",
+      "Bash(node scripts/*)",
+      "Bash(git status)",
+      "Bash(git diff)",
+      "Bash(git log --oneline*)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf*)",
+      "Bash(DROP TABLE*)",
+      "Bash(curl * | sh)"
+    ]
+  }
+}

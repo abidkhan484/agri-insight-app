@@ -1,0 +1,72 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/check-secrets.js",
+            "timeout": 5000,
+            "on_failure": "block",
+            "description": "Block hardcoded secrets/tokens"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/check-logger.js",
+            "timeout": 5000,
+            "on_failure": "warn",
+            "description": "Warn if Winston/loglevel/structlog import is missing in new file"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/check-console-log.js",
+            "timeout": 5000,
+            "on_failure": "warn",
+            "description": "Warn if console.log appears in edited file"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/check-bangla.js",
+            "timeout": 5000,
+            "on_failure": "warn",
+            "description": "Warn if farmer-facing file lacks Bangla Unicode text"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/update-progress.js --auto",
+            "timeout": 5000,
+            "on_failure": "warn",
+            "description": "Auto-save session progress to .session/progress.json"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/session-start.js",
+            "timeout": 3000,
+            "on_failure": "warn",
+            "description": "Load and print current session progress status"
+          }
+        ]
+      }
+    ]
+  }
+}

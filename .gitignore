@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# Logs
+logs/
+*.log
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Session & runtime state
+.session/
+
+# ChromaDB vector store
+chroma_db/
+
+# Ollama model cache
+.ollama/
+
+# Arduino / ESP32 build
+.pio/
+*.bin
+*.elf
+
+# InfluxDB / Grafana data volumes
+influxdb-data/
+grafana-data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# Test coverage
+coverage/
+.nyc_output/
