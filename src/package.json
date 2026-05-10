@@ -7,6 +7,7 @@
   },
   "scripts": {
     "start": "node bot/index.js",
+    "test": "vitest run",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -26,7 +27,8 @@
     "eslint-config-prettier": "^9.x",
     "husky": "^9.x",
     "lint-staged": "^15.x",
-    "prettier": "^3.x"
+    "prettier": "^3.x",
+    "vitest": "^4.1.5"
   },
   "lint-staged": {
     "*.{js,mjs,cjs}": [
