@@ -20,3 +20,24 @@ CREATE TABLE IF NOT EXISTS plots (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (farmer_id) REFERENCES farmers(id)
 );
+
+CREATE TABLE IF NOT EXISTS reminders (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  plot_id INTEGER NOT NULL,
+  type TEXT NOT NULL,          -- 'jeevamrutha' | 'mulch' | 'neemastra' | 'irrigation' | 'custom'
+  interval_days INTEGER,       -- NULL for one-time
+  next_due DATE NOT NULL,
+  description TEXT,            -- for custom reminders
+  active BOOLEAN DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (plot_id) REFERENCES plots(id)
+);
+
+CREATE TABLE IF NOT EXISTS reminder_logs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  reminder_id INTEGER NOT NULL,
+  sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  status TEXT DEFAULT 'sent',
+  message TEXT,
+  FOREIGN KEY (reminder_id) REFERENCES reminders(id)
+);

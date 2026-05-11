@@ -6,21 +6,25 @@ A **zero-cost** agentic technology platform delivering free tech support to Zero
 
 ---
 
+## Status: P1 Completed ✅
+
+The system currently supports farmer registration, plot management, and automated ZBNF reminders (Jeevamrutha, Neemastra, Mulch, Irrigation).
+
+---
+
 ## Tools (P0–P8)
 
-| Phase | Tool | What It Does |
-|-------|------|--------------|
-| P0 | Shared Foundation | SQLite DB, Winston logger, ESLint/Prettier, Husky pre-commit |
-| P1 | Farm Scheduler Bot | Telegram bot with ZBNF auto-reminders (Jeevamrutha, Neemastra, Mulch) |
-| P2 | Weather Irrigation Alert | Open-Meteo forecasts → skip/spray/heat alerts via Telegram |
-| P3 | Farm Record Tracker | React PWA + IndexedDB — offline crop logs, yield charts, CSV/PDF export |
-| P4 | IoT Soil Monitoring | ESP32 + MQTT + Node-RED + Grafana — real-time Whapasa soil alerts |
-| P5 | Plant Disease Detection | PlantNet API + TF.js MobileNetV2 — photo → Bangla disease + ZBNF treatment |
-| P6 | ZBNF Knowledge PWA | Offline formulation calculators, pest gallery, crop calendar (Bangla-first) |
-| P7 | Local AI Assistant | Ollama + ChromaDB RAG — Bangla/English ZBNF Q&A, runs fully offline |
-| P8 | Community Network | Telegram FAQ bot, Supabase farmer map (Leaflet/OSM), knowledge wiki |
-
-**Build order is sequential:** P0 → P1 → P2 → P3 → P4 → P5 → P6 → P7 → P8
+| Phase | Tool | Status | What It Does |
+|-------|------|--------|--------------|
+| P0 | Shared Foundation | ✅ | SQLite DB, Winston logger, ESLint/Prettier, Husky pre-commit |
+| P1 | Farm Scheduler Bot | ✅ | Telegram bot with ZBNF auto-reminders |
+| P2 | Weather Irrigation Alert | 🛠️ | Open-Meteo forecasts → skip/spray/heat alerts via Telegram |
+| P3 | Farm Record Tracker | 🛠️ | React PWA + IndexedDB — offline crop logs |
+| P4 | IoT Soil Monitoring | 🛠️ | ESP32 + MQTT + Node-RED + Grafana — Whapasa soil alerts |
+| P5 | Plant Disease Detection | 🛠️ | Photo → Bangla disease identification + ZBNF treatment |
+| P6 | ZBNF Knowledge PWA | 🛠️ | Offline formulation calculators, pest gallery |
+| P7 | Local AI Assistant | 🛠️ | Ollama + ChromaDB RAG — Bangla/English ZBNF Q&A |
+| P8 | Community Network | 🛠️ | Telegram FAQ bot, Supabase farmer map |
 
 ---
 
@@ -44,38 +48,38 @@ A **zero-cost** agentic technology platform delivering free tech support to Zero
 agents/          ← Sub-agent definitions (coder, qa, reviewer, doc-updater, committer)
 skills/          ← Per-phase skill files (SKILL.md in each)
 tasks/           ← P0–P8 implementation checklists
-docs/            ← architecture.md · developer-setup.md · api-reference.md · farmer-guide-bn-en.md
-templates/       ← .eslintrc.cjs · .prettierrc · logger.js · husky-pre-commit.sh
-scripts/         ← update-progress.js (tracks .session/progress.json)
-.claude/         ← Hook scripts + settings.json
+docs/            ← architecture.md · farmer-guide-bn-en.md · CODEMAPS/
+src/             ← Source code (Bot, Scheduler, Services)
+templates/       ← Config templates
+scripts/         ← Automation scripts
 ```
 
 ---
 
-## Agent Workflow
+## Documentation
 
-For every feature, invoke agents in this order:
-
-```
-coder → qa → reviewer → doc-updater → committer
-```
-
-Agent definitions live in `agents/`. Skills live in `skills/`.
+- [Architecture Overview](docs/architecture.md)
+- [Farmer Guide (Bangla + English)](docs/farmer-guide-bn-en.md)
+- [Codemaps Index](docs/CODEMAPS/INDEX.md)
+- [Developer Setup](docs/developer-setup.md)
 
 ---
 
 ## Code Quality (Non-Negotiable)
 
-- **ESLint** `no-console: error` — use Winston (Node.js), loglevel (React), structlog (Python)
+- **ESLint** `no-console: error` — use Winston (Node.js)
 - **Prettier** — single quotes, trailing commas, 100 char width
-- **Husky pre-commit** — tsc → lint → format → test; zero warnings allowed
-- **Bangla first** in all farmer-facing Telegram messages and PWA labels
-- **No hardcoded secrets** — all config from `.env` (never committed)
+- **Husky pre-commit** — lint → format → test; zero warnings allowed
+- **Bangla first** in all farmer-facing Telegram messages
 - **Parameterized SQL only** — better-sqlite3 prepared statements
 
 ---
 
 ## Quick Start
 
-See [docs/developer-setup.md](docs/developer-setup.md) for the full setup walkthrough.  
-See [docs/farmer-guide-bn-en.md](docs/farmer-guide-bn-en.md) for all Telegram commands in Bangla + English.
+1. `cd src`
+2. `npm install`
+3. `cp .env.example .env` (Add your `BOT_TOKEN`)
+4. `npm run dev`
+
+See [docs/developer-setup.md](docs/developer-setup.md) for full instructions.
