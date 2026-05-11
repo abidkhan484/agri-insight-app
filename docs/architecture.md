@@ -70,10 +70,11 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 - **Cron jobs**: Jeevamrutha (every 15 days), Neemastra (every 14 days), Mulch (every 7 days)
 - **Formula source**: `src/services/jeevamrutha.js` (synced with `skills/zbnf-formulation/SKILL.md`)
 
-### P2 — Weather Irrigation Alert (Roadmap)
+### P2 — Weather Irrigation Alert
 - **API**: Open-Meteo (no key, unlimited free requests)
 - **Decision logic**: Whapasa rules — if 48h precip > 5mm → skip irrigation
 - **Cron**: 00:00 UTC = 06:00 BDT daily
+- **Entry point**: `src/scheduler/weather-alerts.js`
 
 ### P3 — Farm Record Tracker PWA (Roadmap)
 - **Framework**: React 18 + Vite
@@ -136,9 +137,10 @@ Farmer's Telegram app
 
 ```sql
 farmers (id, telegram_id UNIQUE, name, district, upazila, created_at)
-plots   (id, farmer_id FK, name, area_decimal, soil_type, crop, start_date, created_at)
+plots   (id, farmer_id FK, name, area_decimal, soil_type, crop, start_date, latitude, longitude, created_at)
 reminders (id, plot_id FK, type, next_due, interval_days, description, active, created_at)
 reminder_logs (id, reminder_id FK, sent_at, status, message)
+weather_alerts (id, plot_id FK, alert_type, message, forecast_data, sent_at)
 ```
 
 ---

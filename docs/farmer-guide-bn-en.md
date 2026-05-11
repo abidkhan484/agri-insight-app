@@ -47,7 +47,7 @@ To add a plot, type `/register` and send. The bot will ask you step by step:
 
 ---
 
-## ২. স্বয়ংক্রিয় রিমাইন্ডার / Automatic Reminders
+## ২. স্বয়ংক্রিয় রিমাইন্ডার ও আবহাওয়া পরামর্শ / Automatic Reminders & Weather Advice
 
 **বাংলা:**
 আপনাকে আলাদাভাবে কিছু করতে হবে না। বট নির্দিষ্ট সময়ে প্রতিদিন সকালে আপনাকে মেসেজ পাঠাবে:
@@ -57,7 +57,7 @@ To add a plot, type `/register` and send. The bot will ask you step by step:
 | 🌱 জীবামৃত প্রয়োগের সময় | প্রতি ১৫ দিনে একবার |
 | 🛡️ নিমাস্ত্র স্প্রে করুন | প্রতি ১৪ দিনে একবার |
 | 🍂 আচ্ছাদন পরীক্ষা | প্রতি ৭ দিনে একবার |
-| ☀️ সেচ পরামর্শ | প্রতি ৩ দিনে একবার |
+| ☀️ আবহাওয়া ও সেচ পরামর্শ | প্রতিদিন সকাল ৬:০০ টা (যদি GPS লোকেশন থাকে) |
 
 **English:**
 You don't need to do anything extra. The bot will send messages each morning when due:
@@ -67,7 +67,7 @@ You don't need to do anything extra. The bot will send messages each morning whe
 | 🌱 Time to apply Jeevamrutha | Every 15 days |
 | 🛡️ Spray Neemastra | Every 14 days |
 | 🍂 Check mulch | Every 7 days |
-| ☀️ Irrigation advice | Every 3 days |
+| ☀️ Weather & Irrigation Advice | Daily at 6:00 AM BDT (if GPS is provided) |
 
 ---
 
@@ -101,14 +101,12 @@ You can use the following commands to manage your plots and reminders:
 
 **বাংলা:**
 আমরা এই বটের ওপর আরও কাজ করছি। শীঘ্রই আপনি পাবেন:
-- **আবহাওয়া পরামর্শ:** বৃষ্টির সম্ভাবনা থাকলে সেচ বন্ধের পরামর্শ।
 - **কার্যক্রম লগ:** আপনার চাষাবাদের খরচ ও কাজের হিসাব রাখা।
 - **রোগ শনাক্তকরণ:** ফসলের ছবি পাঠিয়ে রোগ চিনে নেওয়া।
 - **AI সহকারী:** কৃষি বিষয়ক যেকোনো প্রশ্নের উত্তর।
 
 **English:**
 We are working on adding more features soon:
-- **Weather Advice:** Guidance on skipping irrigation if rain is expected.
 - **Activity Log:** Keep track of your farming costs and tasks.
 - **Disease Identification:** Identify crop diseases by sending a photo.
 - **AI Assistant:** Get answers to any farming questions.

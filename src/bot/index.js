@@ -6,6 +6,7 @@ import { registerWizard } from './scenes/register.js';
 import { initPlotCommands } from './commands/plots.js';
 import { initReminderCommands } from './commands/reminders.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
+import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
 
 if (!config.botToken) {
   logger.error('BOT_TOKEN is missing in configuration. Exiting...');
@@ -59,6 +60,9 @@ initReminderCommands(bot);
 
 // Initialize Reminder Engine
 initReminderEngine(bot);
+
+// Initialize Weather Alert Engine
+initWeatherAlertEngine(bot);
 
 // /help command
 bot.help((ctx) => {

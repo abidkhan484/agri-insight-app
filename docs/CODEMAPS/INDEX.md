@@ -7,6 +7,7 @@ Overview of the ZBNF Farming Assistant codebase structure.
 ## Areas
 
 - [P1 — Farm Scheduler](./p1-scheduler.md) - Plot registration and ZBNF reminders.
+- [P2 — Weather Alert](./p2-weather-alert.md) - Weather-based irrigation and spray advisories.
 - [Shared Foundation](../architecture.md) - Database, logging, and bot infrastructure.
 
 ## System Overview

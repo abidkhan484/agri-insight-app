@@ -41,3 +41,13 @@ CREATE TABLE IF NOT EXISTS reminder_logs (
   message TEXT,
   FOREIGN KEY (reminder_id) REFERENCES reminders(id)
 );
+
+CREATE TABLE IF NOT EXISTS weather_alerts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  plot_id INTEGER NOT NULL,
+  alert_type TEXT NOT NULL,
+  message TEXT NOT NULL,
+  forecast_data TEXT,        -- JSON blob of the raw forecast
+  sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (plot_id) REFERENCES plots(id)
+);
