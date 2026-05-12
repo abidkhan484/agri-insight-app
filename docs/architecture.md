@@ -102,9 +102,13 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 - **Offline Strategy**: Service Workers (Workbox) pre-caching all assets and JSON data.
 - **Path**: `zbnf-knowledge/`
 
-### P7 — Local AI Assistant (Roadmap)
-- **LLM**: Ollama (gemma2:2b)
-- **RAG**: LlamaIndex
+### P7 — Local AI Assistant
+- **Inference**: Ollama (gemma2:2b) running locally.
+- **Orchestration**: LlamaIndex for RAG pipeline.
+- **Vector Store**: ChromaDB (local persistence).
+- **Service**: Flask REST API providing a `/ask` endpoint.
+- **Features**: Semantic search over ZBNF docs, grounded answers in Bangla/English.
+- **Path**: `ai-assistant/`
 
 ### P8 — Community Farmer Network (Roadmap)
 - **Database**: Supabase PostgreSQL
@@ -113,6 +117,39 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 ---
 
 ## Data Flow Diagrams
+
+### AI Assistant RAG Pipeline (P7)
+
+```
+Farmer types /ask "কীভাবে জীবামৃত তৈরি করব?"
+      │
+      ▼
+Telegram Bot (agri-bot)
+      │
+      ▼ (POST /ask)
+Flask AI Service (ai-assistant)
+      │
+      ├──▶ Embedding Model (nomic-embed-text)
+      │      (Converts question to vector)
+      │
+      ├──▶ ChromaDB Search
+      │      (Retrieves top 4 relevant ZBNF doc chunks)
+      │
+      ├──▶ LlamaIndex Orchestrator
+      │      (Combines Context + System Prompt + Question)
+      │
+      └──▶ Ollama (gemma2:2b)
+             (Generates grounded Bangla answer)
+      │
+      ▼
+JSON Response {answer, sources}
+      │
+      ▼
+Telegram Bot (formats message with citations)
+      │
+      ▼
+Farmer's Telegram (Bangla Answer + Source docs)
+```
 
 ### Bot → SQLite → Scheduler → Telegram (P0–P2)
 
@@ -185,22 +222,6 @@ Bangla Result + ZBNF Recipe
       │
       ▼
 Farmer implements natural treatment
-```
-
-### ZBNF Knowledge PWA Flow (P6)
-
-```
-Farmer opens ZBNF Knowledge PWA
-      │
-      ▼
-App Router (React Router v7)
-      ├──▶ Calculator (Inputs area → Returns ZBNF recipe)
-      ├──▶ Pest Gallery (Browse pests → View symptoms & ZBNF treatment)
-      └──▶ Calendar (Select division → View planting windows)
-      │
-      ▼
-Service Worker (Workbox)
- (Serves cached HTML/JS/JSON even without internet)
 ```
 
 ---

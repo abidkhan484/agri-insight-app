@@ -6,4 +6,5 @@ export const config = {
   timezone: process.env.TIMEZONE || 'Asia/Dhaka',
   logLevel: process.env.LOG_LEVEL || 'info',
   nodeEnv: process.env.NODE_ENV || 'development',
+  aiApiUrl: process.env.AI_API_URL || 'http://localhost:5000',
 };

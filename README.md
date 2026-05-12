@@ -6,9 +6,9 @@ A **zero-cost** agentic technology platform delivering free tech support to Zero
 
 ---
 
-## Status: P6 MVP Completed ✅
+## Status: P7 AI Assistant Completed ✅
 
-The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, IoT soil monitoring, plant disease detection, and offline ZBNF knowledge base with calculators.
+The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, IoT soil monitoring, plant disease detection, offline ZBNF knowledge base, and a local AI assistant for ZBNF Q&A.
 
 ---
 
@@ -23,7 +23,7 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 | P4 | IoT Soil Monitoring | ✅ | ESP32 + MQTT + Node-RED + Grafana — Whapasa soil alerts |
 | P5 | Plant Disease Detection | ✅ | Photo → Bangla disease identification + ZBNF treatment |
 | P6 | ZBNF Knowledge PWA | ✅ | Offline formulation calculators, pest gallery, crop calendar |
-| P7 | Local AI Assistant | 🛠️ | Ollama + ChromaDB RAG — Bangla/English ZBNF Q&A |
+| P7 | Local AI Assistant | ✅ | Ollama + ChromaDB RAG — Bangla/English ZBNF Q&A |
 | P8 | Community Network | 🛠️ | Telegram FAQ bot, Supabase farmer map |
 
 ---
@@ -40,6 +40,25 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 | Weather | Open-Meteo (free, no key) |
 | Disease | PlantNet API (free tier) · TensorFlow.js (offline fallback) |
 | Hosting | Railway.app / Render.com (bot) · Netlify / GitHub Pages (PWAs) |
+
+---
+
+## Local AI Assistant (P7)
+
+### Ollama Setup
+1. **Install Ollama**: `curl -fsSL https://ollama.com/install.sh | sh`
+2. **Pull Models**:
+   ```bash
+   ollama pull gemma2:2b
+   ollama pull nomic-embed-text
+   ```
+3. **Run AI Service**:
+   ```bash
+   cd ai-assistant
+   pip install -r requirements.txt
+   python app.py
+   ```
+4. **Usage**: Use the `/ask` command in the Telegram bot or access the Flask API at `http://localhost:5000/ask`.
 
 ---
 
@@ -91,6 +110,7 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 
 ```
 agents/          ← Sub-agent definitions (coder, qa, reviewer, doc-updater, committer)
+ai-assistant/    ← P7 Local AI Assistant (Flask + LlamaIndex + ChromaDB)
 skills/          ← Per-phase skill files (SKILL.md in each)
 tasks/           ← P0–P8 implementation checklists
 docs/            ← architecture.md · farmer-guide-bn-en.md · CODEMAPS/

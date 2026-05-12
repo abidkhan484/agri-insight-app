@@ -6,6 +6,7 @@ import { registerWizard } from './scenes/register.js';
 import { initPlotCommands } from './commands/plots.js';
 import { initReminderCommands } from './commands/reminders.js';
 import { registerSoilstatusCommand } from './commands/soilstatus.js';
+import { registerAskCommand } from './commands/ask.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
 
@@ -59,6 +60,7 @@ bot.command('register', (ctx) => ctx.scene.enter('REGISTER_PLOT_SCENE'));
 initPlotCommands(bot);
 initReminderCommands(bot);
 registerSoilstatusCommand(bot, db);
+registerAskCommand(bot, db);
 
 // Initialize Reminder Engine
 initReminderEngine(bot);
@@ -77,16 +79,19 @@ bot.help((ctx) => {
 /myreminders - রিমাইন্ডার তালিকা
 /cancelreminder <ID> - রিমাইন্ডার বাতিল করুন
 /soilstatus - মাটির অবস্থা দেখুন
+/ask <প্রশ্ন> - AI সহকারীকে প্রশ্ন করুন (ZBNF)
 
 Need help? I understand:
 /start - Start the bot
 /register - Register a new plot
 /myplots - List your plots
-/deleteplot <name> - Remove a plot
+/deleteplot <নাম> - Remove a plot
 /remind - Set custom reminders
 /myreminders - List active reminders
 /cancelreminder <ID> - Cancel a reminder
-/soilstatus - Check soil moisture status`;
+/soilstatus - Check soil moisture status
+/ask <question> - Ask AI Assistant (ZBNF)
+
 
   logger.info('Help command received', { chat_id: 'chat:' + ctx.chat.id });
   return ctx.reply(helpMessage);

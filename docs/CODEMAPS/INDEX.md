@@ -12,6 +12,7 @@ Overview of the ZBNF Farming Assistant codebase structure.
 - [P4 — IoT Soil Monitoring](./p4-iot-monitoring.md) - Real-time soil data and alerts.
 - [P5 — Plant Disease Detection](./p5-disease-detection.md) - Photo-based disease ID and ZBNF treatment.
 - [P6 — ZBNF Knowledge](./p6-zbnf-knowledge.md) - Offline formulation calculators and pest gallery.
+- [P7 — Local AI Assistant](./p7-ai-assistant.md) - Ollama + ChromaDB RAG Q&A service.
 - [Shared Foundation](../architecture.md) - Database, logging, and bot infrastructure.
 
 ## System Overview
@@ -27,6 +28,15 @@ src/
 ├── scheduler/          # Cron jobs and reminder engine
 ├── services/           # Business logic and external integrations
 └── scripts/            # Utility scripts
+```
+
+### AI Service (Python)
+```
+ai-assistant/           # P7: Local AI Assistant
+├── app.py              # Flask API
+├── services/           # RAG logic (LlamaIndex)
+├── scripts/            # Ingestion script
+└── config/             # Python logging config
 ```
 
 ### Frontend (React PWAs)

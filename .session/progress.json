@@ -5,9 +5,10 @@
     "P2",
     "P3",
     "P4",
-    "P5"
+    "P5",
+    "P6"
   ],
-  "current": "P6",
+  "current": "P7",
   "notes": [
     {
       "ts": "2026-05-12T01:55:32.172Z",
@@ -24,7 +25,11 @@
     {
       "ts": "2026-05-12T02:51:15.249Z",
       "note": "P5 Plant Disease Detection completed."
+    },
+    {
+      "ts": "2026-05-12T03:29:46.901Z",
+      "note": "P6 ZBNF Knowledge PWA completed."
     }
   ],
-  "last_updated": "2026-05-12T02:51:15.249Z"
+  "last_updated": "2026-05-12T03:29:46.901Z"
 }
