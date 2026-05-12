@@ -1,6 +1,6 @@
 # Codemaps Index
 
-**Last Updated:** 2025-05-15
+**Last Updated:** 2025-05-21
 
 Overview of the ZBNF Farming Assistant codebase structure.
 
@@ -10,6 +10,7 @@ Overview of the ZBNF Farming Assistant codebase structure.
 - [P2 — Weather Alert](./p2-weather-alert.md) - Weather-based irrigation and spray advisories.
 - [P3 — Krishi Record](./p3-krishi-record.md) - Offline PWA for farm record keeping.
 - [P4 — IoT Soil Monitoring](./p4-iot-monitoring.md) - Real-time soil data and alerts.
+- [P5 — Plant Disease Detection](./p5-disease-detection.md) - Photo-based disease ID and ZBNF treatment.
 - [Shared Foundation](../architecture.md) - Database, logging, and bot infrastructure.
 
 ## System Overview
@@ -34,6 +35,12 @@ krishi-record/          # P3: Farm Record Tracker
 │   ├── components/     # UI Components
 │   ├── db/             # IndexedDB Schema
 │   └── utils/          # Calculations & Utils
+
+disease-detect/         # P5: Plant Disease Detection
+├── src/
+│   ├── components/     # UI Components
+│   ├── services/       # API & TF.js services
+│   └── data/           # Treatment knowledge base
 ```
 
 ### IoT & Infrastructure

@@ -89,9 +89,11 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 - **Visualization**: Grafana Dashboards via InfluxDB
 - **Telegram**: `/soilstatus` command and real-time alerts
 
-### P5 — Plant Disease Detection (Roadmap)
-- **Primary**: PlantNet API
-- **Fallback**: TensorFlow.js
+### P5 — Plant Disease Detection
+- **Primary**: PlantNet API (Online identification)
+- **Fallback**: TensorFlow.js (Offline on-device inference)
+- **Mapping**: Scientific name → Local disease name → ZBNF Treatment (local JSON)
+- **Path**: `disease-detect/`
 
 ### P6 — ZBNF Knowledge PWA (Roadmap)
 - **Calculators**: 6 ZBNF formulations
@@ -156,6 +158,32 @@ Node-RED Flow
       Farmer's Telegram (Bangla/English Alert)
 ```
 
+### Plant Disease Detection Flow (P5)
+
+```
+Farmer takes photo of leaf
+      │
+      ▼
+Mobile PWA (disease-detect)
+      │
+      ├── (Online) ──▶ PlantNet API
+      │                  │
+      │                  ▼ (Species Result)
+      │
+      └── (Offline) ─▶ TF.js (MobileNetV2)
+                         │
+                         ▼ (Classification Result)
+      │
+      ▼
+Local Treatment Lookup (src/data/disease-treatments.json)
+      │
+      ▼
+Bangla Result + ZBNF Recipe
+      │
+      ▼
+Farmer implements natural treatment
+```
+
 ---
 
 ## Database Schema (SQLite — agri-bot)
@@ -180,3 +208,4 @@ soil_readings (id, plot_id FK, moisture, temp, humidity, ts)
 | PWA offline | Dexie.js (IndexedDB) | localStorage, PouchDB | Full offline, relational-ish queries |
 | AI inference | Ollama (local) | OpenAI API, Gemini | Zero cost, no data leaves device |
 | IoT Protocol | MQTT | HTTP, WebSockets | Low power, lightweight, pub/sub model |
+| Disease ID | PlantNet + TF.js | Custom Cloud API | PlantNet is free/accurate; TF.js is 100% offline |

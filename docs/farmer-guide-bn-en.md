@@ -123,21 +123,41 @@ Use our 'Krishi Record' app to track your farming expenses, yields, and soil hea
 
 ---
 
-## ৫. ভবিষ্যৎ ফিচারসমূহ (শীঘ্রই আসছে) / Upcoming Features (Coming Soon)
+## ৫. রোগ শনাক্তকরণ (P5) / Plant Disease Detection (P5)
+
+**বাংলা:**
+আপনার ফসলের কোনো পাতার রোগ হয়েছে বলে মনে হলে আপনি আমাদের রোগ শনাক্তকরণ টুল ব্যবহার করতে পারেন।
+
+**কিভাবে ব্যবহার করবেন:**
+1. বটের দেওয়া লিঙ্কে গিয়ে 'Disease Detector' বা 'রোগ শনাক্তকরণ' অ্যাপটি খুলুন।
+2. **ছবি তুলুন (Take Photo):** ক্যামেরা আইকনে ক্লিক করে আক্রান্ত পাতার একটি পরিষ্কার ছবি তুলুন।
+3. **শনাক্ত করুন (Identify):** 'শনাক্ত করুন' বাটনে চাপ দিন।
+4. **ফলাফল:** অ্যাপ আপনাকে রোগের নাম (বাংলায়) এবং এটি প্রতিকারের জন্য কোন ZBNF পদ্ধতি (যেমন: নিমাস্ত্র বা টক দই স্প্রে) ব্যবহার করতে হবে তা বলে দেবে।
+
+**English:**
+If you suspect a disease in your crops, you can use our Disease Detection tool.
+
+**How to use:**
+1. Open the 'Disease Detector' app via the link provided by the bot.
+2. **Take Photo:** Click the camera icon and take a clear photo of the infected leaf.
+3. **Identify:** Press the 'Identify' button.
+4. **Result:** The app will show the disease name in Bangla and the specific ZBNF treatment (e.g., Neemastra or sour buttermilk spray).
+
+---
+
+## ৬. ভবিষ্যৎ ফিচারসমূহ (শীঘ্রই আসছে) / Upcoming Features (Coming Soon)
 
 **বাংলা:**
 আমরা এই বটের ওপর আরও কাজ করছি। শীঘ্রই আপনি পাবেন:
-- **রোগ শনাক্তকরণ:** ফসলের ছবি পাঠিয়ে রোগ চিনে নেওয়া।
 - **AI সহকারী:** কৃষি বিষয়ক যেকোনো প্রশ্নের উত্তর।
 
 **English:**
 We are working on adding more features soon:
-- **Disease Identification:** Identify crop diseases by sending a photo.
 - **AI Assistant:** Get answers to any farming questions.
 
 ---
 
-## ৬. সব কমান্ডের তালিকা / All Commands
+## ৭. সব কমান্ডের তালিকা / All Commands
 
 | কমান্ড | বাংলা | English |
 |--------|-------|---------|
@@ -153,7 +173,7 @@ We are working on adding more features soon:
 
 ---
 
-## ৭. সমস্যা হলে কী করবেন / Troubleshooting
+## ৮. সমস্যা হলে কী করবেন / Troubleshooting
 
 | সমস্যা | সমাধান |
 |-------|-------|

@@ -6,9 +6,9 @@ A **zero-cost** agentic technology platform delivering free tech support to Zero
 
 ---
 
-## Status: P4 Completed ✅
+## Status: P5 MVP Completed ✅
 
-The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, and IoT soil monitoring.
+The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, IoT soil monitoring, and plant disease detection.
 
 ---
 
@@ -21,7 +21,7 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 | P2 | Weather Irrigation Alert | ✅ | Open-Meteo forecasts → skip/spray/heat alerts via Telegram |
 | P3 | Farm Record Tracker | ✅ | React PWA + IndexedDB — offline crop logs |
 | P4 | IoT Soil Monitoring | ✅ | ESP32 + MQTT + Node-RED + Grafana — Whapasa soil alerts |
-| P5 | Plant Disease Detection | 🛠️ | Photo → Bangla disease identification + ZBNF treatment |
+| P5 | Plant Disease Detection | ✅ | Photo → Bangla disease identification + ZBNF treatment |
 | P6 | ZBNF Knowledge PWA | 🛠️ | Offline formulation calculators, pest gallery |
 | P7 | Local AI Assistant | 🛠️ | Ollama + ChromaDB RAG — Bangla/English ZBNF Q&A |
 | P8 | Community Network | 🛠️ | Telegram FAQ bot, Supabase farmer map |
@@ -38,7 +38,18 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 | AI | Ollama · ChromaDB · LlamaIndex · Flask |
 | Map | Leaflet · OpenStreetMap · Supabase (free tier) |
 | Weather | Open-Meteo (free, no key) |
+| Disease | PlantNet API (free tier) · TensorFlow.js (offline fallback) |
 | Hosting | Railway.app / Render.com (bot) · Netlify / GitHub Pages (PWAs) |
+
+---
+
+## Plant Disease Detection (P5)
+
+### API Setup
+- **Primary Engine**: PlantNet API
+- **API Key**: Get one at [my.plantnet.org](https://my.plantnet.org)
+- **Env Variable**: `VITE_PLANTNET_API_KEY`
+- **Offline Fallback**: TF.js with a quantized MobileNetV2 model stored in `public/models/plant-disease/`
 
 ---
 
@@ -76,6 +87,8 @@ docs/            ← architecture.md · farmer-guide-bn-en.md · CODEMAPS/
 src/             ← Source code (Bot, Scheduler, Services)
 templates/       ← Config templates
 scripts/         ← Automation scripts
+disease-detect/  ← P5 Plant Disease Detection PWA
+krishi-record/   ← P3 Farm Record Tracker PWA
 ```
 
 ---
