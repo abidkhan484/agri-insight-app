@@ -95,9 +95,12 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 - **Mapping**: Scientific name → Local disease name → ZBNF Treatment (local JSON)
 - **Path**: `disease-detect/`
 
-### P6 — ZBNF Knowledge PWA (Roadmap)
-- **Calculators**: 6 ZBNF formulations
-- **Offline**: vite-plugin-pwa
+### P6 — ZBNF Knowledge PWA
+- **Framework**: React 19 + Vite 8 + `vite-plugin-pwa`
+- **Calculators**: Area-based dosage for Jeevamrutha, Beejamrutha, Neemastra, Agniastra, Brahmastra, and Mulch.
+- **Content**: Pest gallery with photos/symptoms/ZBNF-treatment, crop calendar by BD division.
+- **Offline Strategy**: Service Workers (Workbox) pre-caching all assets and JSON data.
+- **Path**: `zbnf-knowledge/`
 
 ### P7 — Local AI Assistant (Roadmap)
 - **LLM**: Ollama (gemma2:2b)
@@ -184,6 +187,22 @@ Bangla Result + ZBNF Recipe
 Farmer implements natural treatment
 ```
 
+### ZBNF Knowledge PWA Flow (P6)
+
+```
+Farmer opens ZBNF Knowledge PWA
+      │
+      ▼
+App Router (React Router v7)
+      ├──▶ Calculator (Inputs area → Returns ZBNF recipe)
+      ├──▶ Pest Gallery (Browse pests → View symptoms & ZBNF treatment)
+      └──▶ Calendar (Select division → View planting windows)
+      │
+      ▼
+Service Worker (Workbox)
+ (Serves cached HTML/JS/JSON even without internet)
+```
+
 ---
 
 ## Database Schema (SQLite — agri-bot)
@@ -209,3 +228,4 @@ soil_readings (id, plot_id FK, moisture, temp, humidity, ts)
 | AI inference | Ollama (local) | OpenAI API, Gemini | Zero cost, no data leaves device |
 | IoT Protocol | MQTT | HTTP, WebSockets | Low power, lightweight, pub/sub model |
 | Disease ID | PlantNet + TF.js | Custom Cloud API | PlantNet is free/accurate; TF.js is 100% offline |
+| PWA Offline Strategy | Workbox Precaching | Custom SW, AppCache | Standardized, handles versioning well |

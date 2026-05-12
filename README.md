@@ -6,9 +6,9 @@ A **zero-cost** agentic technology platform delivering free tech support to Zero
 
 ---
 
-## Status: P5 MVP Completed ✅
+## Status: P6 MVP Completed ✅
 
-The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, IoT soil monitoring, and plant disease detection.
+The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, IoT soil monitoring, plant disease detection, and offline ZBNF knowledge base with calculators.
 
 ---
 
@@ -22,7 +22,7 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 | P3 | Farm Record Tracker | ✅ | React PWA + IndexedDB — offline crop logs |
 | P4 | IoT Soil Monitoring | ✅ | ESP32 + MQTT + Node-RED + Grafana — Whapasa soil alerts |
 | P5 | Plant Disease Detection | ✅ | Photo → Bangla disease identification + ZBNF treatment |
-| P6 | ZBNF Knowledge PWA | 🛠️ | Offline formulation calculators, pest gallery |
+| P6 | ZBNF Knowledge PWA | ✅ | Offline formulation calculators, pest gallery, crop calendar |
 | P7 | Local AI Assistant | 🛠️ | Ollama + ChromaDB RAG — Bangla/English ZBNF Q&A |
 | P8 | Community Network | 🛠️ | Telegram FAQ bot, Supabase farmer map |
 
@@ -50,6 +50,16 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 - **API Key**: Get one at [my.plantnet.org](https://my.plantnet.org)
 - **Env Variable**: `VITE_PLANTNET_API_KEY`
 - **Offline Fallback**: TF.js with a quantized MobileNetV2 model stored in `public/models/plant-disease/`
+
+---
+
+## ZBNF Knowledge PWA (P6)
+
+### Features
+- **Calculators**: Accurate dose calculation for 6 ZBNF formulations (Jeevamrutha, Beejamrutha, etc.) based on land area.
+- **Pest Gallery**: Offline searchable database of 30+ common pests with ZBNF treatments.
+- **Crop Calendar**: Seasonal planting windows for all 8 divisions of Bangladesh.
+- **Offline First**: Works 100% offline via Service Workers (Workbox).
 
 ---
 
@@ -89,6 +99,7 @@ templates/       ← Config templates
 scripts/         ← Automation scripts
 disease-detect/  ← P5 Plant Disease Detection PWA
 krishi-record/   ← P3 Farm Record Tracker PWA
+zbnf-knowledge/  ← P6 ZBNF Knowledge Base PWA
 ```
 
 ---

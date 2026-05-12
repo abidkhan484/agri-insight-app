@@ -123,7 +123,7 @@ Use our 'Krishi Record' app to track your farming expenses, yields, and soil hea
 
 ---
 
-## ৫. রোগ শনাক্তকরণ (P5) / Plant Disease Detection (P5)
+## ৫. রোগ শনাক্তকরণ / Plant Disease Detection
 
 **বাংলা:**
 আপনার ফসলের কোনো পাতার রোগ হয়েছে বলে মনে হলে আপনি আমাদের রোগ শনাক্তকরণ টুল ব্যবহার করতে পারেন।
@@ -145,19 +145,41 @@ If you suspect a disease in your crops, you can use our Disease Detection tool.
 
 ---
 
-## ৬. ভবিষ্যৎ ফিচারসমূহ (শীঘ্রই আসছে) / Upcoming Features (Coming Soon)
+## ৬. ZBNF জ্ঞানভান্ডার ও ক্যালকুলেটর / ZBNF Knowledge Base & Calculator
+
+**বাংলা:**
+সঠিক পরিমাণে ZBNF উপকরণ তৈরির জন্য এবং পোকামাকড় দমনের সঠিক উপায় জানতে 'ZBNF জ্ঞানভান্ডার' অ্যাপটি ব্যবহার করুন। এটি ১০০% অফলাইনে কাজ করে।
+
+**ফিচারসমূহ:**
+1. **উপকরণ ক্যালকুলেটর (Calculators):** আপনার জমির পরিমাণ লিখুন (যেমন: ২০ ডেসিমেল)। অ্যাপটি স্বয়ংক্রিয়ভাবে জীবামৃত, নিমাস্ত্র, অগ্নিঅস্ত্র বা ব্রহ্মাস্ত্র তৈরির জন্য কতটুকু গোবর, গোমূত্র বা পাতা লাগবে তা বলে দেবে।
+2. **পোকামাকড় গ্যালারি (Pest Gallery):** ধানের বা সবজির সাধারণ পোকামাকড়ের ছবি দেখুন এবং সেগুলোর প্রাকৃতিক প্রতিকার জানুন।
+3. **ফসল ক্যালেন্ডার (Crop Calendar):** বাংলাদেশের ৮টি বিভাগের জন্য কোন মাসে কোন ফসল লাগানো ভালো তা দেখুন।
+
+**English:**
+Use the 'ZBNF Knowledge Base' app for accurate formulation calculations and pest management. Works 100% offline.
+
+**Features:**
+1. **Calculators:** Enter your plot area (e.g., 20 decimals). The app automatically calculates exact quantities of cow dung, urine, or leaves needed for Jeevamrutha, Neemastra, Agniastra, or Brahmastra.
+2. **Pest Gallery:** Browse photos of common pests and find their natural ZBNF treatments.
+3. **Crop Calendar:** Check recommended planting windows for all 8 divisions of Bangladesh.
+
+---
+
+## ৭. ভবিষ্যৎ ফিচারসমূহ (শীঘ্রই আসছে) / Upcoming Features (Coming Soon)
 
 **বাংলা:**
 আমরা এই বটের ওপর আরও কাজ করছি। শীঘ্রই আপনি পাবেন:
 - **AI সহকারী:** কৃষি বিষয়ক যেকোনো প্রশ্নের উত্তর।
+- **কৃষক নেটওয়ার্ক:** আপনার এলাকার অন্যান্য প্রাকৃতিক চাষীদের ম্যাপে দেখা।
 
 **English:**
 We are working on adding more features soon:
 - **AI Assistant:** Get answers to any farming questions.
+- **Farmer Network:** See other natural farmers in your area on a map.
 
 ---
 
-## ৭. সব কমান্ডের তালিকা / All Commands
+## ৮. সব কমান্ডের তালিকা / All Commands
 
 | কমান্ড | বাংলা | English |
 |--------|-------|---------|
@@ -173,7 +195,7 @@ We are working on adding more features soon:
 
 ---
 
-## ৮. সমস্যা হলে কী করবেন / Troubleshooting
+## ৯. সমস্যা হলে কী করবেন / Troubleshooting
 
 | সমস্যা | সমাধান |
 |-------|-------|
