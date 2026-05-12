@@ -51,3 +51,14 @@ CREATE TABLE IF NOT EXISTS weather_alerts (
   sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (plot_id) REFERENCES plots(id)
 );
+
+CREATE TABLE IF NOT EXISTS soil_readings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  plot_id INTEGER NOT NULL,
+  moisture REAL NOT NULL,
+  temp REAL,
+  humidity REAL,
+  alert_level TEXT DEFAULT 'OK', -- 'OK', 'WARN', 'CRITICAL'
+  ts DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (plot_id) REFERENCES plots(id)
+);

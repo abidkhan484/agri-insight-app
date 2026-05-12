@@ -58,6 +58,7 @@ To add a plot, type `/register` and send. The bot will ask you step by step:
 | 🛡️ নিমাস্ত্র স্প্রে করুন | প্রতি ১৪ দিনে একবার |
 | 🍂 আচ্ছাদন পরীক্ষা | প্রতি ৭ দিনে একবার |
 | ☀️ আবহাওয়া ও সেচ পরামর্শ | প্রতিদিন সকাল ৬:০০ টা (যদি GPS লোকেশন থাকে) |
+| 🌡️ মাটির আর্দ্রতা সর্তকতা | যখন মাটি শুকিয়ে যায় (যদি IoT সেন্সর থাকে) |
 
 **English:**
 You don't need to do anything extra. The bot will send messages each morning when due:
@@ -68,6 +69,7 @@ You don't need to do anything extra. The bot will send messages each morning whe
 | 🛡️ Spray Neemastra | Every 14 days |
 | 🍂 Check mulch | Every 7 days |
 | ☀️ Weather & Irrigation Advice | Daily at 6:00 AM BDT (if GPS is provided) |
+| 🌡️ Soil Moisture Alerts | When soil gets dry (if IoT sensor is installed) |
 
 ---
 
@@ -81,8 +83,7 @@ You don't need to do anything extra. The bot will send messages each morning whe
 - `/myreminders` — আপনার সক্রিয় রিমাইন্ডারগুলো দেখুন।
 - `/cancelreminder [আইডি]` — কোনো নির্দিষ্ট রিমাইন্ডার বন্ধ করুন।
 - `/remind` — নিজের জন্য আলাদা রিমাইন্ডার সেট করুন।
-  - উদাহরণ: `/remind once 2025-05-20 "বীজ কিনুন"`
-  - উদাহরণ: `/remind every 7 "সার প্রয়োগ করুন"`
+- `/soilstatus` — মাটির বর্তমান আর্দ্রতা ও তাপমাত্রা দেখুন (IoT সেন্সর থাকলে)।
 
 **English:**
 You can use the following commands to manage your plots and reminders:
@@ -92,8 +93,7 @@ You can use the following commands to manage your plots and reminders:
 - `/myreminders` — List all your active reminders.
 - `/cancelreminder [ID]` — Deactivate a specific reminder.
 - `/remind` — Set custom reminders for yourself.
-  - Example: `/remind once 2025-05-20 "Buy seeds"`
-  - Example: `/remind every 7 "Apply fertilizer"`
+- `/soilstatus` — Check current soil moisture and temperature (if IoT sensor is installed).
 
 ---
 
@@ -148,6 +148,7 @@ We are working on adding more features soon:
 | `/myreminders` | রিমাইন্ডার তালিকা | List active reminders |
 | `/cancelreminder` | রিমাইন্ডার বাতিল | Cancel a reminder |
 | `/remind` | কাস্টম রিমাইন্ডার | Set custom reminder |
+| `/soilstatus` | মাটির অবস্থা | Check soil status |
 | `/help` | সাহায্য | Show all commands |
 
 ---
@@ -159,9 +160,11 @@ We are working on adding more features soon:
 | বট সাড়া দিচ্ছে না | কিছুক্ষণ অপেক্ষা করুন; ইন্টারনেট সংযোগ পরীক্ষা করুন। |
 | জমি যোগ হচ্ছে না | `/register` কমান্ডটি আবার ব্যবহার করুন এবং সব ধাপ পূরণ করুন। |
 | রিমাইন্ডার আসছে না | আপনি জমি নিবন্ধিত করেছেন কি না তা `/myplots` দিয়ে চেক করুন। |
+| মাটির তথ্য দেখাচ্ছে না | আপনার IoT ডিভাইসটি সচল আছে কি না এবং ইন্টারনেটে যুক্ত কি না পরীক্ষা করুন। |
 
 | Problem | Solution |
 |---------|----------|
 | Bot not responding | Wait a moment; check internet connection. |
 | Plot not adding | Try `/register` again and complete all steps. |
 | No reminders | Check if you have registered plots using `/myplots`. |
+| No soil data | Check if your IoT device is powered on and connected to the internet. |

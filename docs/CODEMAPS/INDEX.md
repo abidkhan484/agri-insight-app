@@ -9,6 +9,7 @@ Overview of the ZBNF Farming Assistant codebase structure.
 - [P1 — Farm Scheduler](./p1-scheduler.md) - Plot registration and ZBNF reminders.
 - [P2 — Weather Alert](./p2-weather-alert.md) - Weather-based irrigation and spray advisories.
 - [P3 — Krishi Record](./p3-krishi-record.md) - Offline PWA for farm record keeping.
+- [P4 — IoT Soil Monitoring](./p4-iot-monitoring.md) - Real-time soil data and alerts.
 - [Shared Foundation](../architecture.md) - Database, logging, and bot infrastructure.
 
 ## System Overview
@@ -33,4 +34,11 @@ krishi-record/          # P3: Farm Record Tracker
 │   ├── components/     # UI Components
 │   ├── db/             # IndexedDB Schema
 │   └── utils/          # Calculations & Utils
+```
+
+### IoT & Infrastructure
+```
+firmware/               # P4: ESP32 Arduino C++ code
+flows/                  # Node-RED JSON flows
+grafana/                # Grafana dashboard exports
 ```

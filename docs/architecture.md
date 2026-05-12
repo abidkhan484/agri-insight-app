@@ -82,9 +82,12 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 - **Features**: Plot management, Input logging (Jeevamrutha, etc.), Observation tracking (earthworms, pests), Harvest & Revenue recording, Visual Reports (Chart.js), CSV/PDF export.
 - **Path**: `krishi-record/`
 
-### P4 — IoT Soil Monitoring (Roadmap)
+### P4 — IoT Soil Monitoring
 - **Hardware**: ESP32 + capacitive soil moisture sensor + DHT22
 - **Protocol**: MQTT
+- **Processing**: Node-RED evaluations of Whapasa thresholds
+- **Visualization**: Grafana Dashboards via InfluxDB
+- **Telegram**: `/soilstatus` command and real-time alerts
 
 ### P5 — Plant Disease Detection (Roadmap)
 - **Primary**: PlantNet API
@@ -133,6 +136,26 @@ node-cron daily check (00:00 UTC)
 Farmer's Telegram app
 ```
 
+### IoT Soil Monitoring Flow (P4)
+
+```
+ESP32 (Soil/Temp/Hum)
+      │
+      ▼ (MQTT: farm/{plot_id}/sensors)
+HiveMQ / Mosquitto Broker
+      │
+      ▼
+Node-RED Flow
+      ├──▶ InfluxDB → Grafana Dashboard
+      └──▶ Evaluate Whapasa (Moisture %)
+             │
+             ▼ (if alert triggered)
+         Telegram Bot API
+             │
+             ▼
+      Farmer's Telegram (Bangla/English Alert)
+```
+
 ---
 
 ## Database Schema (SQLite — agri-bot)
@@ -143,6 +166,7 @@ plots   (id, farmer_id FK, name, area_decimal, soil_type, crop, start_date, lati
 reminders (id, plot_id FK, type, next_due, interval_days, description, active, created_at)
 reminder_logs (id, reminder_id FK, sent_at, status, message)
 weather_alerts (id, plot_id FK, alert_type, message, forecast_data, sent_at)
+soil_readings (id, plot_id FK, moisture, temp, humidity, ts)
 ```
 
 ---
@@ -155,3 +179,4 @@ weather_alerts (id, plot_id FK, alert_type, message, forecast_data, sent_at)
 | Scheduling | node-cron + GitHub Actions | Celery, BullMQ | Simplest for single-process bot |
 | PWA offline | Dexie.js (IndexedDB) | localStorage, PouchDB | Full offline, relational-ish queries |
 | AI inference | Ollama (local) | OpenAI API, Gemini | Zero cost, no data leaves device |
+| IoT Protocol | MQTT | HTTP, WebSockets | Low power, lightweight, pub/sub model |

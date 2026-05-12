@@ -6,9 +6,9 @@ A **zero-cost** agentic technology platform delivering free tech support to Zero
 
 ---
 
-## Status: P1 Completed ✅
+## Status: P4 Completed ✅
 
-The system currently supports farmer registration, plot management, and automated ZBNF reminders (Jeevamrutha, Neemastra, Mulch, Irrigation).
+The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, and IoT soil monitoring.
 
 ---
 
@@ -18,9 +18,9 @@ The system currently supports farmer registration, plot management, and automate
 |-------|------|--------|--------------|
 | P0 | Shared Foundation | ✅ | SQLite DB, Winston logger, ESLint/Prettier, Husky pre-commit |
 | P1 | Farm Scheduler Bot | ✅ | Telegram bot with ZBNF auto-reminders |
-| P2 | Weather Irrigation Alert | 🛠️ | Open-Meteo forecasts → skip/spray/heat alerts via Telegram |
-| P3 | Farm Record Tracker | 🛠️ | React PWA + IndexedDB — offline crop logs |
-| P4 | IoT Soil Monitoring | 🛠️ | ESP32 + MQTT + Node-RED + Grafana — Whapasa soil alerts |
+| P2 | Weather Irrigation Alert | ✅ | Open-Meteo forecasts → skip/spray/heat alerts via Telegram |
+| P3 | Farm Record Tracker | ✅ | React PWA + IndexedDB — offline crop logs |
+| P4 | IoT Soil Monitoring | ✅ | ESP32 + MQTT + Node-RED + Grafana — Whapasa soil alerts |
 | P5 | Plant Disease Detection | 🛠️ | Photo → Bangla disease identification + ZBNF treatment |
 | P6 | ZBNF Knowledge PWA | 🛠️ | Offline formulation calculators, pest gallery |
 | P7 | Local AI Assistant | 🛠️ | Ollama + ChromaDB RAG — Bangla/English ZBNF Q&A |
@@ -33,12 +33,36 @@ The system currently supports farmer registration, plot management, and automate
 | Layer | Choice |
 |-------|--------|
 | Bot | Node.js 20+ · Telegraf v4 · better-sqlite3 · node-cron |
-| PWA | React 18 · Vite · vite-plugin-pwa · Dexie.js |
+| PWA | React 19 · Vite · vite-plugin-pwa · Dexie.js |
 | IoT | ESP32 · MQTT · Node-RED · InfluxDB · Grafana |
 | AI | Ollama · ChromaDB · LlamaIndex · Flask |
 | Map | Leaflet · OpenStreetMap · Supabase (free tier) |
 | Weather | Open-Meteo (free, no key) |
 | Hosting | Railway.app / Render.com (bot) · Netlify / GitHub Pages (PWAs) |
+
+---
+
+## Hardware & IoT (P4)
+
+### Hardware Requirements
+- **Microcontroller**: ESP32 (NodeMCU or similar)
+- **Soil Moisture**: Capacitive Soil Moisture Sensor (v1.2)
+- **Environment**: DHT22 Temperature & Humidity Sensor
+- **Power**: 18650 Li-ion battery + TP4056 Charger + 5V Solar Panel (for field deployment)
+
+### MQTT Setup
+- **Broker**: `broker.hivemq.com` (for development)
+- **Port**: `1883`
+- **Topic**: `farm/{plot_id}/sensors`
+- **Payload Format**:
+  ```json
+  {
+    "moisture": 45.2,
+    "temp": 30.5,
+    "humidity": 65.0,
+    "ts": "2024-05-20T10:00:00Z"
+  }
+  ```
 
 ---
 

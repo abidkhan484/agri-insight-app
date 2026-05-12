@@ -5,6 +5,7 @@ import db from '../db/connection.js';
 import { registerWizard } from './scenes/register.js';
 import { initPlotCommands } from './commands/plots.js';
 import { initReminderCommands } from './commands/reminders.js';
+import { registerSoilstatusCommand } from './commands/soilstatus.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
 
@@ -57,6 +58,7 @@ bot.command('register', (ctx) => ctx.scene.enter('REGISTER_PLOT_SCENE'));
 // Initialize Commands
 initPlotCommands(bot);
 initReminderCommands(bot);
+registerSoilstatusCommand(bot, db);
 
 // Initialize Reminder Engine
 initReminderEngine(bot);
@@ -74,6 +76,7 @@ bot.help((ctx) => {
 /remind - রিমাইন্ডার সেট করুন
 /myreminders - রিমাইন্ডার তালিকা
 /cancelreminder <ID> - রিমাইন্ডার বাতিল করুন
+/soilstatus - মাটির অবস্থা দেখুন
 
 Need help? I understand:
 /start - Start the bot
@@ -82,7 +85,8 @@ Need help? I understand:
 /deleteplot <name> - Remove a plot
 /remind - Set custom reminders
 /myreminders - List active reminders
-/cancelreminder <ID> - Cancel a reminder`;
+/cancelreminder <ID> - Cancel a reminder
+/soilstatus - Check soil moisture status`;
 
   logger.info('Help command received', { chat_id: 'chat:' + ctx.chat.id });
   return ctx.reply(helpMessage);

@@ -95,12 +95,10 @@ describe('P2 — Weather Irrigation Alert', () => {
     });
 
     it('should handle API success on second attempt', async () => {
-      fetch
-        .mockRejectedValueOnce(new Error('Temporary failure'))
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => mockApiResponse,
-        });
+      fetch.mockRejectedValueOnce(new Error('Temporary failure')).mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockApiResponse,
+      });
 
       const promise = fetchForecast(23.8103, 90.4125);
 
