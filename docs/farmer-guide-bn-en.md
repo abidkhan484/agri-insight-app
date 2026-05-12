@@ -97,23 +97,47 @@ You can use the following commands to manage your plots and reminders:
 
 ---
 
-## ৪. ভবিষ্যৎ ফিচারসমূহ (শীঘ্রই আসছে) / Upcoming Features (Coming Soon)
+## ৪. কৃষি রেকর্ড অ্যাপ (অফলাইন) / Krishi Record App (Offline)
+
+**বাংলা:**
+আপনার চাষাবাদের খরচ, ফলন এবং মাটির স্বাস্থ্যের হিসাব রাখতে আমাদের 'কৃষি রেকর্ড' অ্যাপ ব্যবহার করুন। এটি ইন্টারনেট ছাড়াও কাজ করে।
+
+**কিভাবে ব্যবহার করবেন:**
+1. আপনার ফোনে অ্যাপটি ইনস্টল করুন (বট থেকে প্রাপ্ত লিঙ্ক ব্যবহার করে)।
+2. **জমি (Plots):** প্রথমে আপনার জমির তথ্য যোগ করুন।
+3. **উপকরণ (Inputs):** যখনই জীবামৃত বা অন্য সার দেবেন, খরচসহ এখানে লিখে রাখুন।
+4. **পর্যবেক্ষণ (Observations):** কেঁচোর সংখ্যা বা পোকামাকড় দেখলে লিখে রাখুন।
+5. **ফসল (Harvests):** ফসল কাটার পর কতটুকু ফলন হলো এবং কত টাকা বিক্রি হলো তা লিখুন।
+6. **রিপোর্ট (Reports):** মাস শেষে লাভ-ক্ষতির হিসাব এবং চার্ট দেখুন।
+
+**English:**
+Use our 'Krishi Record' app to track your farming expenses, yields, and soil health. It works offline too.
+
+**How to use:**
+1. Install the app on your phone (using the link provided by the bot).
+2. **Plots:** Add your plot information first.
+3. **Inputs:** Log fertilizers like Jeevamrutha along with costs.
+4. **Observations:** Record earthworm counts or pest sightings.
+5. **Harvests:** Record the quantity harvested and revenue earned.
+6. **Reports:** View profit/loss summaries and visual charts.
+
+---
+
+## ৫. ভবিষ্যৎ ফিচারসমূহ (শীঘ্রই আসছে) / Upcoming Features (Coming Soon)
 
 **বাংলা:**
 আমরা এই বটের ওপর আরও কাজ করছি। শীঘ্রই আপনি পাবেন:
-- **কার্যক্রম লগ:** আপনার চাষাবাদের খরচ ও কাজের হিসাব রাখা।
 - **রোগ শনাক্তকরণ:** ফসলের ছবি পাঠিয়ে রোগ চিনে নেওয়া।
 - **AI সহকারী:** কৃষি বিষয়ক যেকোনো প্রশ্নের উত্তর।
 
 **English:**
 We are working on adding more features soon:
-- **Activity Log:** Keep track of your farming costs and tasks.
 - **Disease Identification:** Identify crop diseases by sending a photo.
 - **AI Assistant:** Get answers to any farming questions.
 
 ---
 
-## ৫. সব কমান্ডের তালিকা / All Commands
+## ৬. সব কমান্ডের তালিকা / All Commands
 
 | কমান্ড | বাংলা | English |
 |--------|-------|---------|
@@ -128,7 +152,7 @@ We are working on adding more features soon:
 
 ---
 
-## ৬. সমস্যা হলে কী করবেন / Troubleshooting
+## ৭. সমস্যা হলে কী করবেন / Troubleshooting
 
 | সমস্যা | সমাধান |
 |-------|-------|

@@ -76,9 +76,11 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 - **Cron**: 00:00 UTC = 06:00 BDT daily
 - **Entry point**: `src/scheduler/weather-alerts.js`
 
-### P3 — Farm Record Tracker PWA (Roadmap)
-- **Framework**: React 18 + Vite
+### P3 — Farm Record Tracker PWA
+- **Framework**: React 19 + Vite 8
 - **Offline DB**: Dexie.js (IndexedDB wrapper)
+- **Features**: Plot management, Input logging (Jeevamrutha, etc.), Observation tracking (earthworms, pests), Harvest & Revenue recording, Visual Reports (Chart.js), CSV/PDF export.
+- **Path**: `krishi-record/`
 
 ### P4 — IoT Soil Monitoring (Roadmap)
 - **Hardware**: ESP32 + capacitive soil moisture sensor + DHT22

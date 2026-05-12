@@ -85,32 +85,34 @@ node bot/index.js
 
 Test: Send `/start` to your bot in Telegram — you should receive the welcome message.
 
-### 2.5 Verify Pre-Commit Hook
-
-```bash
-# Set up husky
-npm run prepare       # runs: husky install
-
-# Verify the hook is executable
-ls -la .husky/pre-commit
-
-# Test it (should pass with clean code)
-git add -A && git commit --dry-run
-```
-
-If `npm run lint` fails, run `npm run lint -- --fix` followed by `npm run format`.
-
 ---
 
 ## 3. Set Up the Farm Record PWA (P3 — `krishi-record/`)
 
+The Krishi Record PWA is a React-based application that works offline using IndexedDB (via Dexie.js).
+
 ```bash
-cd krishi-record    # or wherever P3 project lives
+cd krishi-record
 npm install
 npm run dev         # starts Vite dev server at http://localhost:5173
 ```
 
-Test offline: Open DevTools → Application → Service Workers → check "Offline" and reload.
+### 3.1 PWA Development
+
+- **Local Storage**: Data is stored in your browser's IndexedDB. You can inspect it in DevTools → Application → IndexedDB → `KrishiRecordDB`.
+- **Offline Testing**: Open DevTools → Application → Service Workers → check "Offline" and reload.
+- **Service Worker**: Managed by `vite-plugin-pwa`. It only activates in production builds by default. To test it:
+  ```bash
+  npm run build
+  npm run preview
+  ```
+
+### 3.2 Running Tests
+
+```bash
+# Run Vitest
+npx vitest run
+```
 
 ---
 
@@ -188,20 +190,6 @@ Expected output:
 [INFO] ingestion_complete chroma_path=./chroma_db
 ```
 
-### 6.5 Start the Flask API
-
-```bash
-python app.py
-# Listening on http://0.0.0.0:5000
-```
-
-Test:
-```bash
-curl -X POST http://localhost:5000/ask \
-  -H 'Content-Type: application/json' \
-  -d '{"question": "জীবামৃত কীভাবে তৈরি করব?"}'
-```
-
 ---
 
 ## 7. Set Up the Farmer Map (P8 — `map-pwa/`)
@@ -234,15 +222,6 @@ npm run dev         # http://localhost:5175
 6. Set build flags for WiFi credentials (do not hardcode in source)
 7. Flash to ESP32
 
-### Node-RED Setup
-
-```bash
-npm install -g --unsafe-perm node-red
-node-red
-# Open http://localhost:1880
-# Import: flows/soil-monitoring.json via Menu → Import
-```
-
 ---
 
 ## 9. Running All Tests
@@ -251,8 +230,8 @@ node-red
 # Bot tests (Vitest)
 cd agri-bot && npm test
 
-# Formula tests (Vitest)
-cd zbnf-knowledge && npm test
+# Krishi Record tests
+cd krishi-record && npx vitest run
 
 # Python AI tests
 cd ai-assistant && python -m pytest tests/ -v
