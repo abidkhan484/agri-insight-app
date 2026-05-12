@@ -95,17 +95,40 @@ Jeevamrutha reminder has been set.
 
 ## Logging & Records
 
-### `/log` 🔐 (Upcoming)
+### `/log` 🔐
 **Bangla:** কৃষি কার্যক্রম লিপিবদ্ধ করুন
 **English:** Log a farm activity
 
 **Parameters:** inline or wizard
 
+**Usage:** `/log` (launches wizard)
+- Select plot
+- Select type: jeevamrutha | beejamrutha | neemastra | agniastra | brahmastra | mulch | other
+- Enter quantity (if applicable)
+- Enter cost in BDT (optional)
+
 ---
 
-### `/report` 🔐 (Upcoming)
+### `/report` 🔐
 **Bangla:** ফার্মের প্রতিবেদন দেখুন
 **English:** View farm report
+
+**Parameters:** optional `[period]` — `week` | `month` | `season` (default: `month`)
+
+**Usage:**
+- `/report` — current month summary
+- `/report week` — last 7 days
+- `/report season` — current growing season
+
+**Response:**
+```
+📊 মে ২০২৬ প্রতিবেদন / May 2026 Report
+
+🌱 জীবামৃত প্রয়োগ: ২ বার
+💊 নিমাস্ত্র স্প্রে: ১ বার
+🌾 শস্য সংগ্রহ: ৮০ কেজি ধান
+💰 আয়: ৩,২০০ টাকা | খরচ: ৮৫০ টাকা
+```
 
 ---
 
@@ -130,47 +153,152 @@ Jeevamrutha reminder has been set.
 
 ## Weather
 
-### `/weather` 🔐 (Upcoming Command)
-> **Note:** Weather alerts are currently sent **automatically** every day at 6:00 AM BDT. The manual command is planned for a future update.
-
+### `/weather` 🔐
 **Bangla:** আবহাওয়া ও সেচ পরামর্শ দেখুন
 **English:** View weather forecast and irrigation advice
 
+**Parameters:** optional `[plot_name]` — defaults to first plot
+
 **Usage:**
 - `/weather` — weather for all plots with GPS
-- `/weather [plot_name]` — specific plot
+- `/weather বাড়ির পাশের জমি` — specific plot
+
+**Response:**
+```
+🌤️ আবহাওয়া পূর্বাভাস — বাড়ির পাশের জমি
+Weather Forecast — North Plot
+
+আজ / Today: ৩১°C | বৃষ্টি: ০ মিমি
+আগামীকাল / Tomorrow: ২৯°C | বৃষ্টি: ৮ মিমি
+
+✅ সেচ বন্ধ রাখুন — আগামীকাল বৃষ্টির সম্ভাবনা (৮ মিমি)
+Hold off irrigation — rain expected tomorrow (8mm)
+```
 
 ---
 
-## Disease Detection (Upcoming)
+## Disease Detection
 
 ### `/disease` 🔐
 **Bangla:** ফসলের ছবি পাঠিয়ে রোগ শনাক্ত করুন
 **English:** Send a crop photo to identify disease
 
+**Parameters:** send a photo after this command (or as caption)
+
+**Usage:**
+1. Send `/disease` → bot prompts for photo
+2. Or: Send a photo with caption `/disease`
+
+**Response:**
+```
+🔬 রোগ শনাক্ত / Disease Identified:
+অলটারনারিয়া পাতার দাগ / Alternaria Leaf Blight
+আত্মবিশ্বাস / Confidence: 78%
+
+উপসর্গ: পাতায় বৃত্তাকার বাদামি দাগ
+Symptoms: Circular brown spots on leaves
+
+চিকিৎসা / Treatment:
+নিমাস্ত্র ৭ দিন অন্তর ৩ বার স্প্রে করুন
+Spray Neemastra 3 times at 7-day intervals
+```
+
 ---
 
-## AI Assistant (Upcoming)
+## AI Assistant
 
 ### `/ask` 🔐
 **Bangla:** AI সহকারীকে যেকোনো ZBNF প্রশ্ন করুন
 **English:** Ask our AI assistant any ZBNF question
 
+**Parameters:** `[question]` — minimum 3 characters, maximum 500 characters
+
+**Usage:**
+- `/ask জীবামৃত কীভাবে তৈরি করব?`
+- `/ask How do I treat late blight on potato?`
+- `/ask ধানের শীষকাটা পোকার চিকিৎসা কী?`
+
+**Response time:** Up to 90 seconds (local AI model)
+
+**Response:**
+```
+🌾 AI উত্তর / AI Answer
+
+জীবামৃত তৈরিতে প্রয়োজন:
+• ২০০ লিটার জল
+• ১০ কেজি দেশি গরুর গোবর
+• ৭.৫ লিটার গোমূত্র
+• ২ কেজি গুড়
+• ২ কেজি ডালের আটা
+• ১ মুঠো মাটি
+
+৪৮ ঘণ্টা রেখে দিন, তারপর ব্যবহার করুন।
+Rest for 48 hours before applying.
+```
+
 ---
 
-## IoT / Soil Monitoring (Upcoming)
+## IoT / Soil Monitoring
 
 ### `/soilstatus` 🔐
 **Bangla:** আপনার জমির মাটির সর্বশেষ তথ্য দেখুন
 **English:** View latest soil sensor readings for your plots
 
+**Parameters:** none
+
+**Response:**
+```
+🟢 বাড়ির পাশের জমি
+আর্দ্রতা / Moisture: 55.2%
+তাপমাত্রা / Temp: 29.8°C
+আপেক্ষিক আর্দ্রতা / Humidity: 72.1%
+
+🟡 পুকুরপাড়ের জমি
+আর্দ্রতা / Moisture: 35.1% — শুকিয়ে আসছে
+তাপমাত্রা / Temp: 31.2°C
+```
+
+**Moisture level indicators:**
+- 🟢 40–70% — ওয়াপাসা (ideal)
+- 🟡 30–40% or 70–80% — warning
+- 🔴 < 30% or > 80% — critical
+
+### `/setthreshold` 🔐
+**Bangla:** মাটির সতর্কতার সীমা পরিবর্তন করুন
+**English:** Customize soil alert thresholds (advanced)
+
+**Parameters:** `[plot_name] [dry_%] [wet_%]`
+
+**Usage:** `/setthreshold "বাড়ির জমি" 28 82`
+> Note: ZBNF Whapasa defaults (30/80) are strongly recommended. Only change with expert guidance.
+
 ---
 
-## Community (Upcoming)
+## Community
 
 ### `/map` 🔐
 **Bangla:** ZBNF কৃষক মানচিত্র দেখুন এবং যোগ দিন
 **English:** View and join the ZBNF farmer map
+
+**Parameters:** none (shows map link + join option)
+
+### `/joinmap` 🔐
+**Bangla:** আপনার অবস্থান মানচিত্রে যোগ করুন
+**English:** Add your district to the public farmer map
+
+**Parameters:** none (uses district from /register)
+
+**Privacy:** Only district-level location is shown. No personal data is made public.
+
+### `/faq` 🔐
+**Bangla:** সাধারণ প্রশ্নের উত্তর খুঁজুন
+**English:** Search frequently asked questions
+
+**Parameters:** `[search query]`
+
+**Usage:**
+- `/faq জীবামৃত`
+- `/faq neemastra spray time`
 
 ---
 
@@ -196,7 +324,7 @@ These messages are sent automatically by the bot on schedule:
 | নিমাস্ত্র রিমাইন্ডার | Every 14 days | Plot planting date |
 | আচ্ছাদন রিমাইন্ডার | Every 7 days | Plot planting date |
 | আবহাওয়া পরামর্শ | Daily 6:00 AM BDT | Whapasa decision rules |
-| মাটির সতর্কতা | On threshold breach | ESP32 reading (P4 only, upcoming) |
+| মাটির সতর্কতা | On threshold breach | ESP32 reading (P4 only) |
 
 ---
 
@@ -208,4 +336,5 @@ These messages are sent automatically by the bot on schedule:
 | No plots | কোনো জমি নেই | No plots found |
 | Invalid date | তারিখ সঠিক নয় (DD-MM-YYYY) | Invalid date format |
 | Area ≤ 0 | জমির আয়তন ০-এর বেশি হতে হবে | Plot area must be > 0 |
+| AI unavailable | AI সহকারী এই মুহূর্তে উপলব্ধ নয় | AI assistant temporarily unavailable |
 | Outside Bangladesh | বাংলাদেশের বাইরে অবস্থান গ্রহণযোগ্য নয় | Location outside Bangladesh bounds |

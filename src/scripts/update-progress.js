@@ -18,8 +18,7 @@ const getArgValue = (prefix) => {
   return parts.slice(1).join('=');
 };
 
-const completedArgs = args.filter((a) => a.startsWith('--completed=')).map((a) => a.split('=')[1]);
-const currentArg = getArgValue('--current=');
+const completedArg = getArgValue('--completed=');
 const noteArg = getArgValue('--note=');
 
 mkdirSync(join(PROJECT_ROOT, '.session'), { recursive: true });
@@ -31,24 +30,9 @@ try {
   // File might not exist or be invalid, using default progress
 }
 
-// Ensure notes is an array
-if (!Array.isArray(progress.notes)) {
-  progress.notes =
-    typeof progress.notes === 'string'
-      ? [{ ts: progress.last_updated || new Date().toISOString(), note: progress.notes }]
-      : [];
+if (completedArg && !progress.completed.includes(completedArg)) {
+  progress.completed.push(completedArg);
 }
-
-completedArgs.forEach((c) => {
-  if (!progress.completed.includes(c)) {
-    progress.completed.push(c);
-  }
-});
-
-if (currentArg) {
-  progress.current = currentArg;
-}
-
 if (noteArg) {
   progress.notes.push({ ts: new Date().toISOString(), note: noteArg });
 }

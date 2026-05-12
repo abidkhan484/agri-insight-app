@@ -24,10 +24,9 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 │  │ P1 — Scheduler│ │P2 — Weather   │ │  P3 — PWA Records│                  │
 │  │    Bot        │ │   Alert       │ │  (React + Dexie) │                  │
 │  │/register      │ │Open-Meteo API │ │  IndexedDB local │                  │
-│  │/myplots       │ │Whapasa rules  │ │  harvest + input │                  │
-│  │/myreminders   │ │Daily 6AM cron │ │  logs + reports  │                  │
-│  │Jeevamrtha     │ └───────────────┘ └──────────────────┘                  │
-│  │reminder cron  │                                                           │
+│  │/addplot       │ │Whapasa rules  │ │  harvest + input │                  │
+│  │Jeevamrtha     │ │Daily 6AM cron │ │  logs + reports  │                  │
+│  │reminder cron  │ └───────────────┘ └──────────────────┘                  │
 │  └───────┬───────┘                                                           │
 │          │ plot data                                                          │
 │          ▼                                                                    │
@@ -46,8 +45,8 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 │  │  Ollama (gemma2:2b)       │ │  FAQ bot │ Supabase farmer map         │   │
 │  │  ChromaDB vector store    │ │  Leaflet │ OpenStreetMap tiles          │   │
 │  │  LlamaIndex RAG pipeline  │ │  /joinmap │ /faq commands               │   │
-│  │  Flask REST API           │ │  Pest alert broadcast                  │   │
-│  │  /ask Telegram command    │ └────────────────────────────────────────┘   │
+│  │  Flask REST API           │ └────────────────────────────────────────┘   │
+│  │  /ask Telegram command    │                                               │
 │  └───────────────────────────┘                                               │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -65,123 +64,63 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 - **Hosting**: Railway.app free tier or Render.com (750 hrs/month)
 
 ### P1 — Farm Scheduler Bot
-- **Commands**: `/register`, `/myplots`, `/deleteplot`, `/myreminders`, `/cancelreminder`, `/remind`
-- **Bot patterns**: Telegraf `Scenes.WizardScene` for multi-step plot registration
+- **Commands**: `/register`, `/addplot`, `/log`, `/report`, `/reminders`
+- **Bot patterns**: Telegraf `Scenes.WizardScene` for multi-step registration
 - **Cron jobs**: Jeevamrutha (every 15 days), Neemastra (every 14 days), Mulch (every 7 days)
-- **Formula source**: `src/services/jeevamrutha.js` (synced with `skills/zbnf-formulation/SKILL.md`)
+- **Formula source**: `skills/zbnf-formulation/SKILL.md` — non-negotiable ratios
 
 ### P2 — Weather Irrigation Alert
 - **API**: Open-Meteo (no key, unlimited free requests)
 - **Decision logic**: Whapasa rules — if 48h precip > 5mm → skip irrigation
 - **Cron**: 00:00 UTC = 06:00 BDT daily
-- **Entry point**: `src/scheduler/weather-alerts.js`
+- **GPS dedup**: groups plots by coordinate to avoid redundant API calls
 
 ### P3 — Farm Record Tracker PWA
-- **Framework**: React 19 + Vite 8
+- **Framework**: React 18 + Vite
 - **Offline DB**: Dexie.js (IndexedDB wrapper)
-- **Features**: Plot management, Input logging (Jeevamrutha, etc.), Observation tracking (earthworms, pests), Harvest & Revenue recording, Visual Reports (Chart.js), CSV/PDF export.
-- **Path**: `krishi-record/`
+- **Data model**: plots, inputLogs, observations, harvests
+- **Reports**: Chart.js + PDF (jsPDF) + CSV (PapaParse) export
+- **Hosting**: Netlify (free, unlimited static sites)
 
 ### P4 — IoT Soil Monitoring
 - **Hardware**: ESP32 + capacitive soil moisture sensor + DHT22
-- **Protocol**: MQTT
-- **Processing**: Node-RED evaluations of Whapasa thresholds
-- **Visualization**: Grafana Dashboards via InfluxDB
-- **Telegram**: `/soilstatus` command and real-time alerts
+- **Protocol**: MQTT (HiveMQ public for dev; Mosquitto on Pi for prod)
+- **Processing**: Node-RED flow with threshold evaluation + cooldown gate
+- **Storage**: InfluxDB OSS (time-series)
+- **Visualization**: Grafana OSS dashboard (4 panels per plot)
+- **Alerts**: Telegram via bot API (2-hour cooldown per alert type per plot)
 
 ### P5 — Plant Disease Detection
-- **Primary**: PlantNet API (Online identification)
-- **Fallback**: TensorFlow.js (Offline on-device inference)
-- **Mapping**: Scientific name → Local disease name → ZBNF Treatment (local JSON)
-- **Path**: `disease-detect/`
+- **Primary**: PlantNet API — 500 req/day free
+- **Fallback**: TensorFlow.js + MobileNetV2 — runs in browser, fully offline
+- **Treatment map**: `disease-treatments.json` — disease genus → ZBNF formulation
+- **Hosting**: Netlify (PWA)
 
 ### P6 — ZBNF Knowledge PWA
-- **Framework**: React 19 + Vite 8 + `vite-plugin-pwa`
-- **Calculators**: Area-based dosage for Jeevamrutha, Beejamrutha, Neemastra, Agniastra, Brahmastra, and Mulch.
-- **Content**: Pest gallery with photos/symptoms/ZBNF-treatment, crop calendar by BD division.
-- **Offline Strategy**: Service Workers (Workbox) pre-caching all assets and JSON data.
-- **Path**: `zbnf-knowledge/`
+- **Calculators**: Jeevamrutha, Beejamrutha, Neemastra, Agniastra, Brahmastra, Mulch
+- **Content**: Pest gallery (images + treatment), Bangla glossary, application calendar
+- **Offline**: vite-plugin-pwa + Workbox service worker (precaches all assets)
+- **Hosting**: Netlify or GitHub Pages
 
 ### P7 — Local AI Assistant
-- **Inference**: Ollama (gemma2:2b) running locally.
-- **Orchestration**: LlamaIndex for RAG pipeline.
-- **Vector Store**: ChromaDB (local persistence).
-- **Service**: Flask REST API providing a `/ask` endpoint.
-- **Features**: Semantic search over ZBNF docs, grounded answers in Bangla/English.
-- **Path**: `ai-assistant/`
+- **LLM**: Ollama (gemma2:2b default; llama3:8b alternative)
+- **Embeddings**: nomic-embed-text (local Ollama model)
+- **Vector store**: ChromaDB (persistent, local file)
+- **RAG**: LlamaIndex (indexes SKILL.md + docs/)
+- **API**: Flask 3.x REST on port 5000
+- **Telegram**: `/ask` command with 90-second timeout
+- **Logging**: structlog JSON
 
 ### P8 — Community Farmer Network
-- **Backend**: Supabase PostgreSQL (Free Tier)
-- **Map Interface**: Leaflet.js + OpenStreetMap (no-cost tiles)
-- **Features**: 
-  - **Farmer Map**: Geolocation of farms with crop/method filters.
-  - **FAQ Bot**: Keyword-based instant responses from `data/faq.json`.
-  - **Pest Alerts**: Regional broadcasts via Telegram.
-  - **Desi Cow Finder**: Peer-to-peer registry for organic inputs.
-- **Path**: `map-pwa/`
+- **Database**: Supabase PostgreSQL (50k rows free)
+- **RLS**: Public read on farmer_locations and faq_entries; service role write only
+- **Map**: Leaflet + OpenStreetMap (no API key, free forever)
+- **Map PWA**: React + react-leaflet, hosted on Netlify
+- **Privacy**: District-level location only; no telegram_id in Supabase
 
 ---
 
 ## Data Flow Diagrams
-
-### Community Data Flow (P8)
-
-```
-Farmer A reports pest via /reportpest
-      │
-      ▼
-Telegram Bot (src/bot/community.js)
-      │
-      ├──▶ Update Supabase (pest_alerts table)
-      │
-      ├──▶ Query Farmers in same Upazila (SQLite/Supabase)
-      │
-      └──▶ Broadcast Alert to Farmer B, C...
-             "⚠️ Pest Alert in your Upazila! Treatment: Neemastra."
-
-Farmer C wants to find Desi Cow dung
-      │
-      ▼
-Telegram Bot /findcow <district>
-      │
-      └──▶ Query Supabase (cow_registry)
-             │
-             ▼
-      List of nearby suppliers + Contact info
-```
-
-### AI Assistant RAG Pipeline (P7)
-
-```
-Farmer types /ask "কীভাবে জীবামৃত তৈরি করব?"
-      │
-      ▼
-Telegram Bot (agri-bot)
-      │
-      ▼ (POST /ask)
-Flask AI Service (ai-assistant)
-      │
-      ├──▶ Embedding Model (nomic-embed-text)
-      │      (Converts question to vector)
-      │
-      ├──▶ ChromaDB Search
-      │      (Retrieves top 4 relevant ZBNF doc chunks)
-      │
-      ├──▶ LlamaIndex Orchestrator
-      │      (Combines Context + System Prompt + Question)
-      │
-      └──▶ Ollama (gemma2:2b)
-             (Generates grounded Bangla answer)
-      │
-      ▼
-JSON Response {answer, sources}
-      │
-      ▼
-Telegram Bot (formats message with citations)
-      │
-      ▼
-Farmer's Telegram (Bangla Answer + Source docs)
-```
 
 ### Bot → SQLite → Scheduler → Telegram (P0–P2)
 
@@ -190,18 +129,18 @@ Farmer types /register
       │
       ▼
 Telegraf WizardScene
- (collect name, area, crop, start_date)
+ (collect name, district, plot data)
       │
       ▼
 better-sqlite3 (sync write)
- INSERT INTO plots, reminders
+ INSERT INTO farmers, plots
       │
       ▼
 node-cron daily check (00:00 UTC)
  SELECT due reminders
       │
       ▼
- calculateJeevamrutha(area)     ← src/services/jeevamrutha.js
+ calculateJeevamrutha(area)     ← skills/zbnf-formulation/SKILL.md
       │
       ▼
  bot.telegram.sendMessage(farmerId, banglaMessage)
@@ -210,50 +149,67 @@ node-cron daily check (00:00 UTC)
 Farmer's Telegram app
 ```
 
-### IoT Soil Monitoring Flow (P4)
+### IoT Data Flow (P4)
 
 ```
-ESP32 (Soil/Temp/Hum)
-      │
-      ▼ (MQTT: farm/{plot_id}/sensors)
-HiveMQ / Mosquitto Broker
+ESP32 sensors (every 5 min)
+  moisture + temp + humidity
       │
       ▼
-Node-RED Flow
-      ├──▶ InfluxDB → Grafana Dashboard
-      └──▶ Evaluate Whapasa (Moisture %)
-             │
-             ▼ (if alert triggered)
-         Telegram Bot API
-             │
-             ▼
-      Farmer's Telegram (Bangla/English Alert)
+MQTT publish
+  topic: farm/{plot_id}/sensors
+      │
+      ▼
+HiveMQ broker (dev) / Mosquitto (prod)
+      │
+      ▼
+Node-RED flow
+  ├── evaluate Whapasa thresholds
+  ├── cooldown gate (2h per alert type per plot)
+  ├── [if alert] HTTP POST → Telegram Bot API
+  └── InfluxDB Out → soil_readings measurement
+      │
+      ▼
+Grafana dashboard
+  (moisture gauge, 24h trend, temp/humidity, alert history)
+      │
+      ▼
+Farmer via Telegram alert
 ```
 
-### Plant Disease Detection Flow (P5)
+### AI Pipeline (P7)
 
 ```
-Farmer takes photo of leaf
+Document ingestion (one-time):
+  skills/zbnf-formulation/SKILL.md
+  docs/farmer-guide-bn-en.md
+  docs/api-reference.md
+  tasks/*.md
       │
       ▼
-Mobile PWA (disease-detect)
-      │
-      ├── (Online) ──▶ PlantNet API
-      │                  │
-      │                  ▼ (Species Result)
-      │
-      └── (Offline) ─▶ TF.js (MobileNetV2)
-                         │
-                         ▼ (Classification Result)
+nomic-embed-text (Ollama local)
+  → text embeddings
       │
       ▼
-Local Treatment Lookup (src/data/disease-treatments.json)
+ChromaDB PersistentClient
+  stored in ./chroma_db/
+
+Query flow (runtime):
+Farmer: /ask জীবামৃত কীভাবে তৈরি করব?
       │
       ▼
-Bangla Result + ZBNF Recipe
+Bot → Flask POST /ask
       │
       ▼
-Farmer implements natural treatment
+LlamaIndex query engine
+  → ChromaDB similarity search (top-4 chunks)
+      │
+      ▼
+Ollama LLM (gemma2:2b local)
+  + retrieved context + Bangla system prompt
+      │
+      ▼
+Answer → Flask response → Bot → Farmer Telegram
 ```
 
 ---
@@ -261,12 +217,13 @@ Farmer implements natural treatment
 ## Database Schema (SQLite — agri-bot)
 
 ```sql
-farmers (id, telegram_id UNIQUE, name, district, upazila, created_at)
-plots   (id, farmer_id FK, name, area_decimal, soil_type, crop, start_date, latitude, longitude, created_at)
-reminders (id, plot_id FK, type, next_due, interval_days, description, active, created_at)
-reminder_logs (id, reminder_id FK, sent_at, status, message)
-weather_alerts (id, plot_id FK, alert_type, message, forecast_data, sent_at)
-soil_readings (id, plot_id FK, moisture, temp, humidity, ts)
+farmers (id, telegram_id UNIQUE, name, district, upazila, latitude, longitude, created_at)
+plots   (id, farmer_id FK, name, area_decimal, soil_type, crop, start_date, latitude, longitude)
+reminders (id, plot_id FK, type, next_due, interval_days, active)
+reminder_logs (id, reminder_id FK, sent_at, batch_summary)
+weather_alerts (id, plot_id FK, alert_type, message, sent_at)
+soil_readings (id, plot_id, moisture, temp, humidity, ts)  ← IoT cache from InfluxDB
+map_registrations (id, telegram_id UNIQUE, registered_at)
 ```
 
 ---
@@ -279,7 +236,7 @@ soil_readings (id, plot_id FK, moisture, temp, humidity, ts)
 | Scheduling | node-cron + GitHub Actions | Celery, BullMQ | Simplest for single-process bot |
 | PWA offline | Dexie.js (IndexedDB) | localStorage, PouchDB | Full offline, relational-ish queries |
 | AI inference | Ollama (local) | OpenAI API, Gemini | Zero cost, no data leaves device |
-| IoT Protocol | MQTT | HTTP, WebSockets | Low power, lightweight, pub/sub model |
-| Disease ID | PlantNet + TF.js | Custom Cloud API | PlantNet is free/accurate; TF.js is 100% offline |
-| PWA Offline Strategy | Workbox Precaching | Custom SW, AppCache | Standardized, handles versioning well |
-| Community DB | Supabase | Self-hosted Postgres | Generous free tier, built-in Auth and PostGIS |
+| Vector store | ChromaDB | Pinecone, Weaviate | Free, local, Python-native |
+| Map tiles | OpenStreetMap | Google Maps, Mapbox | No API key, free forever, privacy |
+| IoT broker | HiveMQ public / Mosquitto | AWS IoT, CloudMQTT | Free, no vendor lock-in |
+| Time-series DB | InfluxDB OSS | TimescaleDB, Firebase | Free, purpose-built, Grafana native |

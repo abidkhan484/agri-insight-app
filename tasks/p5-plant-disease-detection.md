@@ -24,11 +24,11 @@ Build a mobile-friendly plant disease detection tool — first as an MVP using P
 
 ### Phase 1: MVP — PlantNet API Integration
 
-- [x] Register at [my.plantnet.org](https://my.plantnet.org) for free API key (500 req/day)
-- [x] Build a simple HTML/JS page with camera input (`<input type="file" accept="image/*" capture>`)
-- [x] On photo capture, send to PlantNet identification API
-- [x] Parse response: plant species + disease identification
-- [x] Map identified disease → ZBNF treatment from a local JSON lookup table:
+- [ ] Register at [my.plantnet.org](https://my.plantnet.org) for free API key (500 req/day)
+- [ ] Build a simple HTML/JS page with camera input (`<input type="file" accept="image/*" capture>`)
+- [ ] On photo capture, send to PlantNet identification API
+- [ ] Parse response: plant species + disease identification
+- [ ] Map identified disease → ZBNF treatment from a local JSON lookup table:
   ```json
   {
     "Rice Blast": "Neemastra foliar spray + extra Jeevamrutha at root zone",
@@ -37,8 +37,8 @@ Build a mobile-friendly plant disease detection tool — first as an MVP using P
     "Powdery Mildew": "Sour buttermilk spray (1:10 dilution)"
   }
   ```
-- [x] Display result: disease name (Bangla + English) + treatment + confidence score
-- [x] Deploy to GitHub Pages / Netlify
+- [ ] Display result: disease name (Bangla + English) + treatment + confidence score
+- [ ] Deploy to GitHub Pages / Netlify
 
 ### Phase 2: Dataset Preparation (for On-Device Model)
 
@@ -60,34 +60,34 @@ Build a mobile-friendly plant disease detection tool — first as an MVP using P
 
 ### Phase 4: On-Device PWA
 
-- [x] Create React + Vite PWA (reuse `vite-plugin-pwa` setup from P3)
-- [x] Bundle TF.js model files with the PWA
-- [x] Implement camera capture → image preprocessing → TF.js inference pipeline
-- [x] Display: top-3 predictions with confidence + ZBNF treatment for top match
-- [x] All output in Bangla with English subtitles
-- [x] Service Worker caches model files for offline use
-- [x] Test: works in airplane mode after first load
+- [ ] Create React + Vite PWA (reuse `vite-plugin-pwa` setup from P3)
+- [ ] Bundle TF.js model files with the PWA
+- [ ] Implement camera capture → image preprocessing → TF.js inference pipeline
+- [ ] Display: top-3 predictions with confidence + ZBNF treatment for top match
+- [ ] All output in Bangla with English subtitles
+- [ ] Service Worker caches model files for offline use
+- [ ] Test: works in airplane mode after first load
 
 ### Phase 5: Treatment Knowledge Base
 
-- [x] Create `data/treatments.json` with comprehensive disease → treatment mapping
-- [x] Include for each disease: Bangla name, English name, symptoms, ZBNF treatment steps, prevention tips
-- [x] Add photo references for each disease (compressed WebP, <50KB each)
-- [x] Link to relevant ZBNF formulation recipes (cross-reference Tool F)
+- [ ] Create `data/treatments.json` with comprehensive disease → treatment mapping
+- [ ] Include for each disease: Bangla name, English name, symptoms, ZBNF treatment steps, prevention tips
+- [ ] Add photo references for each disease (compressed WebP, <50KB each)
+- [ ] Link to relevant ZBNF formulation recipes (cross-reference Tool F)
 
 ## Acceptance Criteria
 
-- [x] MVP (PlantNet): photo upload → disease + treatment in <5 seconds
-- [x] On-device: photo → inference → result in <3 seconds on mid-range Android
-- [x] Model accuracy >90% for top-5 BD crop diseases
-- [x] PWA works fully offline after initial load
-- [x] All results display in Bangla with treatment steps
-- [x] Model size ≤ 15 MB
-- [x] `loglevel` used throughout — no `console.log` in any component
-- [x] `npm run lint` passes with zero warnings
-- [x] All disease result cards include Bangla disease name (primary) + English (secondary)
-- [x] PlantNet API key in `.env` as `VITE_PLANTNET_API_KEY` — not hardcoded
-- [x] `docs/farmer-guide-bn-en.md` updated with disease photo upload instructions
+- [ ] MVP (PlantNet): photo upload → disease + treatment in <5 seconds
+- [ ] On-device: photo → inference → result in <3 seconds on mid-range Android
+- [ ] Model accuracy >90% for top-5 BD crop diseases
+- [ ] PWA works fully offline after initial load
+- [ ] All results display in Bangla with treatment steps
+- [ ] Model size ≤ 15 MB
+- [ ] `loglevel` used throughout — no `console.log` in any component
+- [ ] `npm run lint` passes with zero warnings
+- [ ] All disease result cards include Bangla disease name (primary) + English (secondary)
+- [ ] PlantNet API key in `.env` as `VITE_PLANTNET_API_KEY` — not hardcoded
+- [ ] `docs/farmer-guide-bn-en.md` updated with disease photo upload instructions
 
 ## Estimated Effort
 

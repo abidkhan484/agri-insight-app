@@ -26,55 +26,55 @@ Build a hardware + software system using ESP32 + capacitive soil moisture sensor
 
 ### Phase 1: ESP32 Firmware
 
-- [x] Set up Arduino IDE with ESP32 board package
-- [x] Wire capacitive soil moisture sensor (analog) + DHT22 (digital + 10kΩ pull-up)
-- [x] Write firmware (`firmware/soil_monitor.ino`): read sensors, connect WiFi, publish MQTT every 5 min
-- [x] MQTT topic: `farm/{plot_id}/sensors` with JSON payload `{moisture, temp, humidity, ts}`
-- [x] Add deep sleep between readings to conserve battery
-- [x] Calibrate moisture: dry soil = 0%, water = 100%
+- [ ] Set up Arduino IDE with ESP32 board package
+- [ ] Wire capacitive soil moisture sensor (analog) + DHT22 (digital + 10kΩ pull-up)
+- [ ] Write firmware (`firmware/soil_monitor.ino`): read sensors, connect WiFi, publish MQTT every 5 min
+- [ ] MQTT topic: `farm/{plot_id}/sensors` with JSON payload `{moisture, temp, humidity, ts}`
+- [ ] Add deep sleep between readings to conserve battery
+- [ ] Calibrate moisture: dry soil = 0%, water = 100%
 
 ### Phase 2: MQTT Broker
 
-- [x] Dev: Use HiveMQ public broker (`broker.hivemq.com:1883`)
-- [x] Prod: Set up Mosquitto on Raspberry Pi with authentication
-- [x] Document topic naming: `farm/{plot_id}/sensors`, `farm/{plot_id}/alerts`, `farm/{plot_id}/config`
+- [ ] Dev: Use HiveMQ public broker (`broker.hivemq.com:1883`)
+- [ ] Prod: Set up Mosquitto on Raspberry Pi with authentication
+- [ ] Document topic naming: `farm/{plot_id}/sensors`, `farm/{plot_id}/alerts`, `farm/{plot_id}/config`
 
 ### Phase 3: Node-RED Data Processing
 
-- [x] Install Node-RED, create flow subscribing to `farm/+/sensors`
-- [x] Evaluate Whapasa thresholds: <30% dry, 30-40% getting dry, 40-70% ideal, 70-80% wet, >80% waterlogged
-- [x] Send alerts to Telegram bot, forward data to InfluxDB/Grafana
-- [x] Export flow as `flows/soil-monitoring.json`
+- [ ] Install Node-RED, create flow subscribing to `farm/+/sensors`
+- [ ] Evaluate Whapasa thresholds: <30% dry, 30-40% getting dry, 40-70% ideal, 70-80% wet, >80% waterlogged
+- [ ] Send alerts to Telegram bot, forward data to InfluxDB/Grafana
+- [ ] Export flow as `flows/soil-monitoring.json`
 
 ### Phase 4: Grafana Dashboard
 
-- [x] Set up Grafana + InfluxDB data source
-- [x] Panels: real-time moisture gauge, 24h trend line, temp/humidity chart, alert history table
-- [x] Per-plot selector dropdown, export dashboard JSON
+- [ ] Set up Grafana + InfluxDB data source
+- [ ] Panels: real-time moisture gauge, 24h trend line, temp/humidity chart, alert history table
+- [ ] Per-plot selector dropdown, export dashboard JSON
 
 ### Phase 5: Telegram Alert Integration
 
-- [x] Format alerts with emoji + plot name + reading + recommendation
-- [x] Alert cooldown: no duplicate alert type per plot within 2 hours
-- [x] Add `/soilstatus` and `/setthreshold` commands to bot
+- [ ] Format alerts with emoji + plot name + reading + recommendation
+- [ ] Alert cooldown: no duplicate alert type per plot within 2 hours
+- [ ] Add `/soilstatus` and `/setthreshold` commands to bot
 
 ### Phase 6: Field Deployment Docs
 
-- [x] Document waterproof enclosure build
-- [x] Document solar power setup (5V panel → TP4056 → 18650 → ESP32)
-- [x] Field deployment checklist
+- [ ] Document waterproof enclosure build
+- [ ] Document solar power setup (5V panel → TP4056 → 18650 → ESP32)
+- [ ] Field deployment checklist
 
 ## Acceptance Criteria
 
-- [x] ESP32 publishes sensor data every 5 min via MQTT
-- [x] Node-RED evaluates thresholds and fires Telegram alerts correctly
-- [x] Grafana dashboard shows real-time + historical data
-- [x] Alert cooldown prevents duplicate alerts within 2 hours
-- [x] System runs 24+ hours unattended
-- [x] Winston logger in `/soilstatus` bot command — no `console.log`
-- [x] Node-RED alert messages include Bangla (primary) + English (secondary) text
-- [x] ESP32 WiFi credentials in Arduino build flags — NOT committed to source
-- [x] `docs/architecture.md` updated with IoT data flow diagram
+- [ ] ESP32 publishes sensor data every 5 min via MQTT
+- [ ] Node-RED evaluates thresholds and fires Telegram alerts correctly
+- [ ] Grafana dashboard shows real-time + historical data
+- [ ] Alert cooldown prevents duplicate alerts within 2 hours
+- [ ] System runs 24+ hours unattended
+- [ ] Winston logger in `/soilstatus` bot command — no `console.log`
+- [ ] Node-RED alert messages include Bangla (primary) + English (secondary) text
+- [ ] ESP32 WiFi credentials in Arduino build flags — NOT committed to source
+- [ ] `docs/architecture.md` updated with IoT data flow diagram
 
 ## Estimated Effort
 
