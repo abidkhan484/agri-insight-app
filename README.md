@@ -6,9 +6,9 @@ A **zero-cost** agentic technology platform delivering free tech support to Zero
 
 ---
 
-## Status: P7 AI Assistant Completed ✅
+## Status: P8 Community Network Completed ✅
 
-The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, IoT soil monitoring, plant disease detection, offline ZBNF knowledge base, and a local AI assistant for ZBNF Q&A.
+The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, IoT soil monitoring, plant disease detection, offline ZBNF knowledge base, a local AI assistant for ZBNF Q&A, and a community-driven farmer network with mapping and FAQ support.
 
 ---
 
@@ -24,7 +24,7 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 | P5 | Plant Disease Detection | ✅ | Photo → Bangla disease identification + ZBNF treatment |
 | P6 | ZBNF Knowledge PWA | ✅ | Offline formulation calculators, pest gallery, crop calendar |
 | P7 | Local AI Assistant | ✅ | Ollama + ChromaDB RAG — Bangla/English ZBNF Q&A |
-| P8 | Community Network | 🛠️ | Telegram FAQ bot, Supabase farmer map |
+| P8 | Community Network | ✅ | Telegram FAQ bot, Supabase farmer map, pest alerts |
 
 ---
 
@@ -40,6 +40,21 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 | Weather | Open-Meteo (free, no key) |
 | Disease | PlantNet API (free tier) · TensorFlow.js (offline fallback) |
 | Hosting | Railway.app / Render.com (bot) · Netlify / GitHub Pages (PWAs) |
+
+---
+
+## Community Farmer Network (P8)
+
+### Features
+- **FAQ Bot**: Instant ZBNF answers via `/faq <keyword>` using a curated local dictionary.
+- **Farmer Map**: Interactive map displaying ZBNF farms, desi cow sources, and regional pest alerts.
+- **Pest Alerts**: Community-driven pest reporting that broadcasts alerts to nearby farmers.
+- **Desi Cow Finder**: Directory of farmers providing desi cow dung and urine (essential for ZBNF).
+
+### Commands
+- `/faq [keyword]` - Get ZBNF recipe or info.
+- `/joinmap` - Get the link to join the Farmer Map.
+- `/reportpest` - Report a pest outbreak in your area.
 
 ---
 
@@ -120,6 +135,7 @@ scripts/         ← Automation scripts
 disease-detect/  ← P5 Plant Disease Detection PWA
 krishi-record/   ← P3 Farm Record Tracker PWA
 zbnf-knowledge/  ← P6 ZBNF Knowledge Base PWA
+map-pwa/         ← P8 Farmer Map PWA
 ```
 
 ---

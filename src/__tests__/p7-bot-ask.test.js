@@ -107,8 +107,7 @@ describe('/ask bot command', () => {
       ctx.chat.id,
       111,
       null,
-      expect.stringContaining('দুঃখিত'),
-      expect.anything()
+      expect.stringContaining('দুঃখিত')
     );
   });
 
@@ -123,8 +122,7 @@ describe('/ask bot command', () => {
       ctx.chat.id,
       111,
       null,
-      expect.stringContaining('দুঃখিত'),
-      expect.anything()
+      expect.stringContaining('দুঃখিত')
     );
   });
 });

@@ -7,6 +7,9 @@ import { initPlotCommands } from './commands/plots.js';
 import { initReminderCommands } from './commands/reminders.js';
 import { registerSoilstatusCommand } from './commands/soilstatus.js';
 import { registerAskCommand } from './commands/ask.js';
+import { registerJoinmapCommand } from './commands/joinmap.js';
+import { registerFaqCommand } from './commands/faq.js';
+import { registerCommunityCommands } from './commands/community.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
 
@@ -60,7 +63,10 @@ bot.command('register', (ctx) => ctx.scene.enter('REGISTER_PLOT_SCENE'));
 initPlotCommands(bot);
 initReminderCommands(bot);
 registerSoilstatusCommand(bot, db);
-registerAskCommand(bot, db);
+registerAskCommand(bot);
+registerJoinmapCommand(bot, db);
+registerFaqCommand(bot);
+registerCommunityCommands(bot, db);
 
 // Initialize Reminder Engine
 initReminderEngine(bot);
@@ -71,7 +77,7 @@ initWeatherAlertEngine(bot);
 // /help command
 bot.help((ctx) => {
   const helpMessage = `সাহায্য প্রয়োজন? আমি এই কমান্ডগুলো বুঝি:
-/start - শুরু করুন
+/start - शुरू করুন
 /register - জমি নিবন্ধিত করুন
 /myplots - আপনার জমিগুলো দেখুন
 /deleteplot <নাম> - জমি মুছে ফেলুন
@@ -80,6 +86,11 @@ bot.help((ctx) => {
 /cancelreminder <ID> - রিমাইন্ডার বাতিল করুন
 /soilstatus - মাটির অবস্থা দেখুন
 /ask <প্রশ্ন> - AI সহকারীকে প্রশ্ন করুন (ZBNF)
+/joinmap - কৃষক মানচিত্রে যোগ দিন
+/faq <প্রশ্ন> - সচরাচর জিজ্ঞাসিত প্রশ্নাবলী
+/registercow - দেশি গরু সরবরাহকারী হিসেবে নাম লিখুন
+/findcow <জেলা> - গরু সরবরাহকারী খুঁজুন
+/reportpest <বর্ণনা> - আপনার এলাকায় পোকার খবর দিন
 
 Need help? I understand:
 /start - Start the bot
@@ -91,7 +102,11 @@ Need help? I understand:
 /cancelreminder <ID> - Cancel a reminder
 /soilstatus - Check soil moisture status
 /ask <question> - Ask AI Assistant (ZBNF)
-
+/joinmap - Join the community map
+/faq <query> - Search FAQ database
+/registercow - Register as desi cow supplier
+/findcow <district> - Find cow suppliers
+/reportpest <desc> - Report pest alert in your area`;
 
   logger.info('Help command received', { chat_id: 'chat:' + ctx.chat.id });
   return ctx.reply(helpMessage);

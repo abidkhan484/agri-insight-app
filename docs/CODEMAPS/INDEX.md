@@ -1,6 +1,6 @@
 # Codemaps Index
 
-**Last Updated:** 2025-05-22
+**Last Updated:** 2025-05-23
 
 Overview of the ZBNF Farming Assistant codebase structure.
 
@@ -13,6 +13,7 @@ Overview of the ZBNF Farming Assistant codebase structure.
 - [P5 — Plant Disease Detection](./p5-disease-detection.md) - Photo-based disease ID and ZBNF treatment.
 - [P6 — ZBNF Knowledge](./p6-zbnf-knowledge.md) - Offline formulation calculators and pest gallery.
 - [P7 — Local AI Assistant](./p7-ai-assistant.md) - Ollama + ChromaDB RAG Q&A service.
+- [P8 — Community Network](./p8-community-network.md) - Farmer map, FAQ, and pest alerts.
 - [Shared Foundation](../architecture.md) - Database, logging, and bot infrastructure.
 
 ## System Overview
@@ -58,6 +59,12 @@ zbnf-knowledge/         # P6: ZBNF Knowledge Base
 │   ├── pages/          # Calculator, Pest Gallery, Calendar
 │   ├── data/           # Pests, Crops, Glossary JSON
 │   └── utils/          # Formula business logic
+
+map-pwa/                # P8: Community Farmer Map
+├── src/
+│   ├── components/     # Map UI, Sidebar
+│   ├── lib/            # Supabase client, Leaflet setup
+│   └── data/           # Region bounds, categories
 ```
 
 ### IoT & Infrastructure

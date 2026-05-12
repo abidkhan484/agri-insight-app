@@ -6,9 +6,8 @@ const AI_API_URL = config.aiApiUrl;
 /**
  * Registers the /ask command with the bot.
  * @param {import('telegraf').Telegraf} bot
- * @param {any} db
  */
-export function registerAskCommand(bot, db) {
+ export function registerAskCommand(bot) {
   bot.command('ask', async (ctx) => {
     const telegramId = ctx.from.id.toString();
     const question = ctx.message.text.replace('/ask', '').trim();
@@ -18,7 +17,7 @@ export function registerAskCommand(bot, db) {
     if (!question) {
       return ctx.reply(
         '❓ প্রশ্ন লিখুন: /ask জীবামৃত কীভাবে তৈরি করব?\n' +
-        'Type your question: /ask How do I make Jeevamrutha?'
+          'Type your question: /ask How do I make Jeevamrutha?',
       );
     }
 
@@ -33,6 +32,7 @@ export function registerAskCommand(bot, db) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question, language: 'bn' }),
+        // @ts-ignore
         signal: AbortSignal.timeout(90000), // 90s timeout
       });
 

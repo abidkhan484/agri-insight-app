@@ -46,8 +46,8 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 │  │  Ollama (gemma2:2b)       │ │  FAQ bot │ Supabase farmer map         │   │
 │  │  ChromaDB vector store    │ │  Leaflet │ OpenStreetMap tiles          │   │
 │  │  LlamaIndex RAG pipeline  │ │  /joinmap │ /faq commands               │   │
-│  │  Flask REST API           │ └────────────────────────────────────────┘   │
-│  │  /ask Telegram command    │                                               │
+│  │  Flask REST API           │ │  Pest alert broadcast                  │   │
+│  │  /ask Telegram command    │ └────────────────────────────────────────┘   │
 │  └───────────────────────────┘                                               │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -110,13 +110,45 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 - **Features**: Semantic search over ZBNF docs, grounded answers in Bangla/English.
 - **Path**: `ai-assistant/`
 
-### P8 — Community Farmer Network (Roadmap)
-- **Database**: Supabase PostgreSQL
-- **Map**: Leaflet + OpenStreetMap
+### P8 — Community Farmer Network
+- **Backend**: Supabase PostgreSQL (Free Tier)
+- **Map Interface**: Leaflet.js + OpenStreetMap (no-cost tiles)
+- **Features**: 
+  - **Farmer Map**: Geolocation of farms with crop/method filters.
+  - **FAQ Bot**: Keyword-based instant responses from `data/faq.json`.
+  - **Pest Alerts**: Regional broadcasts via Telegram.
+  - **Desi Cow Finder**: Peer-to-peer registry for organic inputs.
+- **Path**: `map-pwa/`
 
 ---
 
 ## Data Flow Diagrams
+
+### Community Data Flow (P8)
+
+```
+Farmer A reports pest via /reportpest
+      │
+      ▼
+Telegram Bot (src/bot/community.js)
+      │
+      ├──▶ Update Supabase (pest_alerts table)
+      │
+      ├──▶ Query Farmers in same Upazila (SQLite/Supabase)
+      │
+      └──▶ Broadcast Alert to Farmer B, C...
+             "⚠️ Pest Alert in your Upazila! Treatment: Neemastra."
+
+Farmer C wants to find Desi Cow dung
+      │
+      ▼
+Telegram Bot /findcow <district>
+      │
+      └──▶ Query Supabase (cow_registry)
+             │
+             ▼
+      List of nearby suppliers + Contact info
+```
 
 ### AI Assistant RAG Pipeline (P7)
 
@@ -250,3 +282,4 @@ soil_readings (id, plot_id FK, moisture, temp, humidity, ts)
 | IoT Protocol | MQTT | HTTP, WebSockets | Low power, lightweight, pub/sub model |
 | Disease ID | PlantNet + TF.js | Custom Cloud API | PlantNet is free/accurate; TF.js is 100% offline |
 | PWA Offline Strategy | Workbox Precaching | Custom SW, AppCache | Standardized, handles versioning well |
+| Community DB | Supabase | Self-hosted Postgres | Generous free tier, built-in Auth and PostGIS |

@@ -59,7 +59,25 @@ The bot will find the correct answer from the ZBNF knowledge base and cite the s
 
 ---
 
-## ৪. স্বয়ংক্রিয় রিমাইন্ডার / Automatic Reminders
+## ৪. কমিউনিটি নেটওয়ার্ক ও FAQ / Community Network & FAQ
+
+**বাংলা:**
+অন্যান্য ZBNF কৃষকদের সাথে যুক্ত হতে এবং দ্রুত তথ্য পেতে নিচের কমান্ডগুলো ব্যবহার করুন:
+
+- **FAQ (সাধারণ প্রশ্ন)**: দ্রুত ZBNF রেসিপি জানতে লিখুন `/faq [কিওয়ার্ড]`। উদাহরণ: `/faq জীবামৃত`
+- **কৃষক ম্যাপ**: আপনার এলাকা বা পাশের এলাকার ZBNF কৃষকদের দেখতে এবং নিজের অবস্থান যোগ করতে লিখুন `/joinmap`
+- **পোকা মাকড় সতর্কবার্তা**: আপনার এলাকায় পোকা মাকড়ের আক্রমণ দেখা দিলে অন্য কৃষকদের সতর্ক করতে `/reportpest` ব্যবহার করুন।
+
+**English:**
+Use these commands to connect with other ZBNF farmers and get quick information:
+
+- **FAQ**: For quick ZBNF recipes, type `/faq [keyword]`. Example: `/faq jeevamrutha`
+- **Farmer Map**: To see ZBNF farmers in your area and add your location, type `/joinmap`
+- **Pest Alerts**: If you see a pest outbreak, use `/reportpest` to alert other farmers in your area.
+
+---
+
+## ৫. স্বয়ংক্রিয় রিমাইন্ডার / Automatic Reminders
 
 **বাংলা:**
 বট নির্দিষ্ট সময়ে প্রতিদিন সকালে আপনাকে মেসেজ পাঠাবে:
@@ -76,7 +94,7 @@ The bot sends reminders for Jeevamrutha (15 days), Neemastra (14 days), Mulch (7
 
 ---
 
-## ৫. কৃষি রেকর্ড অ্যাপ (অফলাইন) / Krishi Record App (Offline)
+## ৬. কৃষি রেকর্ড অ্যাপ (অফলাইন) / Krishi Record App (Offline)
 
 **বাংলা:**
 চাষাবাদের খরচ, ফলন এবং মাটির স্বাস্থ্যের হিসাব রাখতে আমাদের 'কৃষি রেকর্ড' অ্যাপ ব্যবহার করুন।
@@ -86,7 +104,7 @@ Use the 'Krishi Record' app to track expenses, yields, and soil health offline.
 
 ---
 
-## ৬. রোগ শনাক্তকরণ / Plant Disease Detection
+## ৭. রোগ শনাক্তকরণ / Plant Disease Detection
 
 **বাংলা:**
 আক্রান্ত পাতার ছবি তুলে রোগের নাম এবং ZBNF প্রতিকার জানতে 'Disease Detector' অ্যাপ ব্যবহার করুন।
@@ -96,7 +114,7 @@ Take a photo of an infected leaf to identify the disease and get ZBNF treatment.
 
 ---
 
-## ৭. ZBNF জ্ঞানভান্ডার ও ক্যালকুলেটর / ZBNF Knowledge Base
+## ৮. ZBNF জ্ঞানভান্ডার ও ক্যালকুলেটর / ZBNF Knowledge Base
 
 **বাংলা:**
 সঠিক পরিমাণে ZBNF উপকরণ তৈরির জন্য 'ZBNF জ্ঞানভান্ডার' ক্যালকুলেটর ব্যবহার করুন। এটি ১০০% অফলাইনে কাজ করে।
@@ -106,13 +124,16 @@ Use the 'ZBNF Knowledge Base' for offline dosage calculators and pest management
 
 ---
 
-## ৮. সব কমান্ডের তালিকা / All Commands
+## ৯. সব কমান্ডের তালিকা / All Commands
 
 | কমান্ড | কাজ | Task |
 |--------|-------|---------|
 | `/start` | শুরু করুন | Start |
 | `/register` | জমি নিবন্ধিত করুন | Register plot |
 | `/ask` | প্রশ্ন করুন | Ask AI |
+| `/faq` | সাধারণ তথ্য | FAQ |
+| `/joinmap` | কৃষক ম্যাপে যোগ দিন | Join Map |
+| `/reportpest` | পোকা মাকড় রিপোর্ট | Report Pest |
 | `/myplots` | জমির তালিকা | List plots |
 | `/myreminders` | রিমাইন্ডার তালিকা | List reminders |
 | `/soilstatus` | মাটির অবস্থা | Check soil |
@@ -120,6 +141,6 @@ Use the 'ZBNF Knowledge Base' for offline dosage calculators and pest management
 
 ---
 
-## ৯. সমস্যা হলে কী করবেন / Troubleshooting
+## ১০. সমস্যা হলে কী করবেন / Troubleshooting
 
 বট সাড়া না দিলে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন। জমি যোগ করতে সমস্যা হলে `/register` আবার চেষ্টা করুন। মাটির তথ্য না দেখালে আপনার IoT ডিভাইসটি সচল কি না চেক করুন।

@@ -37,6 +37,7 @@ export default [
         fetch: 'readonly',
         URL: 'readonly',
         setTimeout: 'readonly',
+        AbortSignal: 'readonly',
         global: 'readonly',
         globalThis: 'readonly',
         // Browser

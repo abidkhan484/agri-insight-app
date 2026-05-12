@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS farmers (
   name TEXT,
   district TEXT,
   upazila TEXT,
+  has_desi_cow BOOLEAN DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -61,4 +62,10 @@ CREATE TABLE IF NOT EXISTS soil_readings (
   alert_level TEXT DEFAULT 'OK', -- 'OK', 'WARN', 'CRITICAL'
   ts DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (plot_id) REFERENCES plots(id)
+);
+
+CREATE TABLE IF NOT EXISTS map_registrations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  telegram_id TEXT UNIQUE NOT NULL,
+  registered_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
