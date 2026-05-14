@@ -1,0 +1,79 @@
+[
+  {
+    "id": "rice",
+    "name_bn": "ধান",
+    "name_en": "Rice",
+    "seasons": [
+      {
+        "name_bn": "আউশ",
+        "name_en": "Aus",
+        "planting_months": [3, 4, 5],
+        "divisions": ["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"]
+      },
+      {
+        "name_bn": "আমন",
+        "name_en": "Aman",
+        "planting_months": [6, 7, 8],
+        "divisions": ["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"]
+      },
+      {
+        "name_bn": "বোরো",
+        "name_en": "Boro",
+        "planting_months": [11, 12, 1],
+        "divisions": ["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"]
+      }
+    ]
+  },
+  {
+    "id": "wheat",
+    "name_bn": "গম",
+    "name_en": "Wheat",
+    "seasons": [
+      {
+        "name_bn": "রবি",
+        "name_en": "Rabi",
+        "planting_months": [11, 12],
+        "divisions": ["Rajshahi", "Rangpur", "Dhaka"]
+      }
+    ]
+  },
+  {
+    "id": "potato",
+    "name_bn": "আলু",
+    "name_en": "Potato",
+    "seasons": [
+      {
+        "name_bn": "রবি",
+        "name_en": "Rabi",
+        "planting_months": [10, 11],
+        "divisions": ["Rajshahi", "Rangpur", "Dhaka", "Mymensingh"]
+      }
+    ]
+  },
+  {
+    "id": "mustard",
+    "name_bn": "সরিষা",
+    "name_en": "Mustard",
+    "seasons": [
+      {
+        "name_bn": "রবি",
+        "name_en": "Rabi",
+        "planting_months": [10, 11],
+        "divisions": ["Dhaka", "Rajshahi", "Rangpur"]
+      }
+    ]
+  },
+  {
+    "id": "tomato",
+    "name_bn": "টমেটো",
+    "name_en": "Tomato",
+    "seasons": [
+      {
+        "name_bn": "রবি",
+        "name_en": "Rabi",
+        "planting_months": [10, 11],
+        "divisions": ["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"]
+      }
+    ]
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "term_en": "Jeevamrutha",
+    "term_bn": "জীবামৃত",
+    "definition_en": "Soil microbe activator made from cow dung, urine, jaggery, and pulse flour.",
+    "definition_bn": "গোবর, গোমূত্র, গুড় এবং ডালের আটা দিয়ে তৈরি মাটির অণুজীব সক্রিয়কারী।"
+  },
+  {
+    "term_en": "Beejamrutha",
+    "term_bn": "বীজামৃত",
+    "definition_en": "Seed treatment formulation for protection against soil-borne diseases.",
+    "definition_bn": "মাটিবাহিত রোগ থেকে সুরক্ষার জন্য বীজ শোধন পদ্ধতি।"
+  },
+  {
+    "term_en": "Neemastra",
+    "term_bn": "নীমাস্ত্র",
+    "definition_en": "Natural insecticide made from neem leaves and cow urine for routine pest control.",
+    "definition_bn": "নিম পাতা এবং গোমূত্র দিয়ে তৈরি প্রাকৃতিক কীটনাশক।"
+  },
+  {
+    "term_en": "Agniastra",
+    "term_bn": "অগ্নিঅস্ত্র",
+    "definition_en": "Potent natural pesticide for severe pest infestations, involving boiling tobacco and chillies.",
+    "definition_bn": "তামাক এবং মরিচ ফুটিয়ে তৈরি করা শক্তিশালী প্রাকৃতিক কীটনাশক।"
+  },
+  {
+    "term_en": "Brahmastra",
+    "term_bn": "ব্রহ্মাস্ত্র",
+    "definition_en": "Last-resort pesticide made from multiple types of bitter leaves.",
+    "definition_bn": "বিভিন্ন ধরণের তেতো পাতা দিয়ে তৈরি সর্বশেষ স্তরের কীটনাশক।"
+  },
+  {
+    "term_en": "Whapasa",
+    "term_bn": "ওয়াপাসা",
+    "definition_en": "The condition of soil where both air and water molecules are present in equal proportions.",
+    "definition_bn": "মাটির এমন অবস্থা যেখানে বায়ু এবং জলের অণু সমান অনুপাতে থাকে।"
+  },
+  {
+    "term_en": "Mulch",
+    "term_bn": "মালচ / আচ্ছাদন",
+    "definition_en": "Covering the soil with organic matter to retain moisture and suppress weeds.",
+    "definition_bn": "আর্দ্রতা ধরে রাখতে এবং আগাছা দমনে জৈব পদার্থ দিয়ে মাটি ঢেকে দেওয়া।"
+  },
+  {
+    "term_en": "Cow Dung",
+    "term_bn": "গোবর",
+    "definition_en": "Waste material from desi cows, used as a base for many ZBNF formulations.",
+    "definition_bn": "দেশি গরুর মল, যা অনেক প্রাকৃতিক সারের প্রধান উপকরণ।"
+  },
+  {
+    "term_en": "Cow Urine",
+    "term_bn": "গোমূত্র",
+    "definition_en": "Urine from desi cows, rich in minerals and beneficial microbes.",
+    "definition_bn": "দেশি গরুর মূত্র, যা খনিজ এবং উপকারী অণুজীব সমৃদ্ধ।"
+  }
+]
