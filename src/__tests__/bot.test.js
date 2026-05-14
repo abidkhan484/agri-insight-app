@@ -9,15 +9,27 @@ vi.mock('telegraf', () => {
       this.catch = vi.fn();
       this.launch = vi.fn().mockResolvedValue(true);
       this.stop = vi.fn();
+      this.use = vi.fn();
+      this.command = vi.fn();
     }
   }
-  return { Telegraf };
+  return {
+    Telegraf,
+    Scenes: {
+      WizardScene: vi.fn(),
+      Stage: vi.fn().mockImplementation(function () {
+        this.middleware = vi.fn();
+      }),
+    },
+    session: vi.fn(),
+  };
 });
 
 vi.mock('../config/index.js', () => ({
   config: {
     botToken: 'test_token',
     timezone: 'Asia/Dhaka',
+    dbPath: './data/test.sqlite',
   },
 }));
 

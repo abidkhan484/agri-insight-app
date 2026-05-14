@@ -34,6 +34,12 @@ export default [
         console: 'readonly',
         module: 'readonly',
         require: 'readonly',
+        fetch: 'readonly',
+        URL: 'readonly',
+        setTimeout: 'readonly',
+        AbortSignal: 'readonly',
+        global: 'readonly',
+        globalThis: 'readonly',
         // Browser
         window: 'readonly',
         document: 'readonly',

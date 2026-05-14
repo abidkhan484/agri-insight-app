@@ -1,0 +1,46 @@
+[
+  {
+    "id": "whitefly",
+    "name_bn": "সাদা মাছি",
+    "name_en": "Whitefly",
+    "image": "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&q=80&w=200",
+    "symptoms_bn": "পাতার নিচে সাদা পোকা, হলুদ পাতা, মধু শিশির",
+    "symptoms_en": "White insects under leaves, yellowing, honeydew",
+    "treatment_primary": "agniastra",
+    "crops_affected_bn": ["টমেটো", "বেগুন", "মরিচ", "তামাক"],
+    "crops_affected_en": ["Tomato", "Brinjal", "Chili", "Tobacco"]
+  },
+  {
+    "id": "armyworm",
+    "name_bn": "ফল আর্মিওয়ার্ম",
+    "name_en": "Fall Armyworm",
+    "image": "https://images.unsplash.com/photo-1590424067954-419b1689366e?auto=format&fit=crop&q=80&w=200",
+    "symptoms_bn": "পাতায় জানালার মতো ক্ষত, কাণ্ডে ছিদ্র",
+    "symptoms_en": "Window-pane leaf damage, stem boring",
+    "treatment_primary": "agniastra",
+    "crops_affected_bn": ["ভুট্টা", "ধান", "গম"],
+    "crops_affected_en": ["Maize", "Rice", "Wheat"]
+  },
+  {
+    "id": "aphid",
+    "name_bn": "জাব পোকা",
+    "name_en": "Aphid",
+    "image": "https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?auto=format&fit=crop&q=80&w=200",
+    "symptoms_bn": "পাতা কুঁকড়ানো, সবুজ/কালো ছোট পোকা",
+    "symptoms_en": "Curled leaves, green/black clusters of insects",
+    "treatment_primary": "neemastra",
+    "crops_affected_bn": ["সরিষা", "ডাল", "সব্জি"],
+    "crops_affected_en": ["Mustard", "Pulses", "Vegetables"]
+  },
+  {
+    "id": "stem-borer",
+    "name_bn": "কাণ্ড ছিদ্রকারী পোকা",
+    "name_en": "Stem Borer",
+    "image": "https://images.unsplash.com/photo-1542362567-b052f50534c0?auto=format&fit=crop&q=80&w=200",
+    "symptoms_bn": "মৃত হৃদয়, শীষে সাদা হওয়া",
+    "symptoms_en": "Dead hearts, white ear (flooding)",
+    "treatment_primary": "agniastra",
+    "crops_affected_bn": ["ধান", "আখ"],
+    "crops_affected_en": ["Rice", "Sugarcane"]
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "description": "Node-RED flow for IoT Soil Monitoring with Whapasa thresholds",
+  "flow": [
+    {
+      "id": "mqtt_in",
+      "type": "mqtt in",
+      "topic": "farm/+/sensors",
+      "broker": "hivemq_public",
+      "wires": [["json_parse"]]
+    },
+    {
+      "id": "json_parse",
+      "type": "json",
+      "wires": [["evaluate_thresholds"]]
+    },
+    {
+      "id": "evaluate_thresholds",
+      "type": "function",
+      "name": "Evaluate Whapasa Thresholds",
+      \"func\": \"const { moisture, temp, humidity, plot_id, ts } = msg.payload;\\n\\n// ZBNF Whapasa thresholds\\nconst THRESHOLDS = {\\n  CRITICAL_DRY:        30,\\n  WARN_DRY:            40,\\n  IDEAL_LOW:           40,\\n  IDEAL_HIGH:          70,\\n  WARN_WET:            70,\\n  CRITICAL_WATERLOGGED: 80,\\n};\\n\\nlet level = 'OK';\\nlet reason_bn = '';\\nlet reason_en = '';\\nlet recommendation_bn = '';\\nlet recommendation_en = '';\\n\\nif (moisture < THRESHOLDS.CRITICAL_DRY) {\\n  level = 'CRITICAL';\\n  reason_bn = `মাটি অত্যন্ত শুষ্ক (${moisture.toFixed(1)}%)`;\\n  reason_en = `Soil critically dry (${moisture.toFixed(1)}%)`;\\n  recommendation_bn = 'এখনই সেচ দিন — ওয়াপাসা স্তরের নিচে';\\n  recommendation_en = 'Irrigate immediately — below Whapasa level';\\n} else if (moisture < THRESHOLDS.WARN_DRY) {\\n  level = 'WARN';\\n  reason_bn = `মাটি শুকিয়ে আসছে (${moisture.toFixed(1)}%)`;\\n  reason_en = `Soil drying out (${moisture.toFixed(1)}%)`;\\n  recommendation_bn = '২৪ ঘণ্টার মধ্যে সেচ পরিকল্পনা করুন';\\n  recommendation_en = 'Plan irrigation within 24 hours';\\n} else if (moisture > THRESHOLDS.CRITICAL_WATERLOGGED) {\\n  level = 'CRITICAL';\\n  reason_bn = `মাটিতে জলাবদ্ধতা (${moisture.toFixed(1)}%)`;\\n  reason_en = `Waterlogged soil (${moisture.toFixed(1)}%)`;\\n  recommendation_bn = 'নিষ্কাশনের ব্যবস্থা করুন';\\n  recommendation_en = 'Arrange drainage immediately';\\n} else if (moisture > THRESHOLDS.WARN_WET) {\\n  level = 'WARN';\\n  reason_bn = `মাটি অতিরিক্ত ভেজা (${moisture.toFixed(1)}%)`;\\n  reason_en = `Soil overly wet (${moisture.toFixed(1)}%)`;\\n  recommendation_bn = 'সেচ বন্ধ রাখুন';\\n  recommendation_en = 'Hold off on irrigation';\\n}\\n\\nmsg.payload = {\\n  plot_id, level, moisture, temp, humidity, ts: Date.now(),\\n  reason_bn, reason_en, recommendation_bn, recommendation_en,\\n};\\nreturn msg;\",
+      "wires": [["cooldown_gate", "influxdb_out"]]
+    },
+    {
+      "id": "cooldown_gate",
+      "type": "function",
+      "name": "Cooldown Gate (2h)",
+      "func": "const COOLDOWN_MS = 2 * 60 * 60 * 1000;\nconst { plot_id, level } = msg.payload;\nif (level === 'OK') return null;\n\nconst key = `cooldown:${plot_id}:${level}`;\nconst lastSent = flow.get(key) || 0;\nconst now = Date.now();\n\nif (now - lastSent < COOLDOWN_MS) {\n  return null;\n}\nflow.set(key, now);\nreturn msg;",
+      "wires": [["format_telegram"]]
+    },
+    {
+      "id": "format_telegram",
+      "type": "function",
+      "name": "Format Telegram Alert",
+      "func": "const { plot_id, level, moisture, temp, reason_bn, reason_en, recommendation_bn, recommendation_en } = msg.payload;\nconst emoji = level === 'CRITICAL' ? '🚨' : '⚠️';\n\nmsg.payload = {\n  chat_id: \"@YOUR_CHANNEL_OR_ID\",\n  text: `${emoji} মাটির সতর্কতা — ${plot_id}\\nSoil Alert — ${plot_id}\\n\\n📊 আর্দ্রতা / Moisture: ${moisture.toFixed(1)}%\\n🌡️ তাপমাত্রা / Temp: ${temp.toFixed(1)}°C\\n\\n${emoji} ${reason_bn} — ${recommendation_bn}\\n${reason_en} — ${recommendation_en}\\n\\n🕐 ${new Date().toLocaleString()}`,\n  parse_mode: 'Markdown'\n};\nreturn msg;",
+      "wires": [["telegram_out"]]
+    },
+    {
+      "id": "influxdb_out",
+      "type": "influxdb out",
+      "measurement": "soil_readings",
+      "wires": []
+    }
+  ]
+}

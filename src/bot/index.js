@@ -1,6 +1,17 @@
-import { Telegraf } from 'telegraf';
+import { Telegraf, Scenes, session } from 'telegraf';
 import { config } from '../config/index.js';
 import logger from '../config/logger.js';
+import db from '../db/connection.js';
+import { registerWizard } from './scenes/register.js';
+import { initPlotCommands } from './commands/plots.js';
+import { initReminderCommands } from './commands/reminders.js';
+import { registerSoilstatusCommand } from './commands/soilstatus.js';
+import { registerAskCommand } from './commands/ask.js';
+import { registerJoinmapCommand } from './commands/joinmap.js';
+import { registerFaqCommand } from './commands/faq.js';
+import { registerCommunityCommands } from './commands/community.js';
+import { initReminderEngine } from '../scheduler/reminders.js';
+import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
 
 if (!config.botToken) {
   logger.error('BOT_TOKEN is missing in configuration. Exiting...');
@@ -9,24 +20,93 @@ if (!config.botToken) {
 
 const bot = new Telegraf(config.botToken);
 
+// Middleware
+const stage = new Scenes.Stage([registerWizard]);
+bot.use(session());
+bot.use(stage.middleware());
+
 // /start command
 bot.start((ctx) => {
-  const welcomeMessage = `স্বাগতম! আমি আপনার কৃষি সহকারী।
-Welcome! I am your agricultural assistant.`;
+  const telegramId = ctx.from.id.toString();
+  const name = ctx.from.first_name || 'Farmer';
 
-  logger.info('Start command received', { chat_id: 'chat:' + ctx.chat.id });
+  logger.info('Start command received', { chat_id: 'chat:' + ctx.chat.id, telegramId });
+
+  // Register farmer if not exists
+  try {
+    const farmer = db.prepare('SELECT id FROM farmers WHERE telegram_id = ?').get(telegramId);
+    if (!farmer) {
+      db.prepare('INSERT INTO farmers (telegram_id, name) VALUES (?, ?)').run(telegramId, name);
+      logger.info('New farmer registered', { telegramId, name });
+    }
+  } catch (error) {
+    logger.error('Failed to register farmer on start', { error, telegramId });
+  }
+
+  const welcomeMessage = `স্বাগতম ${name}! আমি আপনার কৃষি সহকারী।
+Welcome ${name}! I am your agricultural assistant.
+
+আমি আপনাকে প্রাকৃতিক কৃষি (ZBNF) পদ্ধতিতে চাষাবাদে সাহায্য করব। শুরু করতে নিচের কমান্ডগুলো ব্যবহার করুন:
+
+/register - নতুন জমি নিবন্ধিত করুন
+/myplots - আপনার জমিগুলো দেখুন
+/myreminders - আপনার রিমাইন্ডারগুলো দেখুন
+/help - সব কমান্ডের তালিকা দেখুন`;
+
   return ctx.reply(welcomeMessage);
 });
 
+// /register command
+bot.command('register', (ctx) => ctx.scene.enter('REGISTER_PLOT_SCENE'));
+
+// Initialize Commands
+initPlotCommands(bot);
+initReminderCommands(bot);
+registerSoilstatusCommand(bot, db);
+registerAskCommand(bot);
+registerJoinmapCommand(bot, db);
+registerFaqCommand(bot);
+registerCommunityCommands(bot, db);
+
+// Initialize Reminder Engine
+initReminderEngine(bot);
+
+// Initialize Weather Alert Engine
+initWeatherAlertEngine(bot);
+
 // /help command
 bot.help((ctx) => {
-  const helpMessage = `সাহায্য প্রয়োজন? বর্তমানে আমি এই কমান্ডগুলো বুঝি:
-/start - শুরু করুন
-/help - সাহায্য
+  const helpMessage = `সাহায্য প্রয়োজন? আমি এই কমান্ডগুলো বুঝি:
+/start - शुरू করুন
+/register - জমি নিবন্ধিত করুন
+/myplots - আপনার জমিগুলো দেখুন
+/deleteplot <নাম> - জমি মুছে ফেলুন
+/remind - রিমাইন্ডার সেট করুন
+/myreminders - রিমাইন্ডার তালিকা
+/cancelreminder <ID> - রিমাইন্ডার বাতিল করুন
+/soilstatus - মাটির অবস্থা দেখুন
+/ask <প্রশ্ন> - AI সহকারীকে প্রশ্ন করুন (ZBNF)
+/joinmap - কৃষক মানচিত্রে যোগ দিন
+/faq <প্রশ্ন> - সচরাচর জিজ্ঞাসিত প্রশ্নাবলী
+/registercow - দেশি গরু সরবরাহকারী হিসেবে নাম লিখুন
+/findcow <জেলা> - গরু সরবরাহকারী খুঁজুন
+/reportpest <বর্ণনা> - আপনার এলাকায় পোকার খবর দিন
 
-Need help? Currently I understand:
+Need help? I understand:
 /start - Start the bot
-/help - Show help`;
+/register - Register a new plot
+/myplots - List your plots
+/deleteplot <নাম> - Remove a plot
+/remind - Set custom reminders
+/myreminders - List active reminders
+/cancelreminder <ID> - Cancel a reminder
+/soilstatus - Check soil moisture status
+/ask <question> - Ask AI Assistant (ZBNF)
+/joinmap - Join the community map
+/faq <query> - Search FAQ database
+/registercow - Register as desi cow supplier
+/findcow <district> - Find cow suppliers
+/reportpest <desc> - Report pest alert in your area`;
 
   logger.info('Help command received', { chat_id: 'chat:' + ctx.chat.id });
   return ctx.reply(helpMessage);
