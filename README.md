@@ -143,6 +143,7 @@ map-pwa/         ← P8 Farmer Map PWA
 ## Documentation
 
 - [Architecture Overview](docs/architecture.md)
+- [Deployment Guide](docs/deployment-guide.md)
 - [Farmer Guide (Bangla + English)](docs/farmer-guide-bn-en.md)
 - [Codemaps Index](docs/CODEMAPS/INDEX.md)
 - [Developer Setup](docs/developer-setup.md)
