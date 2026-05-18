@@ -1,7 +1,7 @@
 import { Telegraf } from 'telegraf';
 import { config } from '../config/index.js';
 import logger from '../config/logger.js';
-import db from '../db/connection.js';
+import { dbService } from '../db/service.js';
 import { fetchForecast } from '../services/weather.js';
 import { getIrrigationAdvice } from '../services/irrigation-advisor.js';
 import { NotificationService } from '../services/notification.js';
@@ -19,16 +19,7 @@ async function runWeatherCheck() {
 
   const bot = new Telegraf(config.botToken);
 
-  const plots = db
-    .prepare(
-      `
-    SELECT p.*, f.telegram_id
-    FROM plots p
-    JOIN farmers f ON p.farmer_id = f.id
-    WHERE p.latitude IS NOT NULL AND p.longitude IS NOT NULL
-  `,
-    )
-    .all();
+  const plots = await dbService.getPlotsWithGPS();
 
   if (plots.length === 0) {
     logger.info('No plots with GPS coordinates found');
@@ -52,16 +43,12 @@ async function runWeatherCheck() {
         const alerts = getIrrigationAdvice(forecast, null);
         for (const alert of alerts) {
           const message = `${alert.message_bn}\n${alert.message_en}`;
-          const sent = await NotificationService.send(bot, plot.telegram_id, message);
+          const farmer = plot.farmers;
+          const sent = await NotificationService.send(bot, farmer.telegram_id, message);
 
           if (sent) {
             logger.info('Weather alert sent', { plotId: plot.id, alertType: alert.type });
-            db.prepare(
-              `
-              INSERT INTO weather_alerts (plot_id, alert_type, message, forecast_data)
-              VALUES (?, ?, ?, ?)
-            `,
-            ).run(plot.id, alert.type, message, JSON.stringify(forecast));
+            await dbService.logWeatherAlert(plot.id, alert.type, message, forecast);
           }
         }
       }
@@ -71,7 +58,6 @@ async function runWeatherCheck() {
   }
 
   logger.info('Manual weather alert check completed');
-  // better-sqlite3 connection is closed on process exit via connections.js
 }
 
 runWeatherCheck().catch((err) => {

@@ -1,24 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import supabase from '../db/connection.js';
 import logger from '../config/logger.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY; // service role — never expose
-
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  logger.error('Missing Supabase credentials in .env');
-  // Don't exit process here to allow bot to run even if Supabase is down
-}
-
-export const supabase = (SUPABASE_URL && SUPABASE_SERVICE_KEY) 
-  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-  : null;
 
 /**
  * Register a farmer's location visible on the public map.
- * Note: we store district/upazila — not precise GPS to protect privacy.
+...
  */
 export async function registerFarmerLocation({ displayName, district, upazila, lat, lon, crops }) {
   if (!supabase) {
@@ -47,8 +32,6 @@ export async function registerFarmerLocation({ displayName, district, upazila, l
 }
 
 export async function getFarmerLocations() {
-  if (!supabase) return [];
-
   const { data, error } = await supabase
     .from('farmer_locations')
     .select('display_name, district, upazila, latitude, longitude, crops, joined_at')
@@ -63,8 +46,6 @@ export async function getFarmerLocations() {
 }
 
 export async function searchFAQ(query) {
-  if (!supabase) return [];
-
   const { data, error } = await supabase
     .from('faq_entries')
     .select('question_bn, question_en, answer_bn, answer_en, category')

@@ -1,23 +1,23 @@
 import logger from '../../config/logger.js';
+import { dbService } from '../../db/service.js';
 
 /**
  * /soilstatus command — returns last reading for farmer's plots
  * @param {import('telegraf').Telegraf} bot
- * @param {import('better-sqlite3').Database} db
  */
-export function registerSoilstatusCommand(bot, db) {
+export function registerSoilstatusCommand(bot) {
   bot.command('soilstatus', async (ctx) => {
     const telegramId = ctx.from.id.toString();
     logger.info('Soilstatus command received', { chat_id: 'chat:' + ctx.chat.id, telegramId });
 
     try {
-      const farmer = db.prepare('SELECT id FROM farmers WHERE telegram_id = ?').get(telegramId);
+      const farmer = await dbService.getFarmerByTelegramId(telegramId);
 
       if (!farmer) {
         return ctx.reply('❌ আপনি নিবন্ধিত নন।\nYou are not registered. Use /register first.');
       }
 
-      const plots = db.prepare('SELECT * FROM plots WHERE farmer_id = ?').all(farmer.id);
+      const plots = await dbService.getPlotsByFarmerId(farmer.id);
 
       if (!plots.length) {
         return ctx.reply(
@@ -26,12 +26,10 @@ export function registerSoilstatusCommand(bot, db) {
         );
       }
 
-      // Latest reading per plot from SQLite cache
+      // Latest reading per plot
       const lines = [];
       for (const plot of plots) {
-        const reading = db
-          .prepare('SELECT * FROM soil_readings WHERE plot_id = ? ORDER BY ts DESC LIMIT 1')
-          .get(plot.id);
+        const reading = await dbService.getLatestSoilReading(plot.id);
 
         if (!reading) {
           lines.push(`📍 *${plot.name}*\nতথ্য নেই / No data`);

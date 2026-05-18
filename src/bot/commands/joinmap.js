@@ -1,13 +1,14 @@
 import logger from '../../config/logger.js';
+import { dbService } from '../../db/service.js';
 import { registerFarmerLocation } from '../../services/supabase.js';
 
-export function registerJoinmapCommand(bot, db) {
+export function registerJoinmapCommand(bot) {
   bot.command('joinmap', async (ctx) => {
     const telegramId = ctx.from.id.toString();
     logger.info('Joinmap command received', { telegramId: `id:${telegramId}` });
 
     // Must be registered farmer
-    const farmer = db.prepare('SELECT * FROM farmers WHERE telegram_id = ?').get(telegramId);
+    const farmer = await dbService.getFarmerByTelegramId(telegramId);
     if (!farmer) {
       return ctx.reply(
         '❌ প্রথমে /register দিয়ে নিবন্ধন করুন।\nFirst register with /register.'
@@ -23,9 +24,7 @@ export function registerJoinmapCommand(bot, db) {
     }
 
     // Check if already on map
-    const existing = db.prepare(
-      'SELECT id FROM map_registrations WHERE telegram_id = ?'
-    ).get(telegramId);
+    const existing = await dbService.isFarmerOnMap(telegramId);
 
     if (existing) {
       return ctx.reply(
@@ -44,9 +43,7 @@ export function registerJoinmapCommand(bot, db) {
       });
 
       // Record locally to prevent duplicate registrations
-      db.prepare(
-        'INSERT OR IGNORE INTO map_registrations (telegram_id, registered_at) VALUES (?, CURRENT_TIMESTAMP)'
-      ).run(telegramId);
+      await dbService.recordMapRegistration(telegramId);
 
       await ctx.reply(
         '🗺️ আপনি ZBNF কৃষক মানচিত্রে যোগ দিয়েছেন!\n' +

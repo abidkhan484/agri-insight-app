@@ -1,6 +1,6 @@
 import { Scenes } from 'telegraf';
 import logger from '../../config/logger.js';
-import db from '../../db/connection.js';
+import { dbService } from '../../db/service.js';
 
 /**
  * Plot Registration Wizard
@@ -79,7 +79,7 @@ export const registerWizard = new Scenes.WizardScene(
 
     // Get farmer from DB
     const telegramId = ctx.from.id.toString();
-    const farmer = db.prepare('SELECT id FROM farmers WHERE telegram_id = ?').get(telegramId);
+    const farmer = await dbService.getFarmerByTelegramId(telegramId);
 
     if (!farmer) {
       await ctx.reply(
@@ -91,16 +91,14 @@ export const registerWizard = new Scenes.WizardScene(
     try {
       const { name, area_decimal, crop, start_date } = ctx.wizard.state.plotData;
 
-      const info = db
-        .prepare(
-          `
-        INSERT INTO plots (farmer_id, name, area_decimal, crop, start_date)
-        VALUES (?, ?, ?, ?, ?)
-      `,
-        )
-        .run(farmer.id, name, area_decimal, crop, start_date);
+      const plot = await dbService.createPlot(farmer.id, {
+        name,
+        area_decimal,
+        crop,
+        start_date,
+      });
 
-      const plotId = info.lastInsertRowid;
+      const plotId = plot.id;
 
       // Create default reminders
       const defaultReminders = [
@@ -110,15 +108,14 @@ export const registerWizard = new Scenes.WizardScene(
         { type: 'irrigation', interval_days: 3 }, // Default check interval
       ];
 
-      const stmt = db.prepare(`
-        INSERT INTO reminders (plot_id, type, interval_days, next_due)
-        VALUES (?, ?, ?, ?)
-      `);
-
       for (const r of defaultReminders) {
         const nextDue = new Date();
         nextDue.setDate(nextDue.getDate() + r.interval_days);
-        stmt.run(plotId, r.type, r.interval_days, nextDue.toISOString().split('T')[0]);
+        await dbService.createReminder(plotId, {
+          type: r.type,
+          interval_days: r.interval_days,
+          next_due: nextDue.toISOString().split('T')[0],
+        });
       }
 
       logger.info('Plot registered successfully', { farmerId: farmer.id, plotName: name });

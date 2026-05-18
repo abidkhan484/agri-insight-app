@@ -1,24 +1,22 @@
 import logger from '../../config/logger.js';
+import { dbService } from '../../db/service.js';
 
 /**
  * Community features: Cow Finder and Pest Broadcast
  * @param {import('telegraf').Telegraf} bot 
- * @param {import('better-sqlite3').Database} db
  */
-export function registerCommunityCommands(bot, db) {
+export function registerCommunityCommands(bot) {
   // /registercow - Register as a desi cow owner/supplier
   bot.command('registercow', async (ctx) => {
     const telegramId = ctx.from.id.toString();
-    const farmer = db.prepare('SELECT * FROM farmers WHERE telegram_id = ?').get(telegramId);
+    const farmer = await dbService.getFarmerByTelegramId(telegramId);
 
     if (!farmer) {
       return ctx.reply('❌ প্রথমে /register দিয়ে নিবন্ধন করুন।\nFirst register with /register.');
     }
 
     try {
-      db.prepare(`
-        UPDATE farmers SET has_desi_cow = 1 WHERE telegram_id = ?
-      `).run(telegramId);
+      await dbService.updateFarmer(telegramId, { has_desi_cow: true });
 
       await ctx.reply('✅ আপনি দেশি গরুর সরবরাহকারী হিসেবে নিবন্ধিত হয়েছেন!\nYou have been registered as a desi cow supplier!');
       logger.info('Farmer registered as cow supplier', { telegramId });
@@ -37,10 +35,7 @@ export function registerCommunityCommands(bot, db) {
     }
 
     try {
-      const suppliers = db.prepare(`
-        SELECT name, district, upazila FROM farmers 
-        WHERE has_desi_cow = 1 AND district LIKE ?
-      `).all(`%${district}%`);
+      const suppliers = await dbService.findCowSuppliers(district);
 
       if (suppliers.length === 0) {
         return ctx.reply(`📍 ${district} জেলায় কোনো দেশি গরুর সরবরাহকারী পাওয়া যায়নি।\nNo desi cow suppliers found in ${district}.`);
@@ -58,7 +53,7 @@ export function registerCommunityCommands(bot, db) {
   bot.command('reportpest', async (ctx) => {
     const telegramId = ctx.from.id.toString();
     const alert = ctx.message.text.replace('/reportpest', '').trim();
-    const farmer = db.prepare('SELECT * FROM farmers WHERE telegram_id = ?').get(telegramId);
+    const farmer = await dbService.getFarmerByTelegramId(telegramId);
 
     if (!farmer || !farmer.upazila) {
       return ctx.reply('❌ প্রথমে /register দিয়ে আপনার এলাকা নিশ্চিত করুন।\nPlease register your area first.');
@@ -70,10 +65,7 @@ export function registerCommunityCommands(bot, db) {
 
     try {
       // Find other farmers in the same upazila
-      const neighbors = db.prepare(`
-        SELECT telegram_id FROM farmers 
-        WHERE upazila = ? AND telegram_id != ?
-      `).all(farmer.upazila, telegramId);
+      const neighbors = await dbService.getNeighborsInUpazila(farmer.upazila, telegramId);
 
       const broadcastMsg = `🚨 *সতর্কতা: আপনার এলাকায় পোকার আক্রমণ!*\n` +
                           `🚨 *Pest Alert in your area!*\n\n` +
