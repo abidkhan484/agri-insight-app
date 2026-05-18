@@ -1,0 +1,99 @@
+name: Deploy PWAs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build krishi-record
+        run: |
+          cd krishi-record
+          npm install
+          npm run build -- --base=/${{ github.event.repository.name }}/krishi-record/
+
+      - name: Build disease-detect
+        run: |
+          cd disease-detect
+          npm install
+          npm run build -- --base=/${{ github.event.repository.name }}/disease-detect/
+        env:
+          VITE_PLANTNET_API_KEY: ${{ secrets.VITE_PLANTNET_API_KEY }}
+
+      - name: Build zbnf-knowledge
+        run: |
+          cd zbnf-knowledge
+          npm install
+          npm run build -- --base=/${{ github.event.repository.name }}/zbnf-knowledge/
+
+      - name: Build map-pwa
+        run: |
+          cd map-pwa
+          npm install || true 
+          npm run build -- --base=/${{ github.event.repository.name }}/map-pwa/
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Combine builds
+        run: |
+          mkdir -p dist/krishi-record
+          mkdir -p dist/disease-detect
+          mkdir -p dist/zbnf-knowledge
+          mkdir -p dist/map-pwa
+          cp -r krishi-record/dist/* dist/krishi-record/
+          cp -r disease-detect/dist/* dist/disease-detect/
+          cp -r zbnf-knowledge/dist/* dist/zbnf-knowledge/
+          [ -d map-pwa/dist ] && cp -r map-pwa/dist/* dist/map-pwa/ || echo "map-pwa dist not found"
+
+          # Root landing page
+          cat <<EOF > dist/index.html
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>ZBNF Farming Assistant PWAs</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 600px; margin: auto; }
+              ul { list-style: none; padding: 0; }
+              li { margin-bottom: 15px; }
+              a { display: block; padding: 15px; background: #e8f5e9; color: #2e7d32; text-decoration: none; border-radius: 8px; font-weight: bold; }
+              a:hover { background: #c8e6c9; }
+            </style>
+          </head>
+          <body>
+            <h1>🌾 ZBNF Assistant PWAs</h1>
+            <p>Select an app to open:</p>
+            <ul>
+              <li><a href="./krishi-record/">📈 Krishi Record Tracker</a></li>
+              <li><a href="./disease-detect/">🔍 Disease Detection</a></li>
+              <li><a href="./zbnf-knowledge/">📚 ZBNF Knowledge Base</a></li>
+              <li><a href="./map-pwa/">📍 Farmer Map</a></li>
+            </ul>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

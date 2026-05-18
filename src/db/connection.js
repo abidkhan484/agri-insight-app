@@ -1,16 +1,17 @@
-import Database from 'better-sqlite3';
+import { createClient } from '@supabase/supabase-js';
 import { config } from '../config/index.js';
 import logger from '../config/logger.js';
-import { dirname } from 'path';
-import { mkdirSync } from 'fs';
 
-mkdirSync(dirname(config.dbPath), { recursive: true });
+if (!config.supabaseUrl || !config.supabaseKey) {
+  logger.error('Missing Supabase credentials in configuration');
+}
 
-const db = new Database(config.dbPath);
-db.pragma('journal_mode = WAL');
+const supabase = createClient(config.supabaseUrl, config.supabaseKey, {
+  auth: {
+    persistSession: false
+  }
+});
 
-logger.info('Database connection established', { path: config.dbPath });
+logger.info('Supabase client initialized', { url: config.supabaseUrl });
 
-process.on('exit', () => db.close());
-
-export default db;
+export default supabase;

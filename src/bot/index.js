@@ -1,7 +1,7 @@
 import { Telegraf, Scenes, session } from 'telegraf';
 import { config } from '../config/index.js';
 import logger from '../config/logger.js';
-import db from '../db/connection.js';
+import { dbService } from '../db/service.js';
 import { registerWizard } from './scenes/register.js';
 import { initPlotCommands } from './commands/plots.js';
 import { initReminderCommands } from './commands/reminders.js';
@@ -26,7 +26,7 @@ bot.use(session());
 bot.use(stage.middleware());
 
 // /start command
-bot.start((ctx) => {
+bot.start(async (ctx) => {
   const telegramId = ctx.from.id.toString();
   const name = ctx.from.first_name || 'Farmer';
 
@@ -34,9 +34,9 @@ bot.start((ctx) => {
 
   // Register farmer if not exists
   try {
-    const farmer = db.prepare('SELECT id FROM farmers WHERE telegram_id = ?').get(telegramId);
+    const farmer = await dbService.getFarmerByTelegramId(telegramId);
     if (!farmer) {
-      db.prepare('INSERT INTO farmers (telegram_id, name) VALUES (?, ?)').run(telegramId, name);
+      await dbService.registerFarmer(telegramId, name);
       logger.info('New farmer registered', { telegramId, name });
     }
   } catch (error) {
@@ -62,11 +62,11 @@ bot.command('register', (ctx) => ctx.scene.enter('REGISTER_PLOT_SCENE'));
 // Initialize Commands
 initPlotCommands(bot);
 initReminderCommands(bot);
-registerSoilstatusCommand(bot, db);
+registerSoilstatusCommand(bot);
 registerAskCommand(bot);
-registerJoinmapCommand(bot, db);
+registerJoinmapCommand(bot);
 registerFaqCommand(bot);
-registerCommunityCommands(bot, db);
+registerCommunityCommands(bot);
 
 // Initialize Reminder Engine
 initReminderEngine(bot);

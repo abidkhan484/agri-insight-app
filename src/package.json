@@ -11,12 +11,10 @@
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "db:init": "node db/init.js",
     "prepare": "husky"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",
-    "better-sqlite3": "^11.10.0",
     "dotenv": "^16.x",
     "node-cron": "^3.x",
     "telegraf": "^4.x",
