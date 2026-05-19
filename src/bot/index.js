@@ -118,19 +118,19 @@ bot.catch((err, ctx) => {
   logger.error('Telegraf error', { err, updateType: ctx.updateType });
 });
 
+// Start dummy HTTP server for Render health checks immediately
+http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end('Bot is running');
+}).listen(config.port, () => {
+  logger.info(`Health check server listening on port ${config.port}`);
+});
+
 // Launch bot
 bot
   .launch()
   .then(() => {
     logger.info('Telegram bot launched successfully');
-    
-    // Add dummy HTTP server for Render health checks
-    http.createServer((req, res) => {
-      res.writeHead(200);
-      res.end('Bot is running');
-    }).listen(config.port, () => {
-      logger.info(`Health check server listening on port ${config.port}`);
-    });
   })
   .catch((err) => {
     logger.error('Failed to launch Telegram bot', err);

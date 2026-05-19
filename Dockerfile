@@ -24,6 +24,9 @@ RUN mkdir -p /app/data
 ENV NODE_ENV=production
 ENV TZ=Asia/Dhaka
 
+# Expose the port for Render health checks
+EXPOSE 5000
+
 # Render uses the PORT env var by default. We'll start a simple HTTP 
 # server alongside the bot to satisfy health checks while using polling.
 CMD ["npm", "start"]
