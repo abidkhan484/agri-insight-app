@@ -9,4 +9,5 @@ export const config = {
   logLevel: process.env.LOG_LEVEL || 'info',
   nodeEnv: process.env.NODE_ENV || 'development',
   aiApiUrl: process.env.AI_API_URL || 'http://localhost:5000',
+  port: process.env.PORT || 3000,
 };

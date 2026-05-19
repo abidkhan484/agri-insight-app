@@ -111,6 +111,9 @@ Before deploying to the cloud, you can test everything on your local machine.
 ### 3. Run the Telegram Bot (Using Docker - Recommended)
 Testing with Docker ensures your local environment perfectly matches the production environment on Render.
 
+> [!WARNING]
+> **DO NOT** run the bot locally (Docker or NPM) while it is also live on Render. Telegram only allows **one instance** to poll for updates at a time. Running both will cause a `409 Conflict` error.
+
 1.  **Build the Docker image**:
     ```bash
     docker build -t agri-bot .
@@ -141,6 +144,18 @@ Each PWA is built with Vite and should be tested with `npm` for hot-reloading.
     npm run dev
     ```
 3.  Open `http://localhost:5173` in your browser.
+
+---
+
+## 🛠️ Troubleshooting
+
+### ❌ Error: `409 Conflict: terminated by other getUpdates request`
+This means multiple instances of your bot are running with the same `BOT_TOKEN`.
+
+**Solution:**
+1.  **Stop Local Instances**: If you are running the bot in a terminal or Docker container locally, stop it (`Ctrl+C` or `docker stop`).
+2.  **Check Render Services**: Go to your Render Dashboard and ensure you don't have multiple services (e.g., a Web Service and a Background Worker) both trying to run the bot.
+3.  **Deployment Overlap**: During a new deployment, Render starts the new version before killing the old one. This might cause a brief conflict for 30-60 seconds. It will resolve itself once the old version is fully terminated.
 
 ---
 
