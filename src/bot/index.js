@@ -122,8 +122,8 @@ bot.catch((err, ctx) => {
 // Start HTTP server for Render health checks and TMA Auth
 http
   .createServer(async (req, res) => {
-    // Basic Request Logging
-    logger.debug(`Incoming request: ${req.method} ${req.url}`);
+    // Basic Request Logging (Level: Info for visibility)
+    logger.info(`Incoming request: ${req.method} ${req.url}`);
 
     // CORS Headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -143,8 +143,15 @@ http
     const normalizedPath = rawPath.replace(/\/+/g, '/').replace(/\/+$/, '') || '/';
 
     // TMA Authentication Endpoint
-    if (req.method === 'POST' && (normalizedPath === '/api/auth/telegram' || normalizedPath.endsWith('/api/auth/telegram'))) {
-      logger.info('Auth endpoint hit', { method: req.method, path: req.url, normalized: normalizedPath });
+    if (normalizedPath === '/api/auth/telegram' || normalizedPath.endsWith('/api/auth/telegram')) {
+      if (req.method !== 'POST') {
+        logger.warn(`Auth endpoint hit with invalid method: ${req.method}`);
+        res.writeHead(405, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Method Not Allowed. Use POST.' }));
+        return;
+      }
+
+      logger.info('Auth endpoint hit (POST)', { path: req.url, normalized: normalizedPath });
       let body = '';
       req.on('data', (chunk) => {
         body += chunk.toString();

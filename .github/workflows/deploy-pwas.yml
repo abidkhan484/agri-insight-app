@@ -27,14 +27,14 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: 'npm'
           cache-dependency-path: client/package-lock.json
 
       - name: Build client
         run: |
           cd client
-          npm ci
+          npm install
           npm run build -- --base=/${{ github.event.repository.name }}/
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
