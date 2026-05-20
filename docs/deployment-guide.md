@@ -75,6 +75,9 @@ Since this is a static site, environment variables are baked in at build time. Y
 ### Automatic Deployment
 I have updated the GitHub Action (`.github/workflows/deploy-pwas.yml`) to build and deploy the unified app automatically whenever you push to `main`.
 
+> [!IMPORTANT]
+> **Manual Step Required**: You must go to your GitHub repository **Settings > Pages** and set the **Source** to **"GitHub Actions"**. If it is set to "Deploy from a branch", the workflow will fail or get stuck.
+
 ### URL:
 `https://<username>.github.io/insight-app/`
 
