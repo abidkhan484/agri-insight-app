@@ -41,10 +41,11 @@ export const SyncStatus = ({ syncManagers = [] }) => {
     synced: { icon: '✅', text: 'Cloud Synced', color: 'var(--tg-hint, #999)' },
     syncing: { icon: '🔄', text: 'Syncing...', color: 'var(--tg-link, #2481cc)' },
     offline: { icon: '📡', text: 'Offline Mode', color: '#ffa500' },
-    error: { icon: '⚠️', text: 'Sync Error', color: '#ff4444' }
+    error: { icon: '⚠️', text: 'Sync Error', color: '#ff4444' },
+    guest: { icon: '👤', text: 'Guest (Local Only)', color: '#999' }
   };
 
-  const current = config[status];
+  const current = syncManagers.length === 0 ? config.guest : config[status];
 
   return (
     <div style={{

@@ -11,7 +11,7 @@ const MapPWA = lazy(() => import('@modules/map/App'));
 const ZBNFKnowledge = lazy(() => import('@modules/knowledge/App'));
 
 function Dashboard() {
-  const { user } = useTMA();
+  const { user, mode } = useTMA();
   
   const modules = [
     { id: 'records', label: 'কৃষি রেকর্ড', sub: 'Krishi Record', icon: '📈', path: '/records' },
@@ -24,7 +24,17 @@ function Dashboard() {
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>Agriculture Assistant</h1>
-        {user && <p>স্বাগতম, {user.first_name}!</p>}
+        {user ? (
+          <p className="welcome-text">স্বাগতম, {user.first_name}!</p>
+        ) : (
+          mode === 'guest' && (
+            <div className="guest-notice">
+              ⚠️ আপনি টেলিগ্রামের বাইরে আছেন। সিঙ্ক ফিচার কাজ করবে না।
+              <br />
+              (Running in Guest Mode. Sync disabled.)
+            </div>
+          )
+        )}
       </header>
       <div className="module-grid">
         {modules.map(module => (

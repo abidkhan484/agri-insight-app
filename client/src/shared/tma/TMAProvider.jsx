@@ -15,12 +15,15 @@ export const TMAProvider = ({ children, authEndpoint }) => {
   const [user, setUser] = useState(null);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState(null);
+  const [mode, setMode] = useState('guest'); // 'telegram' or 'guest'
 
   useEffect(() => {
     const initTMA = async () => {
       try {
         if (!WebApp) {
-          throw new Error('Telegram WebApp SDK not found');
+          log.warn('Telegram WebApp SDK not found. Running in Guest Mode.');
+          setIsReady(true);
+          return;
         }
 
         // 1. Initialize Telegram SDK
@@ -34,15 +37,21 @@ export const TMAProvider = ({ children, authEndpoint }) => {
         const initData = WebApp.initData;
         if (!initData) {
           if (import.meta.env.DEV) {
-            log.warn('Running outside Telegram. Using mock user for development.');
+            log.warn('Running outside Telegram (Dev). Using mock user.');
             setUser({ id: 'mock-user-123', first_name: 'DevFarmer', language_code: 'en' });
+            setMode('telegram');
             setIsReady(true);
             return;
           }
-          throw new Error('This app must be run inside Telegram');
+          
+          log.info('Running outside Telegram. Entering Guest Mode.');
+          setMode('guest');
+          setIsReady(true);
+          return;
         }
 
         // 2. Validate with Backend and get Supabase JWT
+        setMode('telegram');
         const response = await fetch(authEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -50,7 +59,11 @@ export const TMAProvider = ({ children, authEndpoint }) => {
         });
 
         if (!response.ok) {
-          throw new Error('Authentication failed');
+          // If auth fails, we still allow Guest Mode but log the error
+          log.error('Authentication failed. Falling back to Guest Mode.');
+          setMode('guest');
+          setIsReady(true);
+          return;
         }
 
         const data = await response.json();
@@ -62,7 +75,8 @@ export const TMAProvider = ({ children, authEndpoint }) => {
         });
       } catch (err) {
         log.error('TMA Initialization Error:', err);
-        setError(err.message);
+        // Don't crash the app, just stay in Guest Mode
+        setMode('guest');
       } finally {
         setIsReady(true);
       }
@@ -72,7 +86,7 @@ export const TMAProvider = ({ children, authEndpoint }) => {
   }, [authEndpoint]);
 
   return (
-    <TMAContext.Provider value={{ user, isReady, error, WebApp }}>
+    <TMAContext.Provider value={{ user, isReady, error, mode, WebApp }}>
       {children}
     </TMAContext.Provider>
   );
