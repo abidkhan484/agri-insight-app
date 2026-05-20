@@ -136,12 +136,15 @@ http
       return;
     }
 
-    // Parse URL and normalize path (remove trailing slashes)
-    const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    const pathname = parsedUrl.pathname.replace(/\/+$/, '');
+    // Robust path normalization: 
+    // 1. Remove query string
+    // 2. Collapse multiple slashes (e.g. //api -> /api)
+    // 3. Remove trailing slashes (except for root /)
+    const urlPath = req.url.split('?')[0];
+    const normalizedPath = urlPath.replace(/\/+/g, '/').replace(/\/+$/, '') || '/';
 
     // TMA Authentication Endpoint
-    if (req.method === 'POST' && pathname === '/api/auth/telegram') {
+    if (req.method === 'POST' && normalizedPath === '/api/auth/telegram') {
       let body = '';
       req.on('data', (chunk) => {
         body += chunk.toString();
@@ -189,14 +192,14 @@ http
     }
 
     // Health check
-    if (pathname === '/health' || pathname === '') {
+    if (normalizedPath === '/health' || normalizedPath === '/') {
       res.writeHead(200);
       res.end('Bot is running');
       return;
     }
 
     // Catch-all 404 with logging
-    logger.warn(`404 Not Found: ${req.method} ${req.url}`);
+    logger.warn(`404 Not Found: ${req.method} ${req.url} (normalized: ${normalizedPath})`);
     res.writeHead(404);
     res.end();
   })
