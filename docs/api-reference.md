@@ -164,13 +164,19 @@ Jeevamrutha reminder has been set.
 **Bangla:** আপনার জমির মাটির সর্বশেষ তথ্য দেখুন
 **English:** View latest soil sensor readings for your plots
 
----
+## Community
 
-## Community (Upcoming)
+### `/joinmap` 🔐
+**Bangla:** ZBNF কৃষক মানচিত্রে যোগ দিন এবং দেখুন
+**English:** Join and view the ZBNF farmer map
 
-### `/map` 🔐
-**Bangla:** ZBNF কৃষক মানচিত্র দেখুন এবং যোগ দিন
-**English:** View and join the ZBNF farmer map
+**Response:**
+```
+🗺️ আপনি ZBNF কৃষক মানচিত্রে যোগ দিয়েছেন!
+You have joined the ZBNF farmer map!
+
+[🗺️ মানচিত্র দেখুন (View Map)] - Opens Farmer Map TMA
+```
 
 ---
 

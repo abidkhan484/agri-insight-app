@@ -1,5 +1,6 @@
 import { dbService } from '../../db/service.js';
 import logger from '../../config/logger.js';
+import { config } from '../../config/index.js';
 
 export const initPlotCommands = (bot) => {
   // /myplots
@@ -20,7 +21,18 @@ export const initPlotCommands = (bot) => {
       message += `${index + 1}. ${plot.name} (${plot.area_decimal} শতাংশ, ফসল: ${plot.crop})\n`;
     });
 
-    return ctx.reply(message);
+    const keyboard = {
+      inline_keyboard: [
+        [
+          {
+            text: '📱 রেকর্ড দেখুন (Manage Records)',
+            web_app: { url: config.krishiRecordUrl },
+          },
+        ],
+      ],
+    };
+
+    return ctx.reply(message, { reply_markup: keyboard });
   });
 
   // /deleteplot <name>

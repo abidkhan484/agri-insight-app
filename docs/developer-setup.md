@@ -46,26 +46,23 @@ Edit `.env`:
 # Telegram
 BOT_TOKEN=your_bot_token_here
 
-# Database
-DB_PATH=./agri.db
+# Supabase (Required for Bot & TMA Sync)
+VITE_SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_KEY=your-service-role-key
+SUPABASE_JWT_SECRET=your-jwt-secret-from-settings
+VITE_SUPABASE_ANON_KEY=your-anon-key
 
 # Scheduling
 TZ=Asia/Dhaka
 
-# AI assistant (P7)
-AI_API_URL=http://localhost:5000
-
-# Logging
-NODE_ENV=development
-LOG_LEVEL=debug
-SERVICE_NAME=agri-bot
+# ...
 ```
 
-### 2.3 Initialize the SQLite Database
+### 2.3 Initialize the Supabase Schema
 
-```bash
-node db/init.js
-```
+1. Log in to your [Supabase Dashboard](https://app.supabase.com).
+2. Go to **SQL Editor**.
+3. Copy the contents of `src/db/schema.sql` and run it to create tables, triggers, and RLS policies.
 
 ### 2.4 Start the Bot (Development)
 
@@ -80,8 +77,18 @@ npm run dev
 ```bash
 cd krishi-record
 npm install
+cp .env.example .env
 npm run dev         # starts Vite dev server at http://localhost:5173
 ```
+
+### 3.1 Local TMA Testing
+
+To test the PWA inside Telegram during development:
+1. Use a tool like **ngrok** to expose your local PWA: `ngrok http 5173`.
+2. Open Telegram and search for `@BotFather`.
+3. Select your bot and go to **Bot Settings → Menu Button → Configure Menu Button**.
+4. Set the URL to your ngrok address.
+5. In the Bot's `.env`, set `KRISHI_RECORD_URL` to your ngrok address so bot commands point to it.
 
 ---
 

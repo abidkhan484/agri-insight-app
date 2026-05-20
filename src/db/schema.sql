@@ -3,7 +3,22 @@
 -- Enable PostGIS for mapping features
 CREATE EXTENSION IF NOT EXISTS postgis;
 
+-- ------------------------------------------------------------------------------
+-- 0. Shared Helpers
+-- ------------------------------------------------------------------------------
+
+-- Function to handle updated_at timestamps
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = now();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- ------------------------------------------------------------------------------
 -- 1. Farmers Table
+-- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS farmers (
   id SERIAL PRIMARY KEY,
   telegram_id TEXT UNIQUE NOT NULL,
@@ -11,8 +26,12 @@ CREATE TABLE IF NOT EXISTS farmers (
   district TEXT,
   upazila TEXT,
   has_desi_cow BOOLEAN DEFAULT false,
-  created_at TIMESTAMPTZ DEFAULT now()
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  is_deleted BOOLEAN DEFAULT false
 );
+
+CREATE TRIGGER update_farmers_updated_at BEFORE UPDATE ON farmers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- 2. Plots Table
 CREATE TABLE IF NOT EXISTS plots (
@@ -25,8 +44,12 @@ CREATE TABLE IF NOT EXISTS plots (
   longitude DOUBLE PRECISION,
   crop TEXT,
   start_date DATE,
-  created_at TIMESTAMPTZ DEFAULT now()
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  is_deleted BOOLEAN DEFAULT false
 );
+
+CREATE TRIGGER update_plots_updated_at BEFORE UPDATE ON plots FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- 3. Reminders Table
 CREATE TABLE IF NOT EXISTS reminders (
@@ -37,8 +60,12 @@ CREATE TABLE IF NOT EXISTS reminders (
   next_due DATE NOT NULL,
   description TEXT,            -- for custom reminders
   active BOOLEAN DEFAULT true,
-  created_at TIMESTAMPTZ DEFAULT now()
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  is_deleted BOOLEAN DEFAULT false
 );
+
+CREATE TRIGGER update_reminders_updated_at BEFORE UPDATE ON reminders FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- 4. Reminder Logs Table
 CREATE TABLE IF NOT EXISTS reminder_logs (
@@ -114,18 +141,137 @@ CREATE TABLE IF NOT EXISTS faq_entries (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- 11. Input Logs (New for Krishi-Record PWA)
+CREATE TABLE IF NOT EXISTS input_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  plot_id INTEGER NOT NULL REFERENCES plots(id) ON DELETE CASCADE,
+  date DATE NOT NULL,
+  type TEXT NOT NULL,
+  quantity NUMERIC,
+  quantity_unit TEXT,
+  cost NUMERIC,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  is_deleted BOOLEAN DEFAULT false
+);
+
+CREATE TRIGGER update_input_logs_updated_at BEFORE UPDATE ON input_logs FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- 12. Observations (New for Krishi-Record PWA)
+CREATE TABLE IF NOT EXISTS observations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  plot_id INTEGER NOT NULL REFERENCES plots(id) ON DELETE CASCADE,
+  date DATE NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  is_deleted BOOLEAN DEFAULT false
+);
+
+CREATE TRIGGER update_observations_updated_at BEFORE UPDATE ON observations FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- 13. Harvests (New for Krishi-Record PWA)
+CREATE TABLE IF NOT EXISTS harvests (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  plot_id INTEGER NOT NULL REFERENCES plots(id) ON DELETE CASCADE,
+  date DATE NOT NULL,
+  crop TEXT NOT NULL,
+  quantity NUMERIC,
+  quantity_unit TEXT,
+  revenue NUMERIC,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  is_deleted BOOLEAN DEFAULT false
+);
+
+CREATE TRIGGER update_harvests_updated_at BEFORE UPDATE ON harvests FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 -- ------------------------------------------------------------------------------
--- RLS Policies (Optional but recommended for Supabase)
+-- ZBNF Automated Scheduler (Triggers)
 -- ------------------------------------------------------------------------------
 
--- Enable RLS on Public Tables
+-- Function to seed default ZBNF reminders for a new plot
+CREATE OR REPLACE FUNCTION seed_plot_reminders()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Jeevamrutha: Every 15 days
+    INSERT INTO reminders (plot_id, type, interval_days, next_due, description)
+    VALUES (NEW.id, 'jeevamrutha', 15, NEW.start_date + INTERVAL '15 days', 'Apply Jeevamrutha to soil');
+
+    -- Neemastra: Every 14 days
+    INSERT INTO reminders (plot_id, type, interval_days, next_due, description)
+    VALUES (NEW.id, 'neemastra', 14, NEW.start_date + INTERVAL '14 days', 'Preventive Neemastra spray');
+
+    -- Mulch: Every 7 days
+    INSERT INTO reminders (plot_id, type, interval_days, next_due, description)
+    VALUES (NEW.id, 'mulch', 7, NEW.start_date + INTERVAL '7 days', 'Check and replenish mulching');
+
+    -- Irrigation: Every 3 days (default Whapasa window)
+    INSERT INTO reminders (plot_id, type, interval_days, next_due, description)
+    VALUES (NEW.id, 'irrigation', 3, NEW.start_date + INTERVAL '3 days', 'Standard Whapasa irrigation check');
+
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER on_plot_created
+AFTER INSERT ON plots
+FOR EACH ROW EXECUTE FUNCTION seed_plot_reminders();
+
+-- ------------------------------------------------------------------------------
+-- RLS Policies
+-- ------------------------------------------------------------------------------
+
+-- Enable RLS on all tables
+ALTER TABLE farmers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE plots ENABLE ROW LEVEL SECURITY;
+ALTER TABLE reminders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE reminder_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE weather_alerts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE soil_readings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE input_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE observations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE harvests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE farmer_locations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pest_alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE faq_entries ENABLE ROW LEVEL SECURITY;
 
--- Allow public read access to Map and FAQ
+-- 1. Public Tables (Read All)
 CREATE POLICY "Public Read Locations" ON farmer_locations FOR SELECT USING (true);
 CREATE POLICY "Public Read Pest Alerts" ON pest_alerts FOR SELECT USING (true);
 CREATE POLICY "Public Read FAQ" ON faq_entries FOR SELECT USING (true);
 
+-- 2. Farmer-Specific Tables (Owner Only)
+-- We use 'telegram_id' as the key. In Supabase, the user's JWT will contain 'telegram_id'.
+-- For now, we assume auth.uid() is the telegram_id or mapped to it.
+
+CREATE POLICY "Farmers: Owner Read/Update" ON farmers 
+  FOR ALL USING (telegram_id = auth.jwt() ->> 'telegram_id');
+
+CREATE POLICY "Plots: Owner Access" ON plots 
+  FOR ALL USING (farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id'));
+
+CREATE POLICY "Reminders: Owner Access" ON reminders 
+  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+
+CREATE POLICY "Logs: Owner Access" ON reminder_logs 
+  FOR ALL USING (reminder_id IN (SELECT id FROM reminders WHERE plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id'))));
+
+CREATE POLICY "Weather: Owner Access" ON weather_alerts 
+  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+
+CREATE POLICY "Soil: Owner Access" ON soil_readings 
+  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+
+CREATE POLICY "Inputs: Owner Access" ON input_logs 
+  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+
+CREATE POLICY "Observations: Owner Access" ON observations 
+  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+
+CREATE POLICY "Harvests: Owner Access" ON harvests 
+  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+
 -- Note: The Bot (using Service Role Key) will bypass RLS for private tables.
+

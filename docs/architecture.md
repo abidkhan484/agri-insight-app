@@ -2,7 +2,7 @@
 
 ## System Overview
 
-The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 loosely coupled components** (P0–P8). All components communicate via Telegram, a shared SQLite database, and free external APIs.
+The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 loosely coupled components** (P0–P8). All components are integrated via a unified **Supabase backend**, allowing for a seamless "Super App" experience where farmers can control the system via Telegram and manage detailed records via **Telegram Mini Apps (TMAs)**.
 
 ---
 
@@ -14,22 +14,21 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 │                                                                               │
 │  ┌─────────────────────────────────────────────────────────────────────┐    │
 │  │                     P0 — Shared Foundation                           │    │
-│  │  Telegram Bot (Telegraf v4) │ SQLite (better-sqlite3) │ node-cron   │    │
-│  │  Winston Logger │ ESLint + Prettier │ Husky pre-commit hook          │    │
+│  │  Telegram Bot (Telegraf v4) │ Supabase (PostgreSQL) │ node-cron     │    │
+│  │  Winston Logger │ TMA Auth Bridge │ Sync Metadata (updated_at)      │    │
 │  └──────────────────────────┬──────────────────────────────────────────┘    │
-│                             │ shared bot identity + DB                        │
-│              ┌──────────────┼───────────────────┐                           │
-│              ▼              ▼                   ▼                            │
-│  ┌───────────────┐ ┌───────────────┐ ┌──────────────────┐                  │
-│  │ P1 — Scheduler│ │P2 — Weather   │ │  P3 — PWA Records│                  │
-│  │    Bot        │ │   Alert       │ │  (React + Dexie) │                  │
-│  │/register      │ │Open-Meteo API │ │  IndexedDB local │                  │
-│  │/myplots       │ │Whapasa rules  │ │  harvest + input │                  │
-│  │/myreminders   │ │Daily 6AM cron │ │  logs + reports  │                  │
-│  │Jeevamrtha     │ └───────────────┘ └──────────────────┘                  │
+│                             │ shared Telegram ID + Supabase Auth              │
+│              ┌──────────────┼───────────────────┬──────────────────────┐    │
+│              ▼              ▼                   ▼                      ▼    │
+│  ┌───────────────┐ ┌───────────────┐ ┌──────────────────┐    ┌──────────────────┐
+│  │ P1 — Scheduler│ │P2 — Weather   │ │  P3 — TMA Records│    │  P8 — TMA Map    │
+│  │    Bot        │ │   Alert       │ │  (React + Dexie) │    │  (Leaflet + SB)  │
+│  │/register      │ │Open-Meteo API │ │  Bidirectional   │    │  Community Map   │
+│  │/myplots       │ │Whapasa rules  │ │  Supabase Sync   │    │  Pest Alerts     │
+│  │Jeevamrtha     │ └───────────────┘ └──────────────────┘    └──────────────────┘
 │  │reminder cron  │                                                           │
 │  └───────┬───────┘                                                           │
-│          │ plot data                                                          │
+│          │ plot data (Sync)                                                   │
 │          ▼                                                                    │
 │  ┌───────────────┐ ┌───────────────┐ ┌──────────────────┐                  │
 │  │ P4 — IoT Soil │ │P5 — Disease   │ │  P6 — Knowledge  │                  │
@@ -41,16 +40,37 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 │  │Telegram alert │ └───────────────┘ └──────────────────┘                  │
 │  └───────────────┘                                                           │
 │                                                                               │
-│  ┌───────────────────────────┐ ┌────────────────────────────────────────┐   │
-│  │  P7 — Local AI Assistant  │ │       P8 — Community Network           │   │
-│  │  Ollama (gemma2:2b)       │ │  FAQ bot │ Supabase farmer map         │   │
-│  │  ChromaDB vector store    │ │  Leaflet │ OpenStreetMap tiles          │   │
-│  │  LlamaIndex RAG pipeline  │ │  /joinmap │ /faq commands               │   │
-│  │  Flask REST API           │ │  Pest alert broadcast                  │   │
-│  │  /ask Telegram command    │ └────────────────────────────────────────┘   │
+│  ┌───────────────────────────┐                                               │
+│  │  P7 — Local AI Assistant  │                                               │
+│  │  Ollama (gemma2:2b)       │                                               │
+│  │  ChromaDB vector store    │                                               │
+│  │  LlamaIndex RAG pipeline  │                                               │
+│  │  Flask REST API           │                                               │
+│  │  /ask Telegram command    │                                               │
 │  └───────────────────────────┘                                               │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Integration Strategy: TMA & Supabase Sync
+
+### 1. Authentication Bridge (TMA)
+The bot serves as an identity provider. When a farmer opens a PWA from a Telegram command, the PWA uses the **Telegram Mini App SDK** to retrieve `initData`. This data is sent to the Bot's `/api/auth/telegram` endpoint, which:
+- Validates the hash using the `BOT_TOKEN`.
+- Signs a **Supabase JWT** containing the user's `telegram_id`.
+- The PWA uses this JWT to authenticate with Supabase, enabling **Row Level Security (RLS)**.
+
+### 2. Bidirectional Synchronization
+To support offline-first usage in rural areas, the PWAs use **Dexie (IndexedDB)**.
+- **Push**: Local 'dirty' records are upserted to Supabase when online.
+- **Pull**: Remote changes modified after the local `last_sync` time are pulled down.
+- **Conflict Resolution**: Last-Write-Wins based on `updated_at`.
+- **Soft Deletion**: Uses an `is_deleted` flag to propagate deletions across devices.
+
+### 3. Automated Business Logic (Triggers)
+Business logic is centralized in the database. 
+- **Example**: When a plot is created (via Bot OR PWA), a **Postgres Trigger** (`on_plot_created`) automatically seeds the `reminders` table with standard ZBNF intervals.
 
 ---
 
@@ -275,11 +295,8 @@ soil_readings (id, plot_id FK, moisture, temp, humidity, ts)
 
 | Decision | Choice | Alternatives Rejected | Reason |
 |----------|--------|-----------------------|--------|
-| Bot DB | better-sqlite3 | PostgreSQL, MongoDB | Sync API, zero server, free |
-| Scheduling | node-cron + GitHub Actions | Celery, BullMQ | Simplest for single-process bot |
-| PWA offline | Dexie.js (IndexedDB) | localStorage, PouchDB | Full offline, relational-ish queries |
-| AI inference | Ollama (local) | OpenAI API, Gemini | Zero cost, no data leaves device |
-| IoT Protocol | MQTT | HTTP, WebSockets | Low power, lightweight, pub/sub model |
-| Disease ID | PlantNet + TF.js | Custom Cloud API | PlantNet is free/accurate; TF.js is 100% offline |
-| PWA Offline Strategy | Workbox Precaching | Custom SW, AppCache | Standardized, handles versioning well |
-| Community DB | Supabase | Self-hosted Postgres | Generous free tier, built-in Auth and PostGIS |
+| Bot DB | Supabase (PostgreSQL) | SQLite, MongoDB | Centralized sync, RLS security, free tier |
+| Integration | Telegram Mini Apps | Magic Links, OAuth | Zero-login UX, native Telegram feel |
+| Offline DB | Dexie.js (IndexedDB) | localStorage, PouchDB | Full offline, relational-ish queries |
+| Sync Logic | Custom SyncManager | Supabase Realtime | Better control over offline conflict resolution |
+| Logic Location| Postgres Triggers | Bot Code | Ensures consistency between Bot and PWA actions |
