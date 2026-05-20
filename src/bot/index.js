@@ -137,11 +137,9 @@ http
     }
 
     // Robust path normalization: 
-    // 1. Remove query string
-    // 2. Collapse multiple slashes (e.g. //api -> /api)
-    // 3. Remove trailing slashes (except for root /)
-    const urlPath = req.url.split('?')[0];
-    const normalizedPath = urlPath.replace(/\/+/g, '/').replace(/\/+$/, '') || '/';
+    // Use URL constructor to handle both absolute and relative URLs correctly
+    const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+    const normalizedPath = parsedUrl.pathname.replace(/\/+/g, '/').replace(/\/+$/, '') || '/';
 
     // TMA Authentication Endpoint
     if (req.method === 'POST' && normalizedPath === '/api/auth/telegram') {

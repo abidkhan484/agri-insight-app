@@ -70,7 +70,7 @@ Since this is a static site, environment variables are baked in at build time. Y
 *   `VITE_SUPABASE_URL`: Your Supabase URL.
 *   `VITE_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
 *   `VITE_PLANTNET_API_KEY`: (Optional) Your PlantNet API Key.
-*   `VITE_AUTH_ENDPOINT`: The URL of your bot's auth endpoint (e.g., `https://your-bot.onrender.com/api/auth/telegram`).
+*   `VITE_AUTH_ENDPOINT`: The URL of your bot's auth endpoint (e.g., `https://agri-insight-app.onrender.com/api/auth/telegram`).
 
 ### Automatic Deployment
 I have updated the GitHub Action (`.github/workflows/deploy-pwas.yml`) to build and deploy the unified app automatically whenever you push to `main`.

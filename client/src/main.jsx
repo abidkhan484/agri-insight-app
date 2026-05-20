@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { TMAProvider } from '@shared/tma/TMAProvider'
 
-const AUTH_ENDPOINT = import.meta.env.VITE_AUTH_ENDPOINT || 'https://agri-bot.onrender.com/api/auth/telegram';
+const AUTH_ENDPOINT = import.meta.env.VITE_AUTH_ENDPOINT || 'https://agri-insight-app.onrender.com/api/auth/telegram';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
