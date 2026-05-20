@@ -62,7 +62,7 @@ function App() {
 
   return (
     <TMATheme>
-      <Router>
+      <Router basename={import.meta.env.BASE_URL}>
         <div className="app-shell">
           <Suspense fallback={<div className="module-loading">লোড হচ্ছে...</div>}>
             <Routes>
