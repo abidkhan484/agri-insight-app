@@ -8,7 +8,7 @@ This guide outlines the zero-cost deployment strategy using **Render**, **GitHub
 | :-------------------- | :------------------------ | :--- | :-------------------- |
 | **Core Telegram Bot** | **Render (Web Service)**  | $0   | No (Sleeps after 15m) |
 | **Database**          | **Supabase (PostgreSQL)** | $0   | Yes                   |
-| **All 4 PWAs**        | **GitHub Pages**          | $0   | Yes                   |
+| **Agriculture Assistant** | **GitHub Pages**          | $0   | Yes                   |
 
 ---
 
@@ -61,31 +61,43 @@ We use a single root `.env.example` to manage settings for all services.
 
 ---
 
-## 4. PWAs (GitHub Pages)
+## 4. Agriculture Assistant PWA (GitHub Pages)
 
-We deploy all 4 frontends to your GitHub Pages site in subdirectories.
+The four previous frontends (Krishi Record, Disease Detection, Knowledge Base, and Farmer Map) have been consolidated into a single application in the `client/` directory.
 
 ### 🔐 GitHub Actions Secrets
-Since these are static sites, environment variables are baked in at build time. You **must** add the following to your GitHub Repo **Settings > Secrets and variables > Actions**:
+Since this is a static site, environment variables are baked in at build time. You **must** add the following to your GitHub Repo **Settings > Secrets and variables > Actions**:
 *   `VITE_SUPABASE_URL`: Your Supabase URL.
 *   `VITE_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
 *   `VITE_PLANTNET_API_KEY`: (Optional) Your PlantNet API Key.
+*   `VITE_AUTH_ENDPOINT`: The URL of your bot's auth endpoint (e.g., `https://your-bot.onrender.com/api/auth/telegram`).
 
 ### Automatic Deployment
-I have created a GitHub Action (`.github/workflows/deploy-pwas.yml`) that builds and deploys these apps automatically whenever you push to `main`.
+I have updated the GitHub Action (`.github/workflows/deploy-pwas.yml`) to build and deploy the unified app automatically whenever you push to `main`.
 
-### URLs will look like:
-
-- `https://<username>.github.io/insight-app/krishi-record/`
-- `https://<username>.github.io/insight-app/disease-detect/`
-- `https://<username>.github.io/insight-app/zbnf-knowledge/`
-- `https://<username>.github.io/insight-app/map-pwa/`
-
-**Note**: You must go to your Repo **Settings > Pages** and set the source to **GitHub Actions**.
+### URL:
+`https://<username>.github.io/insight-app/`
 
 ---
 
-## 4. Keeping the Bot "Alive"
+## 5. Client Docker Deployment (Alternative)
+
+If you wish to host the client yourself (e.g., on a VPS or Render as a static site with Nginx):
+
+1.  Navigate to the `client` directory: `cd client`
+2.  Build the Docker image:
+    ```bash
+    docker build -t agri-assistant-client .
+    ```
+3.  Run the container:
+    ```bash
+    docker run -p 8080:80 agri-assistant-client
+    ```
+    *The app will be available at http://localhost:8080*
+
+---
+
+## 6. Keeping the Bot "Alive"
 
 Since Render sleeps after 15 minutes, the first message to the bot after a break might take 30 seconds to respond.
 
@@ -134,10 +146,10 @@ Best for rapid development and debugging without rebuilding images.
     npm start
     ```
 
-### 5. Run the PWAs (Frontend)
-Each PWA is built with Vite and should be tested with `npm` for hot-reloading.
+### 5. Run the Agriculture Assistant (Frontend)
+The unified PWA is built with Vite and should be tested with `npm`.
 
-1.  Navigate to a PWA folder (e.g., `cd krishi-record`).
+1.  Navigate to the `client` folder: `cd client`
 2.  Install and run:
     ```bash
     npm install

@@ -16,6 +16,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",
     "dotenv": "^16.x",
+    "jsonwebtoken": "^9.0.3",
     "node-cron": "^3.x",
     "telegraf": "^4.x",
     "winston": "^3.x"

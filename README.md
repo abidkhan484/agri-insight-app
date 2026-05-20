@@ -32,11 +32,11 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 
 | Layer | Choice |
 |-------|--------|
-| Bot | Node.js 20+ · Telegraf v4 · better-sqlite3 · node-cron |
-| PWA | React 19 · Vite · vite-plugin-pwa · Dexie.js |
+| Bot | Node.js 20+ · Telegraf v4 · Supabase · node-cron |
+| PWA | React 19 · Vite · Telegram Mini Apps · Dexie.js |
 | IoT | ESP32 · MQTT · Node-RED · InfluxDB · Grafana |
 | AI | Ollama · ChromaDB · LlamaIndex · Flask |
-| Map | Leaflet · OpenStreetMap · Supabase (free tier) |
+| DB | Supabase (PostgreSQL + RLS + Triggers) |
 | Weather | Open-Meteo (free, no key) |
 | Disease | PlantNet API (free tier) · TensorFlow.js (offline fallback) |
 | Hosting | Railway.app / Render.com (bot) · Netlify / GitHub Pages (PWAs) |

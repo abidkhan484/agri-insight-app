@@ -13,6 +13,7 @@ import { registerFaqCommand } from './commands/faq.js';
 import { registerCommunityCommands } from './commands/community.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
+import { validateTelegramInitData, generateSupabaseJWT, parseTelegramUser } from '../services/auth.js';
 
 if (!config.botToken) {
   logger.error('BOT_TOKEN is missing in configuration. Exiting...');
@@ -118,13 +119,81 @@ bot.catch((err, ctx) => {
   logger.error('Telegraf error', { err, updateType: ctx.updateType });
 });
 
-// Start dummy HTTP server for Render health checks immediately
-http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end('Bot is running');
-}).listen(config.port, () => {
-  logger.info(`Health check server listening on port ${config.port}`);
-});
+// Start HTTP server for Render health checks and TMA Auth
+http
+  .createServer(async (req, res) => {
+    // CORS Headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
+
+    // TMA Authentication Endpoint
+    if (req.method === 'POST' && req.url === '/api/auth/telegram') {
+      let body = '';
+      req.on('data', (chunk) => {
+        body += chunk.toString();
+      });
+      req.on('end', async () => {
+        try {
+          const { initData } = JSON.parse(body);
+
+          if (!validateTelegramInitData(initData)) {
+            logger.warn('TMA Auth Failed: Invalid initData');
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid Telegram data' }));
+            return;
+          }
+
+          const user = parseTelegramUser(initData);
+          if (!user || !user.id) {
+            logger.warn('TMA Auth Failed: Missing user data');
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid user data' }));
+            return;
+          }
+
+          const token = generateSupabaseJWT(user.id);
+
+          logger.info('TMA Auth Success', { telegramId: user.id });
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(
+            JSON.stringify({
+              token,
+              user: {
+                id: user.id,
+                first_name: user.first_name,
+                language_code: user.language_code,
+              },
+            }),
+          );
+        } catch (error) {
+          logger.error('TMA Auth Error', { error: error.message });
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Internal server error' }));
+        }
+      });
+      return;
+    }
+
+    // Health check
+    if (req.url === '/health' || req.url === '/') {
+      res.writeHead(200);
+      res.end('Bot is running');
+      return;
+    }
+
+    res.writeHead(404);
+    res.end();
+  })
+  .listen(config.port, () => {
+    logger.info(`Server listening on port ${config.port}`);
+  });
 
 // Launch bot
 bot
