@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import WebApp from '@twa-dev/sdk';
+import WebAppImport from '@twa-dev/sdk';
+import log from 'loglevel';
 
 const TMAContext = createContext(null);
+
+// Robustly resolve the WebApp object to handle ESM/CJS interop issues in production
+const WebApp = WebAppImport?.default || WebAppImport || (typeof window !== 'undefined' ? window.Telegram?.WebApp : null);
 
 /**
  * TMAProvider initializes the Telegram WebApp SDK and handles authentication
@@ -15,14 +19,22 @@ export const TMAProvider = ({ children, authEndpoint }) => {
   useEffect(() => {
     const initTMA = async () => {
       try {
+        if (!WebApp) {
+          throw new Error('Telegram WebApp SDK not found');
+        }
+
         // 1. Initialize Telegram SDK
-        WebApp.ready();
-        WebApp.expand();
+        if (typeof WebApp.ready === 'function') {
+          WebApp.ready();
+        }
+        if (typeof WebApp.expand === 'function') {
+          WebApp.expand();
+        }
 
         const initData = WebApp.initData;
         if (!initData) {
           if (import.meta.env.DEV) {
-            console.warn('Running outside Telegram. Using mock user for development.');
+            log.warn('Running outside Telegram. Using mock user for development.');
             setUser({ id: 'mock-user-123', first_name: 'DevFarmer', language_code: 'en' });
             setIsReady(true);
             return;
@@ -49,7 +61,7 @@ export const TMAProvider = ({ children, authEndpoint }) => {
           token: data.token
         });
       } catch (err) {
-        console.error('TMA Initialization Error:', err);
+        log.error('TMA Initialization Error:', err);
         setError(err.message);
       } finally {
         setIsReady(true);

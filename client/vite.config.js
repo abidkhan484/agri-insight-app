@@ -50,6 +50,12 @@ export default defineConfig({
     },
   },
   envDir: '../',
+  optimizeDeps: {
+    include: ['@twa-dev/sdk'],
+  },
+  ssr: {
+    noExternal: ['@twa-dev/sdk'],
+  },
   test: {
     globals: true,
     environment: 'jsdom',
