@@ -122,10 +122,13 @@ bot.catch((err, ctx) => {
 // Start HTTP server for Render health checks and TMA Auth
 http
   .createServer(async (req, res) => {
+    // Basic Request Logging
+    logger.debug(`Incoming request: ${req.method} ${req.url}`);
+
     // CORS Headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') {
       res.writeHead(204);
@@ -133,8 +136,12 @@ http
       return;
     }
 
+    // Parse URL and normalize path (remove trailing slashes)
+    const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+    const pathname = parsedUrl.pathname.replace(/\/+$/, '');
+
     // TMA Authentication Endpoint
-    if (req.method === 'POST' && req.url === '/api/auth/telegram') {
+    if (req.method === 'POST' && pathname === '/api/auth/telegram') {
       let body = '';
       req.on('data', (chunk) => {
         body += chunk.toString();
@@ -182,12 +189,14 @@ http
     }
 
     // Health check
-    if (req.url === '/health' || req.url === '/') {
+    if (pathname === '/health' || pathname === '') {
       res.writeHead(200);
       res.end('Bot is running');
       return;
     }
 
+    // Catch-all 404 with logging
+    logger.warn(`404 Not Found: ${req.method} ${req.url}`);
     res.writeHead(404);
     res.end();
   })
