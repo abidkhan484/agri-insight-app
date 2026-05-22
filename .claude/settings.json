@@ -8,19 +8,28 @@
       "MultiEdit",
       "Bash(npm run lint)",
       "Bash(npm run format:check)",
+      "Bash(npm run format)",
       "Bash(npm run test)",
+      "Bash(npm run dev)",
       "Bash(npm run build)",
+      "Bash(npx vitest*)",
       "Bash(node scripts/*)",
       "Bash(git status)",
-      "Bash(git diff)",
-      "Bash(git log --oneline*)"
+      "Bash(git diff*)",
+      "Bash(git add*)",
+      "Bash(git log*)",
+      "Bash(python -m pytest*)",
+      "Bash(python -m ruff*)"
     ],
     "deny": [
       "Bash(git push --force*)",
       "Bash(git reset --hard*)",
-      "Bash(rm -rf*)",
+      "Bash(rm -rf *)",
       "Bash(DROP TABLE*)",
-      "Bash(curl * | sh)"
+      "Bash(curl * | sh)",
+      "Bash(wget * | sh)",
+      "Bash(sudo *)",
+      "Bash(chmod -R 777 *)"
     ]
   }
 }

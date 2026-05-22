@@ -3,6 +3,7 @@ name: reviewer
 description: Reviews ZBNF farming assistant code for security vulnerabilities (OWASP Top 10), ZBNF formula accuracy, logger presence, ESLint/Prettier compliance, and Bangla UI correctness. Blocks progression if critical issues found.
 tools: ["Read", "Bash", "Glob", "Grep"]
 model: sonnet
+fallback_models: ["gemini-3.5-flash", "gemini-3.1-pro"]
 ---
 
 # Reviewer Agent — ZBNF Farming Assistant

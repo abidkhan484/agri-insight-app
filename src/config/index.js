@@ -14,4 +14,5 @@ export const config = {
   krishiRecordUrl: process.env.KRISHI_RECORD_URL || 'http://localhost:5173',
   mapPwaUrl: process.env.MAP_PWA_URL || 'http://localhost:5174',
   port: process.env.PORT || 5000,
+  plantnetApiKey: process.env.PLANTNET_API_KEY,
 };

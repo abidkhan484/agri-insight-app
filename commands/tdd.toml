@@ -1,0 +1,47 @@
+# commands/tdd.toml
+[command]
+name        = "tdd"
+description = "Execute a Test-Driven Development workflow for a feature (write tests -> fail -> implement -> pass -> review -> commit)."
+usage       = "@tdd phase=P9 feature='SMS Fallback Alerts' test_file='src/__tests__/sms.test.js'"
+
+[parameters]
+phase     = { type = "string", required = true,  description = "Phase identifier, e.g. P9" }
+feature   = { type = "string", required = true,  description = "Feature to implement" }
+test_file = { type = "string", required = true,  description = "Target test file path to create, e.g., src/__tests__/sms.test.js" }
+
+[steps]
+
+  [steps.1_write_tests]
+  agent       = "senior"
+  instruction = "Write the initial failing Vitest tests inside '{test_file}' for the feature: '{feature}' in {phase}. Cover standard behavior, edge cases (empty inputs, nulls), and error paths. Do not implement the feature code yet."
+  reads       = ["tasks/{phase_slug}.md", "skills/tdd-workflow/SKILL.md"]
+  gate        = "Test file '{test_file}' created with robust Vitest tests; no actual feature code written yet."
+
+  [steps.2_verify_fail]
+  agent       = "qa"
+  instruction = "Run the new test suite inside '{test_file}' to ensure it fails. This validates that the test suite actually catches the absence of the feature (the Red step of TDD)."
+  reads       = ["{test_file}"]
+  gate        = "npx vitest run {test_file} exits with failure (tests fail as expected)."
+
+  [steps.3_implement]
+  agent       = "senior"
+  instruction = "Write the minimal product implementation to make all tests in '{test_file}' pass. Adhere strictly to the locked tech stack in CLAUDE.md and Winston logging rules."
+  reads       = ["{test_file}", "CLAUDE.md"]
+  gate        = "Feature implemented. All lint warnings are clean."
+
+  [steps.4_verify_pass]
+  agent       = "qa"
+  instruction = "Run the test suite inside '{test_file}' again. Ensure all test blocks now pass successfully (the Green step of TDD)."
+  reads       = ["{test_file}"]
+  gate        = "npx vitest run {test_file} exits with 0 (all tests pass)."
+
+  [steps.5_review]
+  agent       = "reviewer"
+  instruction = "Audit the implemented code for safety. Run checks for SQL injection, RLS compliance, hardcoded secrets, Winston logs, and Bangla UI text."
+  reads       = ["skills/security-review/SKILL.md", "CLAUDE.md"]
+  gate        = "Zero security warnings or format violations found."
+
+  [steps.6_commit]
+  agent       = "committer"
+  instruction = "Verify full lint and formatting, then commit the implementation: 'feat({phase_lower}): implement {feature} via TDD'."
+  gate        = "Pre-commit validations pass and changes committed successfully."

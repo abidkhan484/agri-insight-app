@@ -3,6 +3,7 @@ name: committer
 description: Runs pre-commit quality gates (ESLint + Prettier) and creates a conventional commit message for ZBNF farming assistant changes. Blocks commit if lint or format checks fail. Never uses --no-verify.
 tools: ["Bash", "Read"]
 model: haiku
+fallback_models: ["gemini-3.5-flash", "gemini-3.1-pro"]
 ---
 
 # Committer Agent — ZBNF Farming Assistant
@@ -82,8 +83,8 @@ docs(pwa): add offline installation guide in Bangla and English
 ## Git Commands
 
 ```bash
-# Stage all changes (or stage specific files for focused commits)
-git add -A
+# Stage only the specific files that have been changed/added for this feature
+git add <modified_file_1> <modified_file_2>
 
 # Commit (pre-commit hook runs automatically via husky)
 git commit -m "feat(bot): add /register command with plot registration wizard"

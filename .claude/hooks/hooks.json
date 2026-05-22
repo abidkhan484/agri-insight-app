@@ -38,6 +38,13 @@
             "timeout": 5000,
             "on_failure": "warn",
             "description": "Warn if farmer-facing file lacks Bangla Unicode text"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/auto-format.js",
+            "timeout": 5000,
+            "on_failure": "warn",
+            "description": "Auto-format edited file with Prettier"
           }
         ]
       }

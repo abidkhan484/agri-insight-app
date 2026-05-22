@@ -3,6 +3,7 @@ name: doc-updater
 description: Updates technical and user-facing documentation for ZBNF farming assistant after feature implementation. Updates README, architecture doc, API command reference, task checklists, and the Bangla+English farmer guide.
 tools: ["Read", "Write", "Edit", "Glob"]
 model: haiku
+fallback_models: ["gemini-3.5-flash", "gemini-3.1-pro"]
 ---
 
 # Doc Updater Agent — ZBNF Farming Assistant

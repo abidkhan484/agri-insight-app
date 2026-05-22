@@ -1,6 +1,6 @@
 # Spec: Implement `/disease` Telegram Command
 
-> Status: **Pending** | Priority: **Medium** | Component: `src/bot/commands/disease.js` (new file)
+> Status: **Completed** | Priority: **Medium** | Component: `src/bot/commands/disease.js` (new file)
 
 ---
 
@@ -76,15 +76,15 @@ Add `PLANTNET_API_KEY` to `.env.example` for backend usage (the existing `VITE_P
 
 ## Acceptance Criteria
 
-- [ ] `/disease` prompts user to send a photo
-- [ ] Bot processes the photo via PlantNet API
-- [ ] Scientific name mapped to local disease name + ZBNF treatment
-- [ ] Response is Bangla-first with English subtitle
-- [ ] `PLANTNET_API_KEY` backend env var added to `.env.example`
-- [ ] `disease-treatments.json` available server-side
-- [ ] Rate limiting considered (500 req/day shared with PWA)
-- [ ] Logger present, no raw PII logged
-- [ ] Registered in `bot/index.js`
+- [x] `/disease` prompts user to send a photo
+- [x] Bot processes the photo via PlantNet API
+- [x] Scientific name mapped to local disease name + ZBNF treatment
+- [x] Response is Bangla-first with English subtitle
+- [x] `PLANTNET_API_KEY` backend env var added to `.env.example`
+- [x] `disease-treatments.json` available server-side
+- [x] Rate limiting considered (500 req/day shared with PWA)
+- [x] Logger present, no raw PII logged
+- [x] Registered in `bot/index.js`
 
 ---
 

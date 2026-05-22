@@ -1,0 +1,74 @@
+{
+  "Alternaria": {
+    "name_bn": "অলটারনারিয়া পাতার দাগ",
+    "name_en": "Alternaria Leaf Blight",
+    "symptoms_bn": "পাতায় বৃত্তাকার বাদামি দাগ, হলুদ আভা",
+    "symptoms_en": "Circular brown spots on leaves with yellow halo",
+    "treatment": {
+      "primary": "neemastra",
+      "secondary": "agniastra",
+      "schedule_bn": "নিমাস্ত্র ৭ দিন অন্তর ৩ বার স্প্রে করুন",
+      "schedule_en": "Spray Neemastra 3 times at 7-day intervals"
+    }
+  },
+  "Phytophthora": {
+    "name_bn": "আলুর ধসা রোগ (লেট ব্লাইট)",
+    "name_en": "Late Blight",
+    "symptoms_bn": "পাতা ও কাণ্ডে কালো পচা দাগ, সাদা ছত্রাক",
+    "symptoms_en": "Dark water-soaked lesions, white mold on undersides",
+    "treatment": {
+      "primary": "brahmastra",
+      "secondary": "neemastra",
+      "schedule_bn": "ব্রহ্মাস্ত্র দিয়ে একবার, তারপর নিমাস্ত্র সাপ্তাহিক",
+      "schedule_en": "Apply Brahmastra once, then weekly Neemastra"
+    }
+  },
+  "Fusarium": {
+    "name_bn": "ফিউজেরিয়াম উইল্ট (ঢলে পড়া রোগ)",
+    "name_en": "Fusarium Wilt",
+    "symptoms_bn": "গাছ হঠাৎ ঢলে পড়ে, শিকড় বাদামি",
+    "symptoms_en": "Sudden wilting, brown vascular tissue",
+    "treatment": {
+      "primary": "jeevamrutha",
+      "secondary": "beejamrutha",
+      "schedule_bn": "জীবামৃত মাটিতে ঢালুন, পরবর্তী চাষে বীজামৃত দিন",
+      "schedule_en": "Drench with Jeevamrutha; use Beejamrutha next season"
+    }
+  },
+  "Bemisia": {
+    "name_bn": "সাদা মাছি (হোয়াইটফ্লাই)",
+    "name_en": "Whitefly",
+    "symptoms_bn": "পাতার নিচে সাদা পোকা, মধু শিশির",
+    "symptoms_en": "White insects under leaves, honeydew residue",
+    "treatment": {
+      "primary": "agniastra",
+      "secondary": "neemastra",
+      "schedule_bn": "অগ্নিআস্ত্র সন্ধ্যায় স্প্রে করুন, ৫ দিন পর নিমাস্ত্র",
+      "schedule_en": "Spray Agniastra at dusk, follow with Neemastra after 5 days"
+    }
+  },
+  "Spodoptera": {
+    "name_bn": "ফল আর্মিওয়ার্ম",
+    "name_en": "Fall Armyworm",
+    "symptoms_bn": "পাতায় জানালার মতো ক্ষত, মল দৃশ্যমান",
+    "symptoms_en": "Window-pane leaf damage, frass visible",
+    "treatment": {
+      "primary": "agniastra",
+      "secondary": "brahmastra",
+      "schedule_bn": "অগ্নিআস্ত্র প্রতি ৫ দিনে স্প্রে করুন",
+      "schedule_en": "Spray Agniastra every 5 days"
+    }
+  },
+  "unknown": {
+    "name_bn": "অজ্ঞাত রোগ",
+    "name_en": "Unknown Disease",
+    "symptoms_bn": "নিশ্চিত শনাক্ত করা যায়নি",
+    "symptoms_en": "Could not identify with confidence",
+    "treatment": {
+      "primary": "neemastra",
+      "secondary": null,
+      "schedule_bn": "সতর্কতামূলক নিমাস্ত্র স্প্রে করুন, কৃষি বিশেষজ্ঞের পরামর্শ নিন",
+      "schedule_en": "Apply preventive Neemastra spray; consult agriculture expert"
+    }
+  }
+}

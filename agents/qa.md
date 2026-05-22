@@ -3,6 +3,7 @@ name: qa
 description: Writes and runs tests for the ZBNF farming assistant. Verifies ZBNF formulation outputs against exact reference values in zbnf-formulation skill. Checks Bangla text presence, logger calls, and edge-case input handling.
 tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
 model: sonnet
+fallback_models: ["gemini-3.5-flash", "gemini-3.1-pro"]
 ---
 
 # QA Agent — ZBNF Farming Assistant

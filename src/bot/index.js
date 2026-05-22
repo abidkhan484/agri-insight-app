@@ -11,6 +11,7 @@ import { registerAskCommand } from './commands/ask.js';
 import { registerJoinmapCommand } from './commands/joinmap.js';
 import { registerFaqCommand } from './commands/faq.js';
 import { registerCommunityCommands } from './commands/community.js';
+import { diseaseScene } from './commands/disease.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
 import { validateTelegramInitData, generateSupabaseJWT, parseTelegramUser } from '../services/auth.js';
@@ -23,7 +24,7 @@ if (!config.botToken) {
 const bot = new Telegraf(config.botToken);
 
 // Middleware
-const stage = new Scenes.Stage([registerWizard]);
+const stage = new Scenes.Stage([registerWizard, diseaseScene]);
 bot.use(session());
 bot.use(stage.middleware());
 
@@ -61,6 +62,9 @@ Welcome ${name}! I am your agricultural assistant.
 // /register command
 bot.command('register', (ctx) => ctx.scene.enter('REGISTER_PLOT_SCENE'));
 
+// /disease command
+bot.command('disease', (ctx) => ctx.scene.enter('DISEASE_SCENE'));
+
 // Initialize Commands
 initPlotCommands(bot);
 initReminderCommands(bot);
@@ -87,12 +91,14 @@ bot.help((ctx) => {
 /myreminders - রিমাইন্ডার তালিকা
 /cancelreminder <ID> - রিমাইন্ডার বাতিল করুন
 /soilstatus - মাটির অবস্থা দেখুন
+/disease - ফসলের রোগ শনাক্তকরণ
 /ask <প্রশ্ন> - AI সহকারীকে প্রশ্ন করুন (ZBNF)
 /joinmap - কৃষক মানচিত্রে যোগ দিন
 /faq <প্রশ্ন> - সচরাচর জিজ্ঞাসিত প্রশ্নাবলী
 /registercow - দেশি গরু সরবরাহকারী হিসেবে নাম লিখুন
 /findcow <জেলা> - গরু সরবরাহকারী খুঁজুন
 /reportpest <বর্ণনা> - আপনার এলাকায় পোকার খবর দিন
+/help - সব কমান্ডের তালিকা দেখুন
 
 Need help? I understand:
 /start - Start the bot
@@ -103,12 +109,14 @@ Need help? I understand:
 /myreminders - List active reminders
 /cancelreminder <ID> - Cancel a reminder
 /soilstatus - Check soil moisture status
+/disease - Identify crop disease from photo
 /ask <question> - Ask AI Assistant (ZBNF)
 /joinmap - Join the community map
 /faq <query> - Search FAQ database
 /registercow - Register as desi cow supplier
 /findcow <district> - Find cow suppliers
-/reportpest <desc> - Report pest alert in your area`;
+/reportpest <desc> - Report pest alert in your area
+/help - Show this help message`;
 
   logger.info('Help command received', { chat_id: 'chat:' + ctx.chat.id });
   return ctx.reply(helpMessage);

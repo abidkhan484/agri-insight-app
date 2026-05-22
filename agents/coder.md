@@ -3,6 +3,7 @@ name: coder
 description: Implements features for the ZBNF farming assistant. Use when given a P-task phase to build. Reads zbnf-formulation skill before any farming business logic. Follows project coding standards strictly — Winston logger, ESLint-clean code, Bangla UI strings.
 tools: ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
 model: sonnet
+fallback_models: ["gemini-3.5-flash", "gemini-3.1-pro"]
 ---
 
 # Coder Agent — ZBNF Farming Assistant

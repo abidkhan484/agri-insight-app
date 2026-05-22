@@ -1,174 +1,109 @@
 # ZBNF Farming Assistant
 
-A **zero-cost** agentic technology platform delivering free tech support to Zero Budget Natural Farming (ZBNF) farmers in Bangladesh. Every tool, API, and hosting service is free or open-source.
+A **zero-cost** agentic technology platform delivering free tech support to Zero Budget Natural Farming (ZBNF) farmers in Bangladesh. Every tool, API, and hosting service is 100% free or open-source.
 
-> All ZBNF formulation ratios are non-negotiable — wrong values damage crops. Always read `skills/zbnf-formulation/SKILL.md` before touching any farming calculation.
-
----
-
-## Status: P8 Community Network Completed ✅
-
-The system supports farmer registration, plot management, automated ZBNF reminders, weather alerts, offline record keeping, IoT soil monitoring, plant disease detection, offline ZBNF knowledge base, a local AI assistant for ZBNF Q&A, and a community-driven farmer network with mapping and FAQ support.
+> [!IMPORTANT]
+> **ZBNF Formulation Ratios are Non-Negotiable**: Wrong recipe values damage crops. Always consult the local formulation skill manual at `skills/zbnf-formulation/SKILL.md` before writing or editing any farming calculation.
 
 ---
 
-## Tools (P0–P8)
+## System Overview
 
-| Phase | Tool | Status | What It Does |
-|-------|------|--------|--------------|
-| P0 | Shared Foundation | ✅ | SQLite DB, Winston logger, ESLint/Prettier, Husky pre-commit |
-| P1 | Farm Scheduler Bot | ✅ | Telegram bot with ZBNF auto-reminders |
-| P2 | Weather Irrigation Alert | ✅ | Open-Meteo forecasts → skip/spray/heat alerts via Telegram |
-| P3 | Farm Record Tracker | ✅ | React PWA + IndexedDB — offline crop logs |
-| P4 | IoT Soil Monitoring | ✅ | ESP32 + MQTT + Node-RED + Grafana — Whapasa soil alerts |
-| P5 | Plant Disease Detection | ✅ | Photo → Bangla disease identification + ZBNF treatment |
-| P6 | ZBNF Knowledge PWA | ✅ | Offline formulation calculators, pest gallery, crop calendar |
-| P7 | Local AI Assistant | ✅ | Ollama + ChromaDB RAG — Bangla/English ZBNF Q&A |
-| P8 | Community Network | ✅ | Telegram FAQ bot, Supabase farmer map, pest alerts |
+The ZBNF Farming Assistant is a production-grade ecosystem supporting natural farming:
+*   **Farmer Registry & Plot Management**: Telegram bot botting with interactive workflows.
+*   **Automated ZBNF Reminders**: Timely schedulers based on planting calendars.
+*   **Weather Alerts**: Real-timeOpen-Meteo analysis mapping heat waves and storm warnings.
+*   **Offline Record Keeper**: Unified React PWA utilizing IndexedDB for remote field logs.
+*   **IoT Soil Telemetry**: Capacitive and environmental sensors broadcasting soil hydration alerts.
+*   **Desi Cow Finder & FAQ**: A peer-to-peer directory for sourcing local ingredients.
+*   **Bangla AI Q&A Assistant**: Offline-first RAG querying ZBNF manuals natively in Bangla.
 
 ---
 
 ## Tech Stack
 
 | Layer | Choice |
-|-------|--------|
-| Bot | Node.js 20+ · Telegraf v4 · Supabase · node-cron |
-| PWA | React 19 · Vite 8 · Telegram Mini Apps · Dexie.js |
-| IoT | ESP32 · MQTT · Node-RED · InfluxDB · Grafana |
-| AI | Ollama · ChromaDB · LlamaIndex · Flask |
-| DB | Supabase (PostgreSQL + RLS + Triggers + PostGIS) |
-| Weather | Open-Meteo (free, no key) |
-| Disease | PlantNet API (free tier) |
-| Hosting | Render.com (bot) · GitHub Pages (PWA) |
+| :--- | :--- |
+| **Bot Backend** | Node.js 20+ · Telegraf v4 · Supabase · node-cron |
+| **Unified PWA** | React 19 · Vite 8 · Telegram Mini Apps · Dexie.js |
+| **IoT Hardware** | ESP32 · MQTT · Node-RED · InfluxDB · Grafana |
+| **AI Engine** | Ollama (Gemma2:2b) · ChromaDB · Flask RAG |
+| **Database** | Supabase (PostgreSQL + RLS + Triggers + PostGIS) |
+| **APIs** | Open-Meteo (Weather) · PlantNet API (Disease) |
+| **Hosting** | Render.com (Bot) · GitHub Pages (PWA) |
 
 ---
 
-## Community Farmer Network (P8)
+## 🤖 Portable Multi-Agent Pipelines
 
-### Features
-- **FAQ Bot**: Instant ZBNF answers via `/faq <keyword>` using a curated local dictionary.
-- **Farmer Map**: Interactive map displaying ZBNF farms, desi cow sources, and regional pest alerts.
-- **Pest Alerts**: Community-driven pest reporting that broadcasts alerts to nearby farmers.
-- **Desi Cow Finder**: Directory of farmers providing desi cow dung and urine (essential for ZBNF).
+This repository implements a **100% self-contained multi-agent pipeline** that works out-of-the-box on other devices immediately upon cloning—without requiring global IDE extensions.
 
-### Commands
-- `/faq [keyword]` - Get ZBNF recipe or info.
-- `/joinmap` - Get the link to join the Farmer Map.
-- `/reportpest` - Report a pest outbreak in your area.
+### Running Workflows Natively (Claude Code)
+If you are running in Claude Code, execute custom TOML commands directly in the CLI using the `@` symbol:
 
----
+*   **Test-Driven Development (TDD)**: Automates the Red-Green-Refactor loop:
+    ```bash
+    @tdd phase=P9 feature="SMS Fallback Alerts" test_file="src/__tests__/sms.test.js"
+    ```
+*   **End-to-End Implementation**: Orchestrates all sub-agents (Architect → Developer → Reviewer → QA → Committer) for a single feature:
+    ```bash
+    @full-pipeline phase=P9 feature="SMS Fallback Alerts"
+    ```
+*   **Manual Security & Code Quality Gate**:
+    ```bash
+    @quality-check
+    ```
 
-## Local AI Assistant (P7)
+### Running Workflows Universally (Gemini CLI / Codex / Terminals)
+For environments where the assistant doesn't natively parse `@` commands, run the pipeline programmatically using standard shell commands:
+```bash
+# Execute TDD workflow
+node scripts/run-pipeline.js tdd phase=P9 feature="SMS Fallback Alerts" test_file="src/__tests__/sms.test.js"
 
-### Ollama Setup
-1. **Install Ollama**: `curl -fsSL https://ollama.com/install.sh | sh`
-2. **Pull Models**:
-   ```bash
-   ollama pull gemma2:2b
-   ollama pull nomic-embed-text
-   ```
-3. **Run AI Service**:
-   ```bash
-   cd ai-assistant
-   pip install -r requirements.txt
-   python app.py
-   ```
-4. **Usage**: Use the `/ask` command in the Telegram bot or access the Flask API at `http://localhost:5000/ask`.
+# Execute full pipeline
+node scripts/run-pipeline.js full-pipeline phase=P9 feature="SMS Fallback Alerts"
 
----
-
-## Plant Disease Detection (P5)
-
-### API Setup
-- **Primary Engine**: PlantNet API
-- **API Key**: Get one at [my.plantnet.org](https://my.plantnet.org)
-- **Env Variable**: `VITE_PLANTNET_API_KEY`
-- **Offline Fallback**: TF.js with a quantized MobileNetV2 model stored in `public/models/plant-disease/`
-
----
-
-## ZBNF Knowledge PWA (P6)
-
-### Features
-- **Calculators**: Accurate dose calculation for 6 ZBNF formulations (Jeevamrutha, Beejamrutha, etc.) based on land area.
-- **Pest Gallery**: Offline searchable database of 30+ common pests with ZBNF treatments.
-- **Crop Calendar**: Seasonal planting windows for all 8 divisions of Bangladesh.
-- **Offline First**: Works 100% offline via Service Workers (Workbox).
-
----
-
-## Hardware & IoT (P4)
-
-### Hardware Requirements
-- **Microcontroller**: ESP32 (NodeMCU or similar)
-- **Soil Moisture**: Capacitive Soil Moisture Sensor (v1.2)
-- **Environment**: DHT22 Temperature & Humidity Sensor
-- **Power**: 18650 Li-ion battery + TP4056 Charger + 5V Solar Panel (for field deployment)
-
-### MQTT Setup
-- **Broker**: `broker.hivemq.com` (for development)
-- **Port**: `1883`
-- **Topic**: `farm/{plot_id}/sensors`
-- **Payload Format**:
-  ```json
-  {
-    "moisture": 45.2,
-    "temp": 30.5,
-    "humidity": 65.0,
-    "ts": "2024-05-20T10:00:00Z"
-  }
-  ```
+# Execute a quality check
+node scripts/run-pipeline.js quality-check
+```
 
 ---
 
 ## Project Layout
 
 ```
-src/               ← Bot backend (Node.js + Telegraf + Supabase)
-client/            ← Unified PWA (React 19 + Vite 8)
+src/               ← Telegram bot backend (Node.js + Telegraf + Supabase)
+client/            ← Unified React PWA (React 19 + Vite 8)
   src/modules/
-    krishi-record/ ← P3 Farm Record Tracker
-    disease-detect/← P5 Plant Disease Detection
-    knowledge/     ← P6 ZBNF Knowledge Base
-    map/           ← P8 Farmer Map (Leaflet)
-  src/shared/      ← TMA auth provider, SyncManager
-ai-assistant/      ← P7 Local AI (Flask + LlamaIndex + ChromaDB)
-firmware/          ← P4 ESP32 Arduino sketch
-flows/             ← P4 Node-RED flow definition
-grafana/           ← P4 Grafana dashboard JSON
-docs/              ← Architecture, guides, specs
-  spec/            ← Feature specs for upcoming work
-agents/            ← Sub-agent definitions (coder, qa, reviewer, doc-updater, committer)
-skills/            ← Per-phase skill files (SKILL.md in each)
-tasks/             ← P0–P8 implementation checklists
-templates/         ← Config templates (ESLint, Prettier, Husky, Winston)
+    krishi-record/ ← Farm Record Tracker PWA
+    disease-detect/← Plant Disease Detection PWA
+    knowledge/     ← ZBNF Knowledge Base PWA
+    map/           ← Farmer Map (Leaflet)
+ai-assistant/      ← Local AI RAG server (Flask + LlamaIndex)
+firmware/          ← ESP32 Arduino telemetry sketches
+docs/              ← Architecture plans, guides, specs
+.claude/
+  hooks/           ← Post-tool Prettier auto-formatter & console.log check hooks
+  settings.json    ← Safe and audited sandbox command permissions
+agents/            ← Persona configurations (coder, qa, reviewer, doc-updater, committer)
+commands/          ← Custom workflow orchestrators (.toml files)
+skills/            ← Shared reference guides (TDD, Security checks, ZBNF recipe ratios)
 ```
-
----
-
-## Documentation
-
-- [Architecture Overview](docs/architecture.md)
-- [Deployment Guide](docs/deployment-guide.md)
-- [Farmer Guide (Bangla + English)](docs/farmer-guide-bn-en.md)
-- [Codemaps Index](docs/CODEMAPS/INDEX.md)
-- [Developer Setup](docs/developer-setup.md)
 
 ---
 
 ## Code Quality (Non-Negotiable)
 
-- **ESLint** `no-console: error` — use Winston (Node.js)
-- **Prettier** — single quotes, trailing commas, 100 char width
-- **Husky pre-commit** — lint → format → test; zero warnings allowed
-- **Bangla first** in all farmer-facing Telegram messages
-- **Supabase SDK only** — all queries via `dbService` abstraction, RLS enforced
+*   **Zero console.log in Production**: ESLint blocks standard output before staging. Use the custom Winston logger in Node.js services (`config/logger.js`) and `loglevel` in client code.
+*   **Prettier Formatting**: Single quotes, trailing commas, 100 character max-width. (Enforced automatically on every file edit via `.claude/hooks/auto-format.js`).
+*   **Bangla First**: All farmer-facing UI text and messages must be in Bangla.
+*   **Row-Level Security (RLS)**: Enforced on all Supabase PostgreSQL tables. All database interactions must use the `dbService` connection layer.
 
 ---
 
 ## Quick Start
 
-### Bot
+### 1. Bot Setup
 ```bash
 cd src
 npm install
@@ -176,11 +111,11 @@ cp ../.env.example ../.env   # Add your BOT_TOKEN + Supabase credentials
 npm start
 ```
 
-### Client (PWA)
+### 2. Client (PWA) Setup
 ```bash
 cd client
 npm install
-npm run dev                  # http://localhost:5173
+npm run dev                  # Serves PWA on http://localhost:5173
 ```
 
-See [docs/developer-setup.md](docs/developer-setup.md) for full instructions.
+Refer to [docs/developer-setup.md](docs/developer-setup.md) for full configurations.

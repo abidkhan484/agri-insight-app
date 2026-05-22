@@ -107,10 +107,20 @@ Use the 'Krishi Record' app to track expenses, yields, and soil health offline.
 ## ৭. রোগ শনাক্তকরণ / Plant Disease Detection
 
 **বাংলা:**
-আক্রান্ত পাতার ছবি তুলে রোগের নাম এবং ZBNF প্রতিকার জানতে 'Disease Detector' অ্যাপ ব্যবহার করুন।
+আক্রান্ত পাতার ছবি তুলে রোগের নাম এবং ZBNF প্রতিকার জানতে আমাদের 'Disease Detector' অ্যাপ ব্যবহার করুন অথবা সরাসরি টেলিগ্রাম বটে `/disease` কমান্ডটি ব্যবহার করুন।
+
+**কিভাবে বটের মাধ্যমে ব্যবহার করবেন:**
+1. টাইপ করুন: `/disease`
+2. বট ছবি পাঠাতে বলবে। আপনার ফোনের ক্যামেরা দিয়ে আক্রান্ত পাতার একটি পরিষ্কার ছবি তুলে পাঠান।
+3. বট ছবি বিশ্লেষণ করে রোগের নাম, আত্মবিশ্বাসের হার এবং ZBNF প্রতিকার বাংলা ও ইংরেজিতে জানিয়ে দেবে।
 
 **English:**
-Take a photo of an infected leaf to identify the disease and get ZBNF treatment.
+Take a photo of an infected leaf to identify the disease and get ZBNF treatment. You can use the 'Disease Detector' PWA or use the `/disease` command directly in the Telegram bot.
+
+**How to use via Bot:**
+1. Type: `/disease`
+2. Send a clear photo of the infected leaf when prompted.
+3. The bot will analyze and reply with the disease name, confidence score, and ZBNF treatments.
 
 ---
 
@@ -137,6 +147,7 @@ Use the 'ZBNF Knowledge Base' for offline dosage calculators and pest management
 | `/myplots` | জমির তালিকা | List plots |
 | `/myreminders` | রিমাইন্ডার তালিকা | List reminders |
 | `/soilstatus` | মাটির অবস্থা | Check soil |
+| `/disease` | ফসলের রোগ শনাক্তকরণ | Identify crop disease |
 | `/help` | সাহায্য | Help |
 
 ---
