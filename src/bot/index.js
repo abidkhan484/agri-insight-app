@@ -16,6 +16,7 @@ import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
 import {
   validateTelegramInitData,
+  validateTelegramOAuthData,
   generateSupabaseJWT,
   parseTelegramUser,
 } from '../services/auth.js';
@@ -203,6 +204,75 @@ http
           );
         } catch (error) {
           logger.error('TMA Auth Error', { error: error.message });
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Internal server error' }));
+        }
+      });
+      return;
+    }
+
+    // Telegram OAuth Login Widget Endpoint (browser-based auth)
+    if (normalizedPath === '/api/auth/telegram-oauth' || normalizedPath.endsWith('/api/auth/telegram-oauth')) {
+      if (req.method !== 'POST') {
+        logger.warn(`OAuth endpoint hit with invalid method: ${req.method}`);
+        res.writeHead(405, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Method Not Allowed. Use POST.' }));
+        return;
+      }
+
+      logger.info('OAuth endpoint hit (POST)', { path: req.url });
+      let body = '';
+      req.on('data', (chunk) => {
+        body += chunk.toString();
+      });
+      req.on('end', async () => {
+        try {
+          const { oauthData } = JSON.parse(body);
+
+          if (!validateTelegramOAuthData(oauthData)) {
+            logger.warn('Telegram OAuth Validation Failed');
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid Telegram OAuth data' }));
+            return;
+          }
+
+          if (!oauthData.id) {
+            logger.warn('Telegram OAuth: Missing user id');
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Invalid user data' }));
+            return;
+          }
+
+          const token = generateSupabaseJWT(oauthData.id);
+
+          // Register farmer if not exists
+          try {
+            const farmer = await dbService.getFarmerByTelegramId(oauthData.id.toString());
+            if (!farmer) {
+              await dbService.registerFarmer(
+                oauthData.id.toString(),
+                oauthData.first_name || 'Farmer',
+              );
+              logger.info('New farmer registered via OAuth', { telegramId: oauthData.id });
+            }
+          } catch (dbErr) {
+            logger.error('Failed to register farmer via OAuth', { error: dbErr.message });
+          }
+
+          logger.info('Telegram OAuth Auth Success', { telegramId: oauthData.id });
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(
+            JSON.stringify({
+              token,
+              user: {
+                id: oauthData.id,
+                first_name: oauthData.first_name || '',
+                language_code: oauthData.language_code || 'bn',
+              },
+            }),
+          );
+        } catch (error) {
+          logger.error('Telegram OAuth Error', { error: error.message });
           res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ error: 'Internal server error' }));
         }

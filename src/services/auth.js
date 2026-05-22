@@ -73,3 +73,47 @@ export function parseTelegramUser(initData) {
     return null;
   }
 }
+
+/**
+ * Validates data received from the Telegram Login Widget (OAuth).
+ * Uses a different algorithm from the WebApp SDK validation.
+ * @see https://core.telegram.org/widgets/login#checking-authorization
+ */
+export function validateTelegramOAuthData(oauthData) {
+  if (!oauthData || !oauthData.hash || !oauthData.id) return false;
+
+  try {
+    // Check auth_date freshness (reject if older than 24 hours)
+    const authDate = parseInt(oauthData.auth_date, 10);
+    if (isNaN(authDate)) return false;
+
+    const now = Math.floor(Date.now() / 1000);
+    const MAX_AGE_SECONDS = 86400; // 24 hours
+    if (now - authDate > MAX_AGE_SECONDS) {
+      logger.warn('Telegram OAuth data expired', { authDate, now });
+      return false;
+    }
+
+    const { hash, ...dataFields } = oauthData;
+
+    // Build data-check-string: alphabetically sorted "key=value" joined by \n
+    const dataCheckString = Object.keys(dataFields)
+      .sort()
+      .map((key) => `${key}=${dataFields[key]}`)
+      .join('\n');
+
+    // Secret key = SHA256(bot_token) — different from WebApp validation!
+    const secretKey = crypto.createHash('sha256').update(config.botToken).digest();
+
+    const calculatedHash = crypto
+      .createHmac('sha256', secretKey)
+      .update(dataCheckString)
+      .digest('hex');
+
+    return calculatedHash === hash;
+  } catch (error) {
+    logger.error('Error validating Telegram OAuth data', { error });
+    return false;
+  }
+}
+

@@ -1,4 +1,17 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Resolve path to the root .env file (two levels up from src/config)
+const rootEnvPath = path.resolve(__dirname, '../../.env');
+
+// Load environment variables from the root .env file
+dotenv.config({ path: rootEnvPath });
+
+// Also load from current working directory as fallback
+dotenv.config();
 
 export const config = {
   botToken: process.env.BOT_TOKEN,

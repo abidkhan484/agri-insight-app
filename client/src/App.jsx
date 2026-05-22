@@ -1,7 +1,8 @@
-import { useState, lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { useTMA } from '@shared/tma/TMAProvider';
 import { TMATheme } from '@shared/tma/TMATheme';
+import { LoginScreen } from '@shared/tma/LoginScreen';
 import './App.css';
 
 // Lazy load modules
@@ -11,7 +12,7 @@ const MapPWA = lazy(() => import('@modules/map/App'));
 const ZBNFKnowledge = lazy(() => import('@modules/knowledge/App'));
 
 function Dashboard() {
-  const { user, mode } = useTMA();
+  const { user, mode, logout } = useTMA();
   
   const modules = [
     { id: 'records', label: 'কৃষি রেকর্ড', sub: 'Krishi Record', icon: '📈', path: '/records' },
@@ -25,11 +26,22 @@ function Dashboard() {
       <header className="dashboard-header">
         <h1>Agriculture Assistant</h1>
         {user ? (
-          <p className="welcome-text">স্বাগতম, {user.first_name}!</p>
+          <div className="user-info">
+            <p className="welcome-text">স্বাগতম, {user.first_name}!</p>
+            {mode === 'browser' && (
+              <button
+                className="logout-btn"
+                onClick={logout}
+                type="button"
+              >
+                লগআউট (Logout)
+              </button>
+            )}
+          </div>
         ) : (
           mode === 'guest' && (
             <div className="guest-notice">
-              ⚠️ আপনি টেলিগ্রামের বাইরে আছেন। সিঙ্ক ফিচার কাজ করবে না।
+              ⚠️ আপনি অতিথি মোডে আছেন। সিঙ্ক ফিচার কাজ করবে না।
               <br />
               (Running in Guest Mode. Sync disabled.)
             </div>
@@ -50,7 +62,7 @@ function Dashboard() {
 }
 
 function App() {
-  const { isReady, error } = useTMA();
+  const { isReady, error, mode } = useTMA();
 
   if (!isReady) {
     return <div className="app-loading">কৃষি সহকারী লোড হচ্ছে...</div>;
@@ -58,6 +70,15 @@ function App() {
 
   if (error) {
     return <div className="app-error">Error: {error}</div>;
+  }
+
+  // Show login screen when user is not authenticated and not in guest mode
+  if (mode === 'login') {
+    return (
+      <TMATheme>
+        <LoginScreen />
+      </TMATheme>
+    );
   }
 
   return (

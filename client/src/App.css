@@ -150,6 +150,33 @@ canvas {
   text-align: center;
 }
 
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-btn {
+  padding: 6px 16px;
+  border: 1px solid #c8e6c9;
+  background: transparent;
+  color: var(--primary-color);
+  font-size: 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: #e8f5e9;
+  border-color: var(--primary-color);
+}
+
+.logout-btn:active {
+  transform: scale(0.95);
+}
+
 .guest-notice {
   background-color: #fff3cd;
   color: #856404;
