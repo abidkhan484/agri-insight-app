@@ -99,7 +99,7 @@ export const initReminderCommands = (bot) => {
         type: 'custom',
         interval_days: intervalDays,
         next_due: nextDue,
-        description: description
+        description: description,
       });
 
       return ctx.reply(

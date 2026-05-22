@@ -36,6 +36,7 @@ export default [
         require: 'readonly',
         fetch: 'readonly',
         URL: 'readonly',
+        URLSearchParams: 'readonly',
         setTimeout: 'readonly',
         AbortSignal: 'readonly',
         global: 'readonly',

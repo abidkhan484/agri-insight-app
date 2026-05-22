@@ -7,7 +7,7 @@ const AI_API_URL = config.aiApiUrl;
  * Registers the /ask command with the bot.
  * @param {import('telegraf').Telegraf} bot
  */
- export function registerAskCommand(bot) {
+export function registerAskCommand(bot) {
   bot.command('ask', async (ctx) => {
     const telegramId = ctx.from.id.toString();
     const question = ctx.message.text.replace('/ask', '').trim();
@@ -39,7 +39,7 @@ const AI_API_URL = config.aiApiUrl;
       if (!response.ok) {
         throw new Error(`AI API error: ${response.status}`);
       }
-      
+
       const data = await response.json();
 
       await ctx.telegram.editMessageText(
@@ -47,16 +47,16 @@ const AI_API_URL = config.aiApiUrl;
         thinking.message_id,
         null,
         `🌾 *AI উত্তর / AI Answer*\n\n${data.answer}`,
-        { parse_mode: 'Markdown' }
+        { parse_mode: 'Markdown' },
       );
       logger.info('Ask response sent', { telegramId: `id:${telegramId}`, sources: data.sources });
     } catch (err) {
       logger.error('Ask command failed', { error: err.message });
       await ctx.telegram.editMessageText(
-        ctx.chat.id, 
-        thinking.message_id, 
+        ctx.chat.id,
+        thinking.message_id,
         null,
-        'দুঃখিত, এই মুহূর্তে উত্তর দিতে পারছি না।\nSorry, unable to answer right now.'
+        'দুঃখিত, এই মুহূর্তে উত্তর দিতে পারছি না।\nSorry, unable to answer right now.',
       );
     }
   });

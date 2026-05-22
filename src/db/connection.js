@@ -8,8 +8,8 @@ if (!config.supabaseUrl || !config.supabaseKey) {
 
 const supabase = createClient(config.supabaseUrl, config.supabaseKey, {
   auth: {
-    persistSession: false
-  }
+    persistSession: false,
+  },
 });
 
 logger.info('Supabase client initialized', { url: config.supabaseUrl });

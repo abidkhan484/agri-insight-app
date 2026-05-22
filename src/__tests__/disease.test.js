@@ -43,7 +43,9 @@ describe('/disease Telegraf Scene Handlers', () => {
       chat: { id: 67890 },
       reply: vi.fn().mockResolvedValue(true),
       telegram: {
-        getFileLink: vi.fn().mockResolvedValue(new URL('https://api.telegram.org/file/bot123/photo.jpg')),
+        getFileLink: vi
+          .fn()
+          .mockResolvedValue(new URL('https://api.telegram.org/file/bot123/photo.jpg')),
         editMessageText: vi.fn().mockResolvedValue(true),
       },
       scene: {
@@ -79,7 +81,9 @@ describe('/disease Telegraf Scene Handlers', () => {
 
     // Fast-forward 60s to trigger timeout
     await vi.runAllTimersAsync();
-    expect(ctx.reply).toHaveBeenLastCalledWith(expect.stringContaining('রোগ শনাক্তকরণ বাতিল করা হয়েছে'));
+    expect(ctx.reply).toHaveBeenLastCalledWith(
+      expect.stringContaining('রোগ শনাক্তকরণ বাতিল করা হয়েছে'),
+    );
     expect(ctx.scene.leave).toHaveBeenCalled();
   });
 
@@ -92,7 +96,10 @@ describe('/disease Telegraf Scene Handlers', () => {
 
   it('should handle successful disease identification and mapping', async () => {
     ctx.message = {
-      photo: [{ file_id: 'p-1', width: 100, height: 100 }, { file_id: 'p-2', width: 800, height: 800 }],
+      photo: [
+        { file_id: 'p-1', width: 100, height: 100 },
+        { file_id: 'p-2', width: 800, height: 800 },
+      ],
     };
 
     // Mock Telegram photo download
@@ -100,7 +107,7 @@ describe('/disease Telegraf Scene Handlers', () => {
       Promise.resolve({
         ok: true,
         blob: () => Promise.resolve(new Blob(['photo-data'], { type: 'image/jpeg' })),
-      })
+      }),
     );
 
     // Mock PlantNet API identification (Rice Blast / Alternaria)
@@ -118,20 +125,20 @@ describe('/disease Telegraf Scene Handlers', () => {
               },
             ],
           }),
-      })
+      }),
     );
 
     await handleDiseasePhoto(ctx);
 
     expect(ctx.reply).toHaveBeenCalledWith(expect.stringContaining('বিশ্লেষণ করা হচ্ছে'));
     expect(ctx.telegram.getFileLink).toHaveBeenCalledWith('p-2');
-    
+
     expect(ctx.telegram.editMessageText).toHaveBeenCalledWith(
       ctx.chat.id,
       undefined,
       null,
       expect.stringContaining('অলটারনারিয়া পাতার দাগ'),
-      expect.objectContaining({ parse_mode: 'Markdown' })
+      expect.objectContaining({ parse_mode: 'Markdown' }),
     );
 
     // Check Bangla confidence digit translation (85% -> ৮৫%)
@@ -140,7 +147,7 @@ describe('/disease Telegraf Scene Handlers', () => {
       undefined,
       null,
       expect.stringContaining('৮৫%'),
-      expect.any(Object)
+      expect.any(Object),
     );
 
     expect(ctx.scene.leave).toHaveBeenCalled();
@@ -155,7 +162,7 @@ describe('/disease Telegraf Scene Handlers', () => {
       Promise.resolve({
         ok: true,
         blob: () => Promise.resolve(new Blob(['photo-data'])),
-      })
+      }),
     );
 
     global.fetch.mockImplementationOnce(() =>
@@ -172,7 +179,7 @@ describe('/disease Telegraf Scene Handlers', () => {
               },
             ],
           }),
-      })
+      }),
     );
 
     await handleDiseasePhoto(ctx);
@@ -182,7 +189,7 @@ describe('/disease Telegraf Scene Handlers', () => {
       undefined,
       null,
       expect.stringContaining('Exoticus planticus'),
-      expect.objectContaining({ parse_mode: 'Markdown' })
+      expect.objectContaining({ parse_mode: 'Markdown' }),
     );
 
     expect(ctx.telegram.editMessageText).toHaveBeenCalledWith(
@@ -190,7 +197,7 @@ describe('/disease Telegraf Scene Handlers', () => {
       undefined,
       null,
       expect.stringContaining('নির্দিষ্ট ZBNF প্রতিকার উপলব্ধ নেই'),
-      expect.any(Object)
+      expect.any(Object),
     );
   });
 
@@ -203,7 +210,7 @@ describe('/disease Telegraf Scene Handlers', () => {
       Promise.resolve({
         ok: true,
         blob: () => Promise.resolve(new Blob(['photo-data'])),
-      })
+      }),
     );
 
     global.fetch.mockImplementationOnce(() =>
@@ -220,7 +227,7 @@ describe('/disease Telegraf Scene Handlers', () => {
               },
             ],
           }),
-      })
+      }),
     );
 
     await handleDiseasePhoto(ctx);
@@ -229,7 +236,7 @@ describe('/disease Telegraf Scene Handlers', () => {
       ctx.chat.id,
       undefined,
       null,
-      expect.stringContaining('রোগ শনাক্ত করা যায়নি')
+      expect.stringContaining('রোগ শনাক্ত করা যায়নি'),
     );
   });
 
@@ -242,14 +249,14 @@ describe('/disease Telegraf Scene Handlers', () => {
       Promise.resolve({
         ok: true,
         blob: () => Promise.resolve(new Blob(['photo-data'])),
-      })
+      }),
     );
 
     global.fetch.mockImplementationOnce(() =>
       Promise.resolve({
         ok: false,
         status: 500,
-      })
+      }),
     );
 
     await handleDiseasePhoto(ctx);
@@ -258,7 +265,7 @@ describe('/disease Telegraf Scene Handlers', () => {
       ctx.chat.id,
       undefined,
       null,
-      expect.stringContaining('সার্ভারে সমস্যা')
+      expect.stringContaining('সার্ভারে সমস্যা'),
     );
   });
 });

@@ -17,7 +17,7 @@ describe('Community Bot Commands', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     bot = {
       command: vi.fn((name, handler) => {
         bot.handlers = bot.handlers || {};
@@ -27,7 +27,7 @@ describe('Community Bot Commands', () => {
         sendMessage: vi.fn().mockResolvedValue(true),
       },
     };
-    
+
     ctx = {
       from: { id: 12345, first_name: 'Test Farmer' },
       message: { text: '' },
@@ -35,7 +35,7 @@ describe('Community Bot Commands', () => {
       reply: vi.fn().mockResolvedValue(true),
       replyWithMarkdown: vi.fn().mockResolvedValue(true),
     };
-    
+
     db = {
       prepare: vi.fn().mockReturnValue({
         get: vi.fn(),
@@ -55,23 +55,25 @@ describe('Community Bot Commands', () => {
   it('should allow a registered farmer to register a cow', async () => {
     registerCommunityCommands(bot, db);
     db.prepare().get.mockReturnValue({ id: 1, telegram_id: '12345' });
-    
+
     await bot.handlers['registercow'](ctx);
-    
-    expect(db.prepare).toHaveBeenCalledWith(expect.stringContaining('UPDATE farmers SET has_desi_cow = 1'));
+
+    expect(db.prepare).toHaveBeenCalledWith(
+      expect.stringContaining('UPDATE farmers SET has_desi_cow = 1'),
+    );
     expect(ctx.reply).toHaveBeenCalledWith(expect.stringContaining('নিবন্ধিত হয়েছেন'));
   });
 
   it('should find cow suppliers in a district', async () => {
     registerCommunityCommands(bot, db);
     ctx.message.text = '/findcow Dhaka';
-    db.prepare().all.mockReturnValue([
-      { name: 'Karim', district: 'Dhaka', upazila: 'Savar' }
-    ]);
-    
+    db.prepare().all.mockReturnValue([{ name: 'Karim', district: 'Dhaka', upazila: 'Savar' }]);
+
     await bot.handlers['findcow'](ctx);
-    
-    expect(db.prepare).toHaveBeenCalledWith(expect.stringContaining('WHERE has_desi_cow = 1 AND district LIKE ?'));
+
+    expect(db.prepare).toHaveBeenCalledWith(
+      expect.stringContaining('WHERE has_desi_cow = 1 AND district LIKE ?'),
+    );
     expect(ctx.replyWithMarkdown).toHaveBeenCalledWith(expect.stringContaining('Karim'));
   });
 
@@ -79,13 +81,15 @@ describe('Community Bot Commands', () => {
     registerCommunityCommands(bot, db);
     ctx.message.text = '/reportpest BPH spotted';
     db.prepare().get.mockReturnValue({ id: 1, telegram_id: '12345', upazila: 'Savar' });
-    db.prepare().all.mockReturnValue([
-      { telegram_id: '99999' }
-    ]);
-    
+    db.prepare().all.mockReturnValue([{ telegram_id: '99999' }]);
+
     await bot.handlers['reportpest'](ctx);
-    
-    expect(bot.telegram.sendMessage).toHaveBeenCalledWith('99999', expect.stringContaining('BPH spotted'), expect.any(Object));
+
+    expect(bot.telegram.sendMessage).toHaveBeenCalledWith(
+      '99999',
+      expect.stringContaining('BPH spotted'),
+      expect.any(Object),
+    );
     expect(ctx.reply).toHaveBeenCalledWith(expect.stringContaining('পাঠানো হয়েছে'));
   });
 });

@@ -51,7 +51,9 @@ describe('P8 — Community Farmer Network', () => {
     });
 
     it('should reject coordinates in Delhi, India', () => {
-      expect(() => validateCoords(28.6139, 77.2090)).toThrow('Coordinates outside Bangladesh bounds');
+      expect(() => validateCoords(28.6139, 77.209)).toThrow(
+        'Coordinates outside Bangladesh bounds',
+      );
     });
 
     it('should reject coordinates in the Bay of Bengal (South of BD)', () => {
@@ -81,7 +83,7 @@ describe('P8 — Community Farmer Network', () => {
     it('should reject non-registered farmers', async () => {
       const bot = { command: vi.fn() };
       registerJoinmapCommand(bot, mockDb);
-      const commandHandler = bot.command.mock.calls.find(c => c[0] === 'joinmap')[1];
+      const commandHandler = bot.command.mock.calls.find((c) => c[0] === 'joinmap')[1];
 
       mockDb.get.mockReturnValue(null); // Farmer not found
 
@@ -94,7 +96,7 @@ describe('P8 — Community Farmer Network', () => {
     it('should reject farmers missing location data', async () => {
       const bot = { command: vi.fn() };
       registerJoinmapCommand(bot, mockDb);
-      const commandHandler = bot.command.mock.calls.find(c => c[0] === 'joinmap')[1];
+      const commandHandler = bot.command.mock.calls.find((c) => c[0] === 'joinmap')[1];
 
       mockDb.get.mockReturnValue({ telegram_id: '12345', district: null }); // Missing district
 
@@ -106,11 +108,16 @@ describe('P8 — Community Farmer Network', () => {
     it('should prevent duplicate registrations', async () => {
       const bot = { command: vi.fn() };
       registerJoinmapCommand(bot, mockDb);
-      const commandHandler = bot.command.mock.calls.find(c => c[0] === 'joinmap')[1];
+      const commandHandler = bot.command.mock.calls.find((c) => c[0] === 'joinmap')[1];
 
       // First call for farmer check, second for map_registrations check
       mockDb.get
-        .mockReturnValueOnce({ telegram_id: '12345', district: 'Dhaka', latitude: 23.6, longitude: 90.3 })
+        .mockReturnValueOnce({
+          telegram_id: '12345',
+          district: 'Dhaka',
+          latitude: 23.6,
+          longitude: 90.3,
+        })
         .mockReturnValueOnce({ id: 1 }); // Already exists in map_registrations
 
       await commandHandler(ctx);
@@ -122,10 +129,15 @@ describe('P8 — Community Farmer Network', () => {
       const { registerFarmerLocation } = await import('../services/supabase.js');
       const bot = { command: vi.fn() };
       registerJoinmapCommand(bot, mockDb);
-      const commandHandler = bot.command.mock.calls.find(c => c[0] === 'joinmap')[1];
+      const commandHandler = bot.command.mock.calls.find((c) => c[0] === 'joinmap')[1];
 
       mockDb.get
-        .mockReturnValueOnce({ telegram_id: '12345', district: 'Dhaka', latitude: 23.6, longitude: 90.3 })
+        .mockReturnValueOnce({
+          telegram_id: '12345',
+          district: 'Dhaka',
+          latitude: 23.6,
+          longitude: 90.3,
+        })
         .mockReturnValueOnce(null); // Not in map_registrations
 
       await commandHandler(ctx);
@@ -155,7 +167,7 @@ describe('P8 — Community Farmer Network', () => {
     it('should prompt for query if empty', async () => {
       const bot = { command: vi.fn() };
       registerFaqCommand(bot);
-      const commandHandler = bot.command.mock.calls.find(c => c[0] === 'faq')[1];
+      const commandHandler = bot.command.mock.calls.find((c) => c[0] === 'faq')[1];
 
       ctx.message.text = '/faq';
       await commandHandler(ctx);
@@ -169,7 +181,7 @@ describe('P8 — Community Farmer Network', () => {
 
       const bot = { command: vi.fn() };
       registerFaqCommand(bot);
-      const commandHandler = bot.command.mock.calls.find(c => c[0] === 'faq')[1];
+      const commandHandler = bot.command.mock.calls.find((c) => c[0] === 'faq')[1];
 
       await commandHandler(ctx);
 
@@ -179,12 +191,12 @@ describe('P8 — Community Farmer Network', () => {
     it('should display search results', async () => {
       const { searchFAQ } = await import('../services/supabase.js');
       searchFAQ.mockResolvedValue([
-        { question_bn: 'জীবামৃত কী?', answer_bn: 'এটি একটি প্রাকৃতিক সার।' }
+        { question_bn: 'জীবামৃত কী?', answer_bn: 'এটি একটি প্রাকৃতিক সার।' },
       ]);
 
       const bot = { command: vi.fn() };
       registerFaqCommand(bot);
-      const commandHandler = bot.command.mock.calls.find(c => c[0] === 'faq')[1];
+      const commandHandler = bot.command.mock.calls.find((c) => c[0] === 'faq')[1];
 
       await commandHandler(ctx);
 

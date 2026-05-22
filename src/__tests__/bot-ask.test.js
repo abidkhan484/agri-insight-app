@@ -20,14 +20,14 @@ describe('/ask bot command', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     bot = {
       command: vi.fn((name, handler) => {
         bot.handlers = bot.handlers || {};
         bot.handlers[name] = handler;
       }),
     };
-    
+
     ctx = {
       from: { id: 12345, first_name: 'Test User' },
       message: { text: '/ask How to make Jeevamrutha?' },
@@ -37,7 +37,7 @@ describe('/ask bot command', () => {
         editMessageText: vi.fn().mockResolvedValue(true),
       },
     };
-    
+
     db = {}; // Mock db if needed
   });
 
@@ -50,7 +50,7 @@ describe('/ask bot command', () => {
     registerAskCommand(bot, db);
     ctx.message.text = '/ask';
     await bot.handlers['ask'](ctx);
-    
+
     expect(ctx.reply).toHaveBeenCalledWith(expect.stringContaining('প্রশ্ন লিখুন'));
   });
 
@@ -58,19 +58,19 @@ describe('/ask bot command', () => {
     registerAskCommand(bot, db);
     ctx.message.text = '/ask ' + 'a'.repeat(501);
     await bot.handlers['ask'](ctx);
-    
+
     expect(ctx.reply).toHaveBeenCalledWith(expect.stringContaining('৫০০ অক্ষরের বেশি হবে না'));
   });
 
   it('should handle successful AI API response', async () => {
     registerAskCommand(bot, db);
-    
+
     const mockApiResponse = {
       answer: 'Jeevamrutha is made with cow dung, urine, etc.',
       sources: ['zbnf-guide.md'],
-      status: 'ok'
+      status: 'ok',
     };
-    
+
     global.fetch.mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockApiResponse),
@@ -79,23 +79,26 @@ describe('/ask bot command', () => {
     await bot.handlers['ask'](ctx);
 
     expect(ctx.reply).toHaveBeenCalledWith(expect.stringContaining('ভাবছি'));
-    expect(global.fetch).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
-      method: 'POST',
-      body: JSON.stringify({ question: 'How to make Jeevamrutha?', language: 'bn' }),
-    }));
-    
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ question: 'How to make Jeevamrutha?', language: 'bn' }),
+      }),
+    );
+
     expect(ctx.telegram.editMessageText).toHaveBeenCalledWith(
       ctx.chat.id,
       111,
       null,
       expect.stringContaining('Jeevamrutha is made with cow dung'),
-      expect.objectContaining({ parse_mode: 'Markdown' })
+      expect.objectContaining({ parse_mode: 'Markdown' }),
     );
   });
 
   it('should handle API failure gracefully', async () => {
     registerAskCommand(bot, db);
-    
+
     global.fetch.mockResolvedValue({
       ok: false,
       status: 500,
@@ -107,13 +110,13 @@ describe('/ask bot command', () => {
       ctx.chat.id,
       111,
       null,
-      expect.stringContaining('দুঃখিত')
+      expect.stringContaining('দুঃখিত'),
     );
   });
 
   it('should handle network error/timeout gracefully', async () => {
     registerAskCommand(bot, db);
-    
+
     global.fetch.mockRejectedValue(new Error('Network timeout'));
 
     await bot.handlers['ask'](ctx);
@@ -122,7 +125,7 @@ describe('/ask bot command', () => {
       ctx.chat.id,
       111,
       null,
-      expect.stringContaining('দুঃখিত')
+      expect.stringContaining('দুঃখিত'),
     );
   });
 });

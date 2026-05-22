@@ -13,7 +13,8 @@ export const dbService = {
       .select('*')
       .eq('telegram_id', telegramId)
       .single();
-    if (error && error.code !== 'PGRST116') logger.error('DB Error: getFarmerByTelegramId', { error, telegramId });
+    if (error && error.code !== 'PGRST116')
+      logger.error('DB Error: getFarmerByTelegramId', { error, telegramId });
     return data;
   },
 
@@ -39,10 +40,7 @@ export const dbService = {
   },
 
   async getPlotsByFarmerId(farmerId) {
-    const { data, error } = await supabase
-      .from('plots')
-      .select('*')
-      .eq('farmer_id', farmerId);
+    const { data, error } = await supabase.from('plots').select('*').eq('farmer_id', farmerId);
     if (error) logger.error('DB Error: getPlotsByFarmerId', { error, farmerId });
     return data || [];
   },
@@ -71,7 +69,7 @@ export const dbService = {
     // otherwise we delete them manually. Let's assume manual for safety.
     await supabase.from('reminders').delete().eq('plot_id', plot.id);
     const { error } = await supabase.from('plots').delete().eq('id', plot.id);
-    
+
     if (error) logger.error('DB Error: deletePlotByTelegramId', { error, telegramId, plotName });
     return !error;
   },
@@ -131,7 +129,7 @@ export const dbService = {
       .from('reminders')
       .update({ active: false })
       .eq('id', reminderId);
-    
+
     if (error) logger.error('DB Error: cancelReminderByTelegramId', { error, reminderId });
     return !error;
   },
@@ -144,14 +142,14 @@ export const dbService = {
       .eq('id', reminderId)
       .eq('plots.farmer_id', farmerId)
       .single();
-    
+
     if (!reminder) return false;
 
     const { error } = await supabase
       .from('reminders')
       .update({ active: false })
       .eq('id', reminderId);
-    
+
     if (error) logger.error('DB Error: cancelReminder', { error, reminderId });
     return !error;
   },
@@ -165,7 +163,8 @@ export const dbService = {
       .order('ts', { ascending: false })
       .limit(1)
       .single();
-    if (error && error.code !== 'PGRST116') logger.error('DB Error: getLatestSoilReading', { error, plotId });
+    if (error && error.code !== 'PGRST116')
+      logger.error('DB Error: getLatestSoilReading', { error, plotId });
     return data;
   },
 
@@ -176,7 +175,8 @@ export const dbService = {
       .select('id')
       .eq('telegram_id', telegramId)
       .single();
-    if (error && error.code !== 'PGRST116') logger.error('DB Error: isFarmerOnMap', { error, telegramId });
+    if (error && error.code !== 'PGRST116')
+      logger.error('DB Error: isFarmerOnMap', { error, telegramId });
     return !!data;
   },
 
@@ -270,15 +270,13 @@ export const dbService = {
   },
 
   async logWeatherAlert(plotId, alertType, message, forecastData) {
-    const { error } = await supabase
-      .from('weather_alerts')
-      .insert({
-        plot_id: plotId,
-        alert_type: alertType,
-        message: message,
-        forecast_data: JSON.stringify(forecastData)
-      });
+    const { error } = await supabase.from('weather_alerts').insert({
+      plot_id: plotId,
+      alert_type: alertType,
+      message: message,
+      forecast_data: JSON.stringify(forecastData),
+    });
     if (error) logger.error('DB Error: logWeatherAlert', { error, plotId });
     return !error;
-  }
+  },
 };

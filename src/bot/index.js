@@ -14,7 +14,11 @@ import { registerCommunityCommands } from './commands/community.js';
 import { diseaseScene } from './commands/disease.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
-import { validateTelegramInitData, generateSupabaseJWT, parseTelegramUser } from '../services/auth.js';
+import {
+  validateTelegramInitData,
+  generateSupabaseJWT,
+  parseTelegramUser,
+} from '../services/auth.js';
 
 if (!config.botToken) {
   logger.error('BOT_TOKEN is missing in configuration. Exiting...');
@@ -144,7 +148,7 @@ http
       return;
     }
 
-    // Robust path normalization: 
+    // Robust path normalization:
     // 1. Get path without query string
     // 2. Normalize slashes (collapse // and remove trailing)
     const rawPath = req.url.split('?')[0];

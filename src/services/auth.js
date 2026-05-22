@@ -13,7 +13,7 @@ export function validateTelegramInitData(initData) {
   try {
     const urlParams = new URLSearchParams(initData);
     const hash = urlParams.get('hash');
-    
+
     // Create data-check-string
     const params = [];
     for (const [key, value] of urlParams.entries()) {
@@ -25,7 +25,10 @@ export function validateTelegramInitData(initData) {
 
     // Calculate HMAC
     const secretKey = crypto.createHmac('sha256', 'WebAppData').update(config.botToken).digest();
-    const calculatedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
+    const calculatedHash = crypto
+      .createHmac('sha256', secretKey)
+      .update(dataCheckString)
+      .digest('hex');
 
     return calculatedHash === hash;
   } catch (error) {
@@ -48,9 +51,9 @@ export function generateSupabaseJWT(telegramId) {
     role: 'authenticated',
     sub: telegramId.toString(),
     telegram_id: telegramId.toString(),
-    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24), // 24 hours
+    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // 24 hours
     aud: 'authenticated',
-    iss: 'zbnf-farming-assistant'
+    iss: 'zbnf-farming-assistant',
   };
 
   return jwt.sign(payload, config.supabaseJwtSecret);
