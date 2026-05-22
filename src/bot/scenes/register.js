@@ -91,32 +91,15 @@ export const registerWizard = new Scenes.WizardScene(
     try {
       const { name, area_decimal, crop, start_date } = ctx.wizard.state.plotData;
 
-      const plot = await dbService.createPlot(farmer.id, {
+      await dbService.createPlot(farmer.id, {
         name,
         area_decimal,
         crop,
         start_date,
       });
 
-      const plotId = plot.id;
-
-      // Create default reminders
-      const defaultReminders = [
-        { type: 'jeevamrutha', interval_days: 15 },
-        { type: 'neemastra', interval_days: 14 },
-        { type: 'mulch', interval_days: 7 },
-        { type: 'irrigation', interval_days: 3 }, // Default check interval
-      ];
-
-      for (const r of defaultReminders) {
-        const nextDue = new Date();
-        nextDue.setDate(nextDue.getDate() + r.interval_days);
-        await dbService.createReminder(plotId, {
-          type: r.type,
-          interval_days: r.interval_days,
-          next_due: nextDue.toISOString().split('T')[0],
-        });
-      }
+      // Default ZBNF reminders are automatically seeded by the Postgres trigger
+      // `on_plot_created` in schema.sql (jeevamrutha/15d, neemastra/14d, mulch/7d, irrigation/3d).
 
       logger.info('Plot registered successfully', { farmerId: farmer.id, plotName: name });
       await ctx.reply(

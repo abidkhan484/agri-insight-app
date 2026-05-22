@@ -49,11 +49,11 @@ Now add your plot with /addplot.
 
 ## Plot Management
 
-### `/addplot` 🔐
-**Bangla:** নতুন জমি যোগ করুন
-**English:** Add a new plot
+### `/register` 🔐
+**Bangla:** কৃষক হিসেবে নিবন্ধন করুন এবং জমি যোগ করুন
+**English:** Register as a farmer and add a plot
 
-**Parameters:** none (starts wizard)
+**Parameters:** none (starts a multi-step wizard)
 
 **Wizard steps:**
 1. জমির নাম / Plot name (e.g., "বাড়ির পাশের জমি")
@@ -77,7 +77,7 @@ Jeevamrutha reminder has been set.
 
 ---
 
-### `/plots` 🔐
+### `/myplots` 🔐
 **Bangla:** আপনার সমস্ত জমির তালিকা
 **English:** List all your plots
 
@@ -111,7 +111,7 @@ Jeevamrutha reminder has been set.
 
 ## Reminders
 
-### `/reminders` 🔐
+### `/myreminders` 🔐
 **Bangla:** আসন্ন রিমাইন্ডার দেখুন
 **English:** View upcoming reminders
 
@@ -150,19 +150,46 @@ Jeevamrutha reminder has been set.
 
 ---
 
-## AI Assistant (Upcoming)
+## AI Assistant
 
 ### `/ask` 🔐
 **Bangla:** AI সহকারীকে যেকোনো ZBNF প্রশ্ন করুন
 **English:** Ask our AI assistant any ZBNF question
 
+**Parameters:** `/ask <question>` (max 500 characters)
+
+**Example:** `/ask জীবামৃত কীভাবে তৈরি করব?`
+
+**Response:**
+```
+🌾 *AI উত্তর / AI Answer*
+
+[বিস্তারিত উত্তর ZBNF নলেজ বেস থেকে]
+```
+
+> **Note:** Requires the P7 AI Assistant service (Ollama) to be running. If the AI service is offline, the bot responds with a fallback message.
+
 ---
 
-## IoT / Soil Monitoring (Upcoming)
+## IoT / Soil Monitoring
 
 ### `/soilstatus` 🔐
 **Bangla:** আপনার জমির মাটির সর্বশেষ তথ্য দেখুন
 **English:** View latest soil sensor readings for your plots
+
+**Parameters:** none
+
+**Response:**
+```
+*মাটির অবস্থা / Soil Status*
+
+🟢 *বাড়ির পাশের জমি*
+অবস্থা: ওয়াপাসা (আদর্শ) / Status: Whapasa (Ideal)
+আর্দ্রতা / Moisture: 55.2%
+তাপমাত্রা / Temp: 30.1°C
+```
+
+> **Note:** Requires ESP32 IoT hardware to be sending readings to the `soil_readings` table. Without hardware, the command will report "তথ্য নেই / No data".
 
 ## Community
 

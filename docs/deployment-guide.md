@@ -104,7 +104,11 @@ If you wish to host the client yourself (e.g., on a VPS or Render as a static si
 
 Since Render sleeps after 15 minutes, the first message to the bot after a break might take 30 seconds to respond.
 
-To keep it active during farming hours (6 AM - 10 PM BDT), the included GitHub Action `daily-cron.yml` can be configured to "ping" your Render URL once a day or more.
+To keep it active during farming hours (6 AM - 10 PM BDT), a GitHub Action `daily-cron.yml` is staged at `github_workflow/workflows/daily-cron.yml`. It is intentionally not deployed to `.github/workflows/` yet — copy it there when ready to activate:
+
+```bash
+cp github_workflow/workflows/daily-cron.yml .github/workflows/daily-cron.yml
+```
 
 ---
 

@@ -2,6 +2,10 @@
  * SyncManager handles bidirectional synchronization between a local Dexie database
  * and a remote Supabase instance.
  */
+import log from 'loglevel';
+
+log.setLevel(import.meta.env.PROD ? 'warn' : 'debug');
+
 export class SyncManager {
   constructor(dexieDb, supabaseClient, tableName) {
     this.db = dexieDb;
@@ -21,7 +25,7 @@ export class SyncManager {
       await this.pushChanges();
       await this.pullChanges();
     } catch (error) {
-      console.error(`Sync error for ${this.tableName}:`, error);
+      log.error(`Sync error for ${this.tableName}:`, error);
       throw error;
     } finally {
       this.isSyncing = false;

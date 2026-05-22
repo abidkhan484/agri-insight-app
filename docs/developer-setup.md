@@ -72,14 +72,17 @@ npm run dev
 
 ---
 
-## 3. Set Up the Farm Record PWA (P3 — `krishi-record/`)
+## 3. Set Up the Agriculture Assistant PWA (P3/P5/P6/P8 — `client/`)
+
+All four frontends (Krishi Record, Disease Detection, Knowledge Base, and Farmer Map) have been consolidated into a single unified PWA.
 
 ```bash
-cd krishi-record
+cd client
 npm install
-cp .env.example .env
 npm run dev         # starts Vite dev server at http://localhost:5173
 ```
+
+The app reads environment variables from the root `.env` file (via `envDir: '../'` in `vite.config.js`).
 
 ### 3.1 Local TMA Testing
 
@@ -88,35 +91,22 @@ To test the PWA inside Telegram during development:
 2. Open Telegram and search for `@BotFather`.
 3. Select your bot and go to **Bot Settings → Menu Button → Configure Menu Button**.
 4. Set the URL to your ngrok address.
-5. In the Bot's `.env`, set `KRISHI_RECORD_URL` to your ngrok address so bot commands point to it.
+5. In the Bot's `.env`, set `KRISHI_RECORD_URL` and `MAP_PWA_URL` to your ngrok address so bot commands point to it.
+
+### 3.2 Modules
+
+| Module | Path | Features |
+|--------|------|----------|
+| Krishi Record (P3) | `client/src/modules/krishi-record/` | Plot management, Input logging, Observations, Harvests, Reports |
+| Disease Detection (P5) | `client/src/modules/disease-detect/` | PlantNet API identification, disease-treatments.json mapping |
+| ZBNF Knowledge (P6) | `client/src/modules/knowledge/` | Calculators, Pest gallery, Crop calendar, Glossary |
+| Farmer Map (P8) | `client/src/modules/map/` | Leaflet + Supabase, Bangladesh bounds |
 
 ---
 
-## 4. Set Up the Disease Detection PWA (P5 — `disease-detect/`)
+## 4. Set Up the Local AI Assistant (P7 — `ai-assistant/`)
 
-```bash
-cd disease-detect
-npm install
-cp .env.example .env
-# Edit VITE_PLANTNET_API_KEY
-npm run dev
-```
-
----
-
-## 5. Set Up the ZBNF Knowledge PWA (P6 — `zbnf-knowledge/`)
-
-```bash
-cd zbnf-knowledge
-npm install
-npm run dev         # http://localhost:5174
-```
-
----
-
-## 6. Set Up the Local AI Assistant (P7 — `ai-assistant/`)
-
-### 6.1 Install Ollama
+### 4.1 Install Ollama
 
 ```bash
 # Linux/macOS
@@ -129,7 +119,7 @@ ollama pull gemma2:2b
 ollama pull nomic-embed-text
 ```
 
-### 6.2 Python Virtual Environment
+### 4.2 Python Virtual Environment
 
 ```bash
 cd ai-assistant
@@ -138,7 +128,7 @@ source venv/bin/activate      # or: venv\Scripts\activate on Windows
 pip install -r requirements.txt
 ```
 
-### 6.3 Configure AI Environment
+### 4.3 Configure AI Environment
 
 ```bash
 cp .env.example .env
@@ -155,7 +145,7 @@ CHROMA_DB_PATH=./chroma_db
 LOG_LEVEL=INFO
 ```
 
-### 6.4 Ingest Documents
+### 4.4 Ingest Documents
 
 Before the AI can answer questions, you must index the ZBNF documentation:
 
@@ -163,7 +153,7 @@ Before the AI can answer questions, you must index the ZBNF documentation:
 python scripts/ingest.py
 ```
 
-### 6.5 Run AI Service
+### 4.5 Run AI Service
 
 ```bash
 python app.py
@@ -171,7 +161,7 @@ python app.py
 
 ---
 
-## 7. IoT Development (P4 — ESP32)
+## 5. IoT Development (P4 — ESP32)
 
 1. Install Arduino IDE 2.x
 2. Add ESP32 board in: **File → Preferences → Board Manager URLs**:
@@ -181,14 +171,14 @@ python app.py
 
 ---
 
-## 8. Running Tests
+## 6. Running Tests
 
 ```bash
 # Bot tests
 cd src && npm test
 
 # PWA tests
-cd krishi-record && npm test
+cd client && npm test
 
 # Python AI tests
 cd ai-assistant && pytest tests/
@@ -196,7 +186,7 @@ cd ai-assistant && pytest tests/
 
 ---
 
-## 9. Session Progress Tracking
+## 7. Session Progress Tracking
 
 ```bash
 # View progress

@@ -79,7 +79,7 @@ initWeatherAlertEngine(bot);
 // /help command
 bot.help((ctx) => {
   const helpMessage = `সাহায্য প্রয়োজন? আমি এই কমান্ডগুলো বুঝি:
-/start - शुरू করুন
+/start - শুরু করুন
 /register - জমি নিবন্ধিত করুন
 /myplots - আপনার জমিগুলো দেখুন
 /deleteplot <নাম> - জমি মুছে ফেলুন

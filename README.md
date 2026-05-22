@@ -33,13 +33,13 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 | Layer | Choice |
 |-------|--------|
 | Bot | Node.js 20+ · Telegraf v4 · Supabase · node-cron |
-| PWA | React 19 · Vite · Telegram Mini Apps · Dexie.js |
+| PWA | React 19 · Vite 8 · Telegram Mini Apps · Dexie.js |
 | IoT | ESP32 · MQTT · Node-RED · InfluxDB · Grafana |
 | AI | Ollama · ChromaDB · LlamaIndex · Flask |
-| DB | Supabase (PostgreSQL + RLS + Triggers) |
+| DB | Supabase (PostgreSQL + RLS + Triggers + PostGIS) |
 | Weather | Open-Meteo (free, no key) |
-| Disease | PlantNet API (free tier) · TensorFlow.js (offline fallback) |
-| Hosting | Railway.app / Render.com (bot) · Netlify / GitHub Pages (PWAs) |
+| Disease | PlantNet API (free tier) |
+| Hosting | Render.com (bot) · GitHub Pages (PWA) |
 
 ---
 
@@ -124,18 +124,24 @@ The system supports farmer registration, plot management, automated ZBNF reminde
 ## Project Layout
 
 ```
-agents/          ← Sub-agent definitions (coder, qa, reviewer, doc-updater, committer)
-ai-assistant/    ← P7 Local AI Assistant (Flask + LlamaIndex + ChromaDB)
-skills/          ← Per-phase skill files (SKILL.md in each)
-tasks/           ← P0–P8 implementation checklists
-docs/            ← architecture.md · farmer-guide-bn-en.md · CODEMAPS/
-src/             ← Source code (Bot, Scheduler, Services)
-templates/       ← Config templates
-scripts/         ← Automation scripts
-disease-detect/  ← P5 Plant Disease Detection PWA
-krishi-record/   ← P3 Farm Record Tracker PWA
-zbnf-knowledge/  ← P6 ZBNF Knowledge Base PWA
-map-pwa/         ← P8 Farmer Map PWA
+src/               ← Bot backend (Node.js + Telegraf + Supabase)
+client/            ← Unified PWA (React 19 + Vite 8)
+  src/modules/
+    krishi-record/ ← P3 Farm Record Tracker
+    disease-detect/← P5 Plant Disease Detection
+    knowledge/     ← P6 ZBNF Knowledge Base
+    map/           ← P8 Farmer Map (Leaflet)
+  src/shared/      ← TMA auth provider, SyncManager
+ai-assistant/      ← P7 Local AI (Flask + LlamaIndex + ChromaDB)
+firmware/          ← P4 ESP32 Arduino sketch
+flows/             ← P4 Node-RED flow definition
+grafana/           ← P4 Grafana dashboard JSON
+docs/              ← Architecture, guides, specs
+  spec/            ← Feature specs for upcoming work
+agents/            ← Sub-agent definitions (coder, qa, reviewer, doc-updater, committer)
+skills/            ← Per-phase skill files (SKILL.md in each)
+tasks/             ← P0–P8 implementation checklists
+templates/         ← Config templates (ESLint, Prettier, Husky, Winston)
 ```
 
 ---
@@ -156,15 +162,25 @@ map-pwa/         ← P8 Farmer Map PWA
 - **Prettier** — single quotes, trailing commas, 100 char width
 - **Husky pre-commit** — lint → format → test; zero warnings allowed
 - **Bangla first** in all farmer-facing Telegram messages
-- **Parameterized SQL only** — better-sqlite3 prepared statements
+- **Supabase SDK only** — all queries via `dbService` abstraction, RLS enforced
 
 ---
 
 ## Quick Start
 
-1. `cd src`
-2. `npm install`
-3. `cp .env.example .env` (Add your `BOT_TOKEN`)
-4. `npm run dev`
+### Bot
+```bash
+cd src
+npm install
+cp ../.env.example ../.env   # Add your BOT_TOKEN + Supabase credentials
+npm start
+```
+
+### Client (PWA)
+```bash
+cd client
+npm install
+npm run dev                  # http://localhost:5173
+```
 
 See [docs/developer-setup.md](docs/developer-setup.md) for full instructions.

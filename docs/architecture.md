@@ -79,10 +79,10 @@ Business logic is centralized in the database.
 ### P0 — Shared Foundation
 - **Runtime**: Node.js 20+ ESM
 - **Bot framework**: Telegraf v4
-- **Database**: better-sqlite3 (synchronous, file-based, no server)
-- **Scheduler**: node-cron (in-process) + GitHub Actions daily-cron.yml (backup)
+- **Database**: Supabase (PostgreSQL with RLS, Triggers, and PostGIS)
+- **Scheduler**: node-cron (in-process) + GitHub Actions daily-cron.yml (backup, not yet deployed)
 - **Logger**: Winston (JSON to files, colorized to console)
-- **Hosting**: Railway.app free tier or Render.com (750 hrs/month)
+- **Hosting**: Render.com free tier (750 hrs/month)
 
 ### P1 — Farm Scheduler Bot
 - **Commands**: `/register`, `/myplots`, `/deleteplot`, `/myreminders`, `/cancelreminder`, `/remind`
@@ -278,15 +278,22 @@ Farmer implements natural treatment
 
 ---
 
-## Database Schema (SQLite — agri-bot)
+## Database Schema (Supabase PostgreSQL)
 
 ```sql
-farmers (id, telegram_id UNIQUE, name, district, upazila, created_at)
-plots   (id, farmer_id FK, name, area_decimal, soil_type, crop, start_date, latitude, longitude, created_at)
-reminders (id, plot_id FK, type, next_due, interval_days, description, active, created_at)
+farmers (id, telegram_id UNIQUE, name, district, upazila, has_desi_cow, created_at, updated_at, is_deleted)
+plots   (id, farmer_id FK, name, area_decimal, soil_type, crop, start_date, latitude, longitude, created_at, updated_at, is_deleted)
+reminders (id, plot_id FK, type, next_due, interval_days, description, active, created_at, updated_at, is_deleted)
 reminder_logs (id, reminder_id FK, sent_at, status, message)
-weather_alerts (id, plot_id FK, alert_type, message, forecast_data, sent_at)
-soil_readings (id, plot_id FK, moisture, temp, humidity, ts)
+weather_alerts (id, plot_id FK, alert_type, message, forecast_data JSONB, sent_at)
+soil_readings (id, plot_id FK, moisture, temp, humidity, alert_level, ts)
+map_registrations (id, telegram_id UNIQUE, registered_at)
+farmer_locations (id UUID, display_name, district, upazila, crop_type, method, has_cow, location GEOGRAPHY, latitude, longitude, created_at)
+pest_alerts (id UUID, pest_name, district, upazila, severity, reported_at)
+faq_entries (id, category, question_bn, question_en, answer_bn, answer_en, upvotes, created_at)
+input_logs (id UUID, plot_id FK, date, type, quantity, quantity_unit, cost, created_at, updated_at, is_deleted)
+observations (id UUID, plot_id FK, date, title, description, created_at, updated_at, is_deleted)
+harvests (id UUID, plot_id FK, date, crop, quantity, quantity_unit, revenue, created_at, updated_at, is_deleted)
 ```
 
 ---

@@ -69,7 +69,8 @@ dependency map.
 ## Security Minimums (OWASP)
 
 - All env vars from `.env` — never hardcoded
-- Parameterized queries only (better-sqlite3 prepared statements)
+- All DB access via `dbService` abstraction layer (Supabase SDK) — no raw SQL
+- Row-Level Security (RLS) enforced on all Supabase tables
 - Bot validates farmer registration before every data operation
 - Telegram inputs sanitized before DB storage
 - `.env` in `.gitignore` — never committed

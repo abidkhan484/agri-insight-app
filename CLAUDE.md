@@ -43,9 +43,9 @@ Agent files live in `agents/`. Skills live in `skills/`.
 | Layer | Choice | Reason |
 |-------|--------|--------|
 | Bot runtime | Node.js 20+ + Telegraf v4 | Free, mature Telegram library |
-| Bot DB | better-sqlite3 | Sync API, no server needed |
+| Bot DB | Supabase (PostgreSQL + RLS + Triggers) | Centralized sync, free tier, row-level security |
 | Scheduling | node-cron + GitHub Actions | In-process + backup cron |
-| PWA framework | React 18 + Vite + vite-plugin-pwa | Offline-first, small bundle |
+| PWA framework | React 19 + Vite 8 + vite-plugin-pwa | Offline-first, small bundle |
 | PWA DB | Dexie.js (IndexedDB) | Full offline, no server |
 | Disease MVP | PlantNet API | Free, 500 req/day |
 | Disease on-device | TensorFlow.js + MobileNetV2 | Runs in browser, free |
@@ -53,9 +53,9 @@ Agent files live in `agents/`. Skills live in `skills/`.
 | Local AI | Ollama + ChromaDB + LlamaIndex | 100% local, zero API cost |
 | Map | Leaflet + OpenStreetMap | No API key, free forever |
 | Weather | Open-Meteo API | Free, no key required |
-| Hosting (bot) | Railway.app free tier or Render.com | Free tier sufficient |
-| Hosting (PWA) | Netlify or GitHub Pages | Free forever |
-| Community DB | Supabase free tier | 50k rows, includes auth |
+| Hosting (bot) | Render.com | Free tier (750 hrs/month) |
+| Hosting (PWA) | GitHub Pages | Free forever |
+| Integration | Telegram Mini Apps (TMA) | Zero-login UX, native Telegram feel |
 
 ---
 
@@ -96,10 +96,11 @@ Use the appropriate logger. `console.log` is blocked by ESLint rule.
 
 ## Security Rules
 
-- Never hardcode `BOT_TOKEN`, DB_PATH, API keys — always `.env`
+- Never hardcode `BOT_TOKEN`, API keys, Supabase secrets — always `.env`
 - Validate all farmer inputs before DB writes (area > 0, valid date format, etc.)
 - Bot commands verify sender is registered farmer before accessing their data
-- Parameterized queries only (better-sqlite3 prepared statements)
+- All DB access via `dbService` abstraction layer (Supabase SDK) — no raw SQL
+- Row-Level Security (RLS) enforced on all Supabase tables
 - Input sanitization before Telegram message construction
 - `.env` file must never be committed — it's in `.gitignore`
 
@@ -133,30 +134,42 @@ Use the appropriate logger. `console.log` is blocked by ESLint rule.
 
 ---
 
-## Project Structure (Target)
+## Project Structure (Actual)
 
 ```
-agri-bot/                   ← P0 creates this
-├── bot/
-│   ├── commands/           ← One file per /command
-│   ├── middleware/
-│   └── index.js
-├── config/
-│   ├── index.js            ← Load .env, export config
-│   └── logger.js           ← Winston logger (create first)
-├── db/
-│   ├── schema.sql
-│   ├── connection.js
-│   └── init.js
-├── scheduler/index.js
-├── services/               ← Business logic
-├── logs/                   ← Created at runtime, gitignored
-├── docs/                   ← Technical + usage docs
-├── .env.example
-├── .eslintrc.cjs
-├── .prettierrc
-├── .husky/pre-commit
-└── package.json
+./                            ← Repo root
+├── src/                      ← Bot backend (Node.js)
+│   ├── bot/
+│   │   ├── commands/         ← One file per /command
+│   │   ├── scenes/           ← Telegraf WizardScenes
+│   │   └── index.js          ← Bot entry + HTTP server + TMA auth
+│   ├── config/
+│   │   ├── index.js          ← Load .env, export config
+│   │   └── logger.js         ← Winston logger
+│   ├── db/
+│   │   ├── schema.sql        ← Supabase PostgreSQL schema
+│   │   ├── connection.js     ← Supabase client init
+│   │   └── service.js        ← DB abstraction layer (all queries)
+│   ├── scheduler/            ← Cron jobs (reminders, weather)
+│   ├── services/             ← Business logic (ZBNF, weather, auth)
+│   ├── __tests__/            ← Vitest test files
+│   └── package.json
+├── client/                   ← Unified PWA (React 19 + Vite 8)
+│   └── src/
+│       ├── modules/
+│       │   ├── krishi-record/ ← P3 Farm Record Tracker
+│       │   ├── disease-detect/← P5 Plant Disease Detection
+│       │   ├── map/           ← P8 Farmer Map (Leaflet)
+│       │   └── knowledge/     ← P6 ZBNF Knowledge Base
+│       ├── shared/            ← TMA auth, SyncManager
+│       └── App.jsx            ← Shell with lazy-loaded modules
+├── ai-assistant/             ← P7 Flask + LlamaIndex + ChromaDB
+├── firmware/                 ← P4 ESP32 Arduino sketch
+├── flows/                    ← P4 Node-RED flow JSON
+├── grafana/                  ← P4 Grafana dashboard JSON
+├── docs/                     ← Architecture, guides, specs
+├── Dockerfile                ← Bot container (Render)
+└── .env.example              ← All env vars documented
 ```
 
 ---
