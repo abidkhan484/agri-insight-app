@@ -41,9 +41,18 @@ function Dashboard() {
         ) : (
           mode === 'guest' && (
             <div className="guest-notice">
-              ⚠️ আপনি অতিথি মোডে আছেন। সিঙ্ক ফিচার কাজ করবে না।
-              <br />
-              (Running in Guest Mode. Sync disabled.)
+              <div className="guest-notice-text">
+                ⚠️ আপনি অতিথি মোডে আছেন। সিঙ্ক ফিচার কাজ করবে না।
+                <br />
+                <span className="guest-en">(Running in Guest Mode. Sync disabled.)</span>
+              </div>
+              <button
+                className="guest-login-btn"
+                onClick={logout}
+                type="button"
+              >
+                লগইন করুন (Sign In)
+              </button>
             </div>
           )
         )}

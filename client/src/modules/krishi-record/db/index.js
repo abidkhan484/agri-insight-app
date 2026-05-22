@@ -16,7 +16,7 @@ db.version(2).stores({
   inputs: 'id, plotId, date, type, sync_status, updated_at',
   observations: 'id, plotId, date, sync_status, updated_at',
   harvests: 'id, plotId, date, sync_status, updated_at'
-}).upgrade(tx => {
+}).upgrade(() => {
   // Migration logic could go here if we wanted to convert existing INT ids to UUIDs,
   // but for a fresh project we can just use the new schema.
 });

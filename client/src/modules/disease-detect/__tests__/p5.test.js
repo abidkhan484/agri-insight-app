@@ -91,7 +91,7 @@ describe('P5 — Plant Disease Detection Tests', () => {
       Object.values(treatments).forEach(t => {
         expect(t.name_bn).toBeDefined();
         // Simple regex to check for non-ASCII (likely Unicode/Bangla)
-        expect(/[^\x00-\x7F]/.test(t.name_bn)).toBe(true);
+        expect(/[^\x20-\x7E]/.test(t.name_bn)).toBe(true);
       });
     });
 

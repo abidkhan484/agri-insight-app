@@ -45,6 +45,6 @@ export async function identifyDisease(imageFile) {
   } catch (error) {
     if (error.message === 'RATE_LIMIT') throw error;
     log.error('plantnet_fetch_failed', error);
-    throw new Error('NETWORK_ERROR');
+    throw new Error('NETWORK_ERROR', { cause: error });
   }
 }

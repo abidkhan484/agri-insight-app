@@ -44,7 +44,7 @@ export default function DiseaseDetector() {
           detections = await classifyDisease(imgEl);
           
           if (detections.length === 0) {
-            throw new Error('FALLBACK_FAILED');
+            throw new Error('FALLBACK_FAILED', { cause: err });
           }
         } else {
           throw err;
@@ -62,7 +62,7 @@ export default function DiseaseDetector() {
       });
     } catch (err) {
       log.error('detection_failed', { error: err.message });
-      setError('শনাক্তকরণ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।\nDetection failed. Please try again.');
+      setError('শনাক্তকরণ ব্যর্থ হয়েছে। আবার চেষ্টা করুন। (Detection failed. Please try again.)');
     } finally {
       setLoading(false);
     }

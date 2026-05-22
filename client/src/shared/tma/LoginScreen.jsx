@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTMA } from './TMAProvider';
 import log from 'loglevel';
 import './LoginScreen.css';
@@ -13,14 +13,25 @@ export const LoginScreen = () => {
   const widgetRef = useRef(null);
   const [widgetLoaded, setWidgetLoaded] = useState(false);
   const [loginError, setLoginError] = useState(null);
+  const [loadTimeout, setLoadTimeout] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   const botName = import.meta.env.VITE_BOT_USERNAME || 'zbnf_farming_bot';
 
   useEffect(() => {
     if (mode !== 'login' || !widgetRef.current) return;
 
-    // Clean up any previous widget
+    // Reset states for new load attempt
+    setWidgetLoaded(false);
+    setLoadTimeout(false);
     widgetRef.current.innerHTML = '';
+
+    // Set a timeout to show fallback if widget takes too long
+    const timer = setTimeout(() => {
+      if (!widgetLoaded) {
+        setLoadTimeout(true);
+      }
+    }, 8000);
 
     // The Telegram Login Widget callback
     window.__onTelegramAuth = async (telegramUser) => {
@@ -43,18 +54,25 @@ export const LoginScreen = () => {
     script.setAttribute('data-radius', '12');
     script.setAttribute('data-onauth', '__onTelegramAuth(user)');
     script.setAttribute('data-request-access', 'write');
-    script.onload = () => setWidgetLoaded(true);
+    
+    script.onload = () => {
+      log.info('Telegram Widget script loaded');
+      setWidgetLoaded(true);
+    };
+    
     script.onerror = () => {
       log.error('Failed to load Telegram Login Widget script');
-      setWidgetLoaded(true); // Mark as loaded to show fallback
+      setWidgetLoaded(true);
+      setLoginError('টেলিগ্রাম উইজেট লোড করা যায়নি। (Failed to load Telegram Widget.)');
     };
 
     widgetRef.current.appendChild(script);
 
     return () => {
+      clearTimeout(timer);
       delete window.__onTelegramAuth;
     };
-  }, [mode, botName, loginWithTelegramOAuth]);
+  }, [mode, botName, loginWithTelegramOAuth, retryCount]);
 
   return (
     <div className="login-screen">
@@ -80,14 +98,26 @@ export const LoginScreen = () => {
           </div>
         )}
 
-        <div className="login-widget-container" ref={widgetRef}>
-          {!widgetLoaded && (
-            <div className="login-widget-loader">
-              <div className="login-spinner" />
-              <span>লোড হচ্ছে...</span>
-            </div>
-          )}
-        </div>
+        <div className="login-widget-container" ref={widgetRef} />
+
+        {!widgetLoaded && !loadTimeout && (
+          <div className="login-widget-loader">
+            <div className="login-spinner" />
+            <span>লোড হচ্ছে...</span>
+          </div>
+        )}
+
+        {loadTimeout && !widgetLoaded && (
+          <div className="login-timeout">
+            <p>উইজেট লোড হতে দেরি হচ্ছে...</p>
+            <button 
+              className="login-retry-btn"
+              onClick={() => setRetryCount(prev => prev + 1)}
+            >
+              আবার চেষ্টা করুন (Retry)
+            </button>
+          </div>
+        )}
 
         <div className="login-info">
           <div className="login-info-item">

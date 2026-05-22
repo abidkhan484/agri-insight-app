@@ -61,6 +61,12 @@ The bot serves as an identity provider. When a farmer opens a PWA from a Telegra
 - Signs a **Supabase JWT** containing the user's `telegram_id`.
 - The PWA uses this JWT to authenticate with Supabase, enabling **Row Level Security (RLS)**.
 
+**Guest Mode Support**:
+For users outside of Telegram or those who prefer not to sign in, the system supports a **Guest Mode**. 
+- Users can access all features offline via IndexedDB.
+- A **LoginScreen** with a Telegram Login Widget is provided for browser-based OAuth authentication.
+- Users can switch from Guest to Authenticated mode at any time to enable Cloud Sync.
+
 ### 2. Bidirectional Synchronization
 To support offline-first usage in rural areas, the PWAs use **Dexie (IndexedDB)**.
 - **Push**: Local 'dirty' records are upserted to Supabase when online.

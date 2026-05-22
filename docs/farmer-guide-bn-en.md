@@ -99,8 +99,20 @@ The bot sends reminders for Jeevamrutha (15 days), Neemastra (14 days), Mulch (7
 **বাংলা:**
 চাষাবাদের খরচ, ফলন এবং মাটির স্বাস্থ্যের হিসাব রাখতে আমাদের 'কৃষি রেকর্ড' অ্যাপ ব্যবহার করুন।
 
+**অতিথি মোড (Guest Mode):**
+আপনি যদি টেলিগ্রাম দিয়ে লগইন করতে না চান, তবে আপনি **'অতিথি হিসেবে চালিয়ে যান' (Continue as Guest)** বিকল্পটি বেছে নিতে পারেন। 
+- অতিথি মোডে আপনি অফলাইনে সব তথ্য সংরক্ষণ করতে পারবেন।
+- **সতর্কতা:** অতিথি মোডে আপনার তথ্য মেঘে (Cloud) সিঙ্ক হবে না। অর্থাৎ, আপনি ফোন পরিবর্তন করলে বা অ্যাপ ডেটা মুছে ফেললে আপনার তথ্য হারিয়ে যাবে।
+- আপনি চাইলে পরে ড্যাশবোর্ড থেকে **'লগইন করুন' (Sign In)** বোতামে ক্লিক করে টেলিগ্রামের সাথে যুক্ত হতে পারেন।
+
 **English:**
 Use the 'Krishi Record' app to track expenses, yields, and soil health offline.
+
+**Guest Mode:**
+If you don't want to sign in with Telegram, you can choose **'Continue as Guest'**.
+- In Guest Mode, all data is saved locally on your phone.
+- **Warning:** Data will NOT be synced to the cloud. You will lose your data if you switch phones or clear app cache.
+- You can always sign in later via the **'Sign In'** button on the Dashboard.
 
 ---
 

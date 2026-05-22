@@ -13,7 +13,7 @@ The ZBNF Farming Assistant is a production-grade ecosystem supporting natural fa
 *   **Farmer Registry & Plot Management**: Telegram bot botting with interactive workflows.
 *   **Automated ZBNF Reminders**: Timely schedulers based on planting calendars.
 *   **Weather Alerts**: Real-timeOpen-Meteo analysis mapping heat waves and storm warnings.
-*   **Offline Record Keeper**: Unified React PWA utilizing IndexedDB for remote field logs.
+*   **Offline Record Keeper**: Unified React PWA utilizing IndexedDB for remote field logs. Supports **Guest Mode** for offline use without mandatory login.
 *   **IoT Soil Telemetry**: Capacitive and environmental sensors broadcasting soil hydration alerts.
 *   **Desi Cow Finder & FAQ**: A peer-to-peer directory for sourcing local ingredients.
 *   **Bangla AI Q&A Assistant**: Offline-first RAG querying ZBNF manuals natively in Bangla.

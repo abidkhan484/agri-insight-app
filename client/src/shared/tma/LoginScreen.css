@@ -111,6 +111,42 @@
   margin: 20px 0;
 }
 
+.login-timeout {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: loginFadeIn 0.3s ease-out;
+}
+
+.login-timeout p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.login-retry-btn {
+  padding: 8px 16px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-retry-btn:hover {
+  background: #1b5e20;
+  transform: translateY(-1px);
+}
+
+.login-retry-btn:active {
+  transform: translateY(0);
+}
+
 .login-widget-loader {
   display: flex;
   flex-direction: column;

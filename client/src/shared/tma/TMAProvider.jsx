@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import WebAppImport from '@twa-dev/sdk';
 import log from 'loglevel';
 
@@ -23,7 +23,6 @@ const AUTH_STORAGE_KEY = 'tma_auth_session';
 export const TMAProvider = ({ children, authEndpoint }) => {
   const [user, setUser] = useState(null);
   const [isReady, setIsReady] = useState(false);
-  const [error, setError] = useState(null);
   const [mode, setMode] = useState('login'); // 'telegram' | 'browser' | 'guest' | 'login'
 
   /**
@@ -186,7 +185,6 @@ export const TMAProvider = ({ children, authEndpoint }) => {
     <TMAContext.Provider value={{
       user,
       isReady,
-      error,
       mode,
       WebApp,
       loginWithTelegramOAuth,
