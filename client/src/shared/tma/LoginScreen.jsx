@@ -103,6 +103,20 @@ export const LoginScreen = () => {
           </div>
         )}
 
+        <a
+          href={`https://t.me/${botName}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="login-telegram-link-btn"
+        >
+          <span className="login-telegram-icon">✈️</span>
+          টেলিগ্রাম অ্যাপে খুলুন (Open in Telegram)
+        </a>
+
+        <div className="login-or-divider">
+          <span>অথবা (or)</span>
+        </div>
+
         <div className="login-widget-container" ref={widgetRef} />
 
         {!widgetLoaded && !loadTimeout && (

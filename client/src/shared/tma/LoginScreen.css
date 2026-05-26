@@ -212,8 +212,77 @@
   transform: scale(0.97);
 }
 
+.login-telegram-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #24A1DE 0%, #1c8ac2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(36, 161, 222, 0.2);
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.login-telegram-link-btn:hover {
+  background: linear-gradient(135deg, #1c8ac2 0%, #1573a3 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(36, 161, 222, 0.35);
+  color: white;
+}
+
+.login-telegram-link-btn:active {
+  transform: translateY(0);
+}
+
+.login-telegram-icon {
+  font-size: 18px;
+}
+
+.login-or-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 16px 0;
+  color: #888;
+  font-size: 13px;
+}
+
+.login-or-divider::before,
+.login-or-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.login-or-divider:not(:empty)::before {
+  margin-right: .5em;
+}
+
+.login-or-divider:not(:empty)::after {
+  margin-left: .5em;
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
+  .login-or-divider {
+    color: #6b7280;
+  }
+
+  .login-or-divider::before,
+  .login-or-divider::after {
+    border-color: #2e4a30;
+  }
+
   .login-screen {
     background: linear-gradient(135deg, #0d2e10 0%, #1a4723 40%, #205a2a 100%);
   }
