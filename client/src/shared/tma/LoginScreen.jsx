@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { useTMA } from './TMAProvider';
-import log from 'loglevel';
-import './LoginScreen.css';
+import { useEffect, useRef, useState } from "react";
+import { useTMA } from "./TMAProvider";
+import log from "loglevel";
+import "./LoginScreen.css";
 
 /**
  * LoginScreen renders a Telegram Login Widget for users accessing
@@ -16,15 +16,15 @@ export const LoginScreen = () => {
   const [loadTimeout, setLoadTimeout] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
 
-  const botName = import.meta.env.VITE_BOT_USERNAME || 'zbnf_farming_bot';
+  const botName = import.meta.env.VITE_BOT_USERNAME || "agri_insight_bot";
 
   useEffect(() => {
-    if (mode !== 'login' || !widgetRef.current) return;
+    if (mode !== "login" || !widgetRef.current) return;
 
     // Reset states for new load attempt
     setWidgetLoaded(false);
     setLoadTimeout(false);
-    widgetRef.current.innerHTML = '';
+    widgetRef.current.innerHTML = "";
 
     // Set a timeout to show fallback if widget takes too long
     const timer = setTimeout(() => {
@@ -35,35 +35,39 @@ export const LoginScreen = () => {
 
     // The Telegram Login Widget callback
     window.__onTelegramAuth = async (telegramUser) => {
-      log.info('Telegram OAuth callback received');
+      log.info("Telegram OAuth callback received");
       setLoginError(null);
       try {
         await loginWithTelegramOAuth(telegramUser);
       } catch (err) {
-        log.error('Telegram OAuth login failed:', err);
-        setLoginError('লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন। (Login failed. Please try again.)');
+        log.error("Telegram OAuth login failed:", err);
+        setLoginError(
+          "লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন। (Login failed. Please try again.)",
+        );
       }
     };
 
     // Create the Telegram Login Widget script
-    const script = document.createElement('script');
-    script.src = 'https://telegram.org/js/telegram-widget.js?22';
+    const script = document.createElement("script");
+    script.src = "https://telegram.org/js/telegram-widget.js?22";
     script.async = true;
-    script.setAttribute('data-telegram-login', botName);
-    script.setAttribute('data-size', 'large');
-    script.setAttribute('data-radius', '12');
-    script.setAttribute('data-onauth', '__onTelegramAuth(user)');
-    script.setAttribute('data-request-access', 'write');
-    
+    script.setAttribute("data-telegram-login", botName);
+    script.setAttribute("data-size", "large");
+    script.setAttribute("data-radius", "12");
+    script.setAttribute("data-onauth", "__onTelegramAuth(user)");
+    script.setAttribute("data-request-access", "write");
+
     script.onload = () => {
-      log.info('Telegram Widget script loaded');
+      log.info("Telegram Widget script loaded");
       setWidgetLoaded(true);
     };
-    
+
     script.onerror = () => {
-      log.error('Failed to load Telegram Login Widget script');
+      log.error("Failed to load Telegram Login Widget script");
       setWidgetLoaded(true);
-      setLoginError('টেলিগ্রাম উইজেট লোড করা যায়নি। (Failed to load Telegram Widget.)');
+      setLoginError(
+        "টেলিগ্রাম উইজেট লোড করা যায়নি। (Failed to load Telegram Widget.)",
+      );
     };
 
     widgetRef.current.appendChild(script);
@@ -86,7 +90,8 @@ export const LoginScreen = () => {
         <div className="login-divider" />
 
         <p className="login-description">
-          টেলিগ্রাম দিয়ে লগইন করুন আপনার কৃষি ডেটা সিঙ্ক করতে এবং সব ফিচার ব্যবহার করতে।
+          টেলিগ্রাম দিয়ে লগইন করুন আপনার কৃষি ডেটা সিঙ্ক করতে এবং সব ফিচার
+          ব্যবহার করতে।
         </p>
         <p className="login-description-en">
           Sign in with Telegram to sync your farm data and access all features.
@@ -110,9 +115,9 @@ export const LoginScreen = () => {
         {loadTimeout && !widgetLoaded && (
           <div className="login-timeout">
             <p>উইজেট লোড হতে দেরি হচ্ছে...</p>
-            <button 
+            <button
               className="login-retry-btn"
-              onClick={() => setRetryCount(prev => prev + 1)}
+              onClick={() => setRetryCount((prev) => prev + 1)}
             >
               আবার চেষ্টা করুন (Retry)
             </button>
@@ -133,9 +138,9 @@ export const LoginScreen = () => {
         <button
           className="login-skip-btn"
           onClick={() => {
-            log.info('User chose to continue as guest');
+            log.info("User chose to continue as guest");
             // Dispatch a custom event that TMAProvider can listen to
-            window.dispatchEvent(new CustomEvent('tma-skip-login'));
+            window.dispatchEvent(new CustomEvent("tma-skip-login"));
           }}
           type="button"
         >
