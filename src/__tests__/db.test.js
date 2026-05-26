@@ -9,6 +9,9 @@ vi.mock('../config/index.js', () => {
   return {
     config: {
       dbPath: join(__dirname, '../data/test-agri-app.sqlite'),
+      supabaseUrl: 'https://example.supabase.co',
+      supabaseKey: 'fake-key',
+      supabaseJwtSecret: 'fake-secret',
     },
   };
 });
@@ -22,15 +25,13 @@ describe('App Database Module', () => {
   });
 
   afterAll(async () => {
-    if (dbModule && dbModule.default) {
-      dbModule.default.close();
-    }
     const __dirname = dirname(fileURLToPath(import.meta.url));
     const testDbPath = join(__dirname, '../data/test-agri-app.sqlite');
     rmSync(testDbPath, { force: true });
   });
 
   it('should create database connection successfully from the app module', () => {
-    expect(dbModule.default.open).toBe(true);
+    expect(dbModule.default).toBeDefined();
+    expect(dbModule.default.from).toBeTypeOf('function');
   });
 });

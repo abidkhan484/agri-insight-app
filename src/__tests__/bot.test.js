@@ -17,6 +17,15 @@ vi.mock('telegraf', () => {
     Telegraf,
     Scenes: {
       WizardScene: vi.fn(),
+      BaseScene: class {
+        constructor(id) {
+          this.id = id;
+          this.enter = vi.fn();
+          this.leave = vi.fn();
+          this.command = vi.fn();
+          this.on = vi.fn();
+        }
+      },
       Stage: vi.fn().mockImplementation(function () {
         this.middleware = vi.fn();
       }),
@@ -30,6 +39,9 @@ vi.mock('../config/index.js', () => ({
     botToken: 'test_token',
     timezone: 'Asia/Dhaka',
     dbPath: './data/test.sqlite',
+    supabaseUrl: 'https://example.supabase.co',
+    supabaseKey: 'fake-key',
+    supabaseJwtSecret: 'fake-secret',
   },
 }));
 

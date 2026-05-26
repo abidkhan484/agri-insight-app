@@ -17,7 +17,7 @@ export const config = {
   botToken: process.env.BOT_TOKEN,
   supabaseUrl: process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL,
   supabaseKey: process.env.SUPABASE_SERVICE_KEY,
-  supabaseJwtSecret: process.env.SUPABASE_JWT_SECRET,
+  supabaseJwtSecret: process.env.SUPABASE_JWT_SECRET || 'super-secret-jwt-key-with-at-least-32-characters-long',
   dbName: process.env.DB_NAME || 'postgres',
   dbPath: process.env.DB_PATH || './data/agri.sqlite',
   timezone: process.env.TIMEZONE || 'Asia/Dhaka',
