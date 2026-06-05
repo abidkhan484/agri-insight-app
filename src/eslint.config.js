@@ -19,6 +19,8 @@ export default [
       '**/.session/',
       '**/chroma_db/',
       '**/*.min.js',
+      'test-env-load.js',
+      'scripts/update-progress.js',
     ],
   },
   {

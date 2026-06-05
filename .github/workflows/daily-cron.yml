@@ -1,0 +1,34 @@
+name: Daily ZBNF Cron (Backup Scheduler)
+
+on:
+  schedule:
+    # 00:00 UTC = 06:00 BDT — runs as a backup if Render.com bot is sleeping
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  run-daily-reminders:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: src/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: src
+
+      - name: Run daily reminder check
+        run: node scripts/run-cron.js --job daily-reminder-check
+        working-directory: src
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_JWT_SECRET: ${{ secrets.SUPABASE_JWT_SECRET }}
+          NODE_ENV: production
+          TIMEZONE: Asia/Dhaka

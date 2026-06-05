@@ -50,7 +50,7 @@ Build a lightweight weather service that checks daily forecasts via Open-Meteo A
 
 ### Phase 4: GitHub Actions Cron (Backup)
 
-- [ ] Create `.github/workflows/weather-alert.yml`
+- [x] Create `.github/workflows/daily-cron.yml` — activated from `github_workflow/workflows/` with Supabase env vars
 - [x] Create `scripts/run-weather-check.js` as a standalone entry point
 - [ ] Test the workflow with `workflow_dispatch` trigger
 
@@ -62,7 +62,7 @@ Build a lightweight weather service that checks daily forecasts via Open-Meteo A
 - [x] Heat alert fires when max temp > 38°C
 - [x] Alerts are sent to the correct farmer via Telegram
 - [x] `weather_alerts` table logs every sent alert
-- [ ] GitHub Actions workflow runs without error (dedicated workflow missing)
+- [x] GitHub Actions `daily-cron.yml` deployed to `.github/workflows/` with correct Supabase env vars
 - [x] Winston logger in all weather service files — no `console.log`
 - [x] `npm run lint` passes with zero warnings
 - [x] All farmer-facing Telegram alerts include Bangla (primary) + English (secondary) text
