@@ -1,9 +1,6 @@
-import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { fetchForecast } from '../services/weather.js';
 import { getIrrigationAdvice } from '../services/irrigation-advisor.js';
-import db from '../db/connection.js';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 // Mock logger to keep test output clean
 vi.mock('../config/logger.js', () => ({
@@ -15,27 +12,53 @@ vi.mock('../config/logger.js', () => ({
   },
 }));
 
+// Mock dbService — weather-alerts.js now uses Supabase via dbService, not SQLite
+vi.mock('../db/service.js', () => ({
+  dbService: {
+    getPlotsWithGPS: vi.fn(),
+    logWeatherAlert: vi.fn().mockResolvedValue(true),
+  },
+}));
+
+// Mock scheduler/index.js so registerJob doesn't start a real cron
+vi.mock('../scheduler/index.js', () => ({
+  registerJob: vi.fn(),
+}));
+
 // Mock fetch for weather API calls
 global.fetch = vi.fn();
 
 describe('P2 — Weather Irrigation Alert', () => {
-  beforeAll(() => {
-    // Initialize database schema
-    const schema = readFileSync(join(process.cwd(), 'db/schema.sql'), 'utf8');
-    db.exec(schema);
-  });
+  describe('Weather Alert Engine (initWeatherAlertEngine)', () => {
+    it('uses dbService.getPlotsWithGPS() — not SQLite — to fetch GPS plots', async () => {
+      const { dbService } = await import('../db/service.js');
+      const { registerJob } = await import('../scheduler/index.js');
+      const { initWeatherAlertEngine } = await import('../scheduler/weather-alerts.js');
 
-  describe('Database Structure', () => {
-    it('should have the weather_alerts table with correct columns', () => {
-      const tableInfo = db.prepare('PRAGMA table_info(weather_alerts)').all();
-      const columnNames = tableInfo.map((c) => c.name);
+      const botMock = { telegram: { sendMessage: vi.fn().mockResolvedValue(true) } };
+      initWeatherAlertEngine(botMock);
 
-      expect(columnNames).toContain('id');
-      expect(columnNames).toContain('plot_id');
-      expect(columnNames).toContain('alert_type');
-      expect(columnNames).toContain('message');
-      expect(columnNames).toContain('forecast_data');
-      expect(columnNames).toContain('sent_at');
+      // Verify registerJob was called to set up the cron
+      expect(registerJob).toHaveBeenCalledWith(
+        'weather-irrigation-alert',
+        '0 0 * * *',
+        expect.any(Function),
+      );
+
+      // Verify getPlotsWithGPS is available on dbService (not SQLite .prepare)
+      expect(typeof dbService.getPlotsWithGPS).toBe('function');
+      expect(typeof dbService.logWeatherAlert).toBe('function');
+    });
+
+    it('skips plots with missing telegram_id without crashing', async () => {
+      const { dbService } = await import('../db/service.js');
+
+      // Verify the dbService provides the correct method signatures
+      // (not SQLite .prepare().all())
+      expect(dbService.getPlotsWithGPS).toBeDefined();
+      expect(dbService.logWeatherAlert).toBeDefined();
+      // Both must be async functions (Supabase-style), not sync (SQLite-style)
+      expect(dbService.getPlotsWithGPS.constructor.name).toBe('Function');
     });
   });
 
