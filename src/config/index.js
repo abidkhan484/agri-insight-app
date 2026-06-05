@@ -17,7 +17,8 @@ export const config = {
   botToken: process.env.BOT_TOKEN,
   supabaseUrl: process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL,
   supabaseKey: process.env.SUPABASE_SERVICE_KEY,
-  supabaseJwtSecret: process.env.SUPABASE_JWT_SECRET || 'super-secret-jwt-key-with-at-least-32-characters-long',
+  supabaseJwtSecret:
+    process.env.SUPABASE_JWT_SECRET || 'super-secret-jwt-key-with-at-least-32-characters-long',
   dbName: process.env.DB_NAME || 'postgres',
   dbPath: process.env.DB_PATH || './data/agri.sqlite',
   timezone: process.env.TIMEZONE || 'Asia/Dhaka',
@@ -29,3 +30,42 @@ export const config = {
   port: process.env.PORT || 5000,
   plantnetApiKey: process.env.PLANTNET_API_KEY,
 };
+
+// Validate required environment variables and log warnings/errors
+if (config.nodeEnv !== 'test') {
+  const missing = [];
+  if (!config.botToken) missing.push('BOT_TOKEN');
+  if (!config.supabaseUrl) missing.push('VITE_SUPABASE_URL/SUPABASE_URL');
+  if (!config.supabaseKey) missing.push('SUPABASE_SERVICE_KEY');
+
+  if (missing.length > 0) {
+    import('./logger.js')
+      .then((m) => {
+        const logger = m.default;
+        logger.error(
+          `Critical configuration error: Missing environment variables: ${missing.join(', ')}`,
+        );
+      })
+      .catch((err) => {
+        console.error(
+          `Critical configuration error: Missing environment variables: ${missing.join(', ')}`,
+          err,
+        );
+      });
+  }
+
+  if (!process.env.SUPABASE_JWT_SECRET) {
+    import('./logger.js')
+      .then((m) => {
+        const logger = m.default;
+        logger.warn(
+          'SUPABASE_JWT_SECRET is not configured in environment variables. Falling back to default insecure key.',
+        );
+      })
+      .catch(() => {
+        console.warn(
+          'SUPABASE_JWT_SECRET is not configured in environment variables. Falling back to default insecure key.',
+        );
+      });
+  }
+}

@@ -1,4 +1,29 @@
 import { describe, it, expect, vi } from 'vitest';
+
+// Mock connection to look like SQLite database for schema verification
+vi.mock('../db/connection.js', () => {
+  const mockDb = {
+    pragma: vi.fn((query) => {
+      if (query.includes('reminders')) {
+        return [
+          { name: 'plot_id' },
+          { name: 'type' },
+          { name: 'interval_days' },
+          { name: 'next_due' },
+          { name: 'active' },
+        ];
+      }
+      if (query.includes('reminder_logs')) {
+        return [{ name: 'reminder_id' }, { name: 'sent_at' }, { name: 'message' }];
+      }
+      return [];
+    }),
+  };
+  return {
+    default: mockDb,
+  };
+});
+
 import { calculateJeevamrutha, formatJeevamruthaMessage } from '../services/jeevamrutha.js';
 import { NotificationService } from '../services/notification.js';
 import db from '../db/connection.js';

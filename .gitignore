@@ -22,6 +22,8 @@ logs/
 *.db
 *.sqlite
 *.sqlite3
+*.sqlite-shm
+*.sqlite-wal
 
 # Session & runtime state
 .session/
