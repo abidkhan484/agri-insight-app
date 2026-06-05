@@ -92,6 +92,18 @@ Use these commands to connect with other ZBNF farmers and get quick information:
 **English:**
 The bot sends reminders for Jeevamrutha (15 days), Neemastra (14 days), Mulch (7 days), and daily Weather advice.
 
+### ৫.১ ম্যানুয়াল আবহাওয়া তথ্য / Manual Weather Info
+
+**বাংলা:**
+আপনার যেকোনো জমির জন্য ম্যানুয়ালি আবহাওয়া ও সেচের পরামর্শ জানতে `/weather` কমান্ড ব্যবহার করুন।
+- সব জমির জন্য: `/weather`
+- নির্দিষ্ট জমির জন্য: `/weather [জমির নাম]` (যেমন: `/weather উত্তরের মাঠ`)
+
+**English:**
+To check weather and irrigation advice for your plots on demand:
+- For all plots: `/weather`
+- For a specific plot: `/weather [Plot Name]` (e.g. `/weather North Field`)
+
 ---
 
 ## ৬. কৃষি রেকর্ড অ্যাপ (অফলাইন) / Krishi Record App (Offline)
@@ -159,11 +171,48 @@ Use the 'ZBNF Knowledge Base' for offline dosage calculators and pest management
 | `/myplots` | জমির তালিকা | List plots |
 | `/myreminders` | রিমাইন্ডার তালিকা | List reminders |
 | `/soilstatus` | মাটির অবস্থা | Check soil |
+| `/weather` | আবহাওয়া পূর্বাভাস | Weather forecast |
+| `/log` | কার্যক্রম লিপিবদ্ধ করুন | Log activity |
+| `/report` | ফার্ম রিপোর্ট দেখুন | View report |
 | `/disease` | ফসলের রোগ শনাক্তকরণ | Identify crop disease |
 | `/help` | সাহায্য | Help |
 
 ---
 
-## ১০. সমস্যা হলে কী করবেন / Troubleshooting
+## ১০. ইন-চ্যাট ফার্ম লগ এবং রিপোর্ট / Farm Logging & Reports
+
+**বাংলা:**
+অ্যাপে না গিয়ে সরাসরি চ্যাটের মাধ্যমে আপনার চাষাবাদের হিসাব (উপকরণ প্রয়োগ, পর্যবেক্ষণ, ফসল সংগ্রহ) রাখতে এবং রিপোর্ট দেখতে পারেন।
+
+### ১০.১ কার্যক্রম লিপিবদ্ধ করুন (Log Activity):
+টাইপ করুন `/log` এবং বট আপনাকে সাহায্য করবে। আপনি ৩ ধরণের কার্যক্রম লিপিবদ্ধ করতে পারেন:
+১. **উপকরণ প্রয়োগ**: প্রয়োগ করা উপকরণের নাম, পরিমাণ, একক এবং খরচ।
+২. **পর্যবেক্ষণ**: জমিতে আপনার কোনো পর্যবেক্ষণ বা মন্তব্য।
+৩. **ফসল সংগ্রহ**: ফসল সংগ্রহের পরিমাণ, একক এবং বিক্রয় মূল্য/রাজস্ব।
+
+### ১০.২ ফার্ম রিপোর্ট দেখুন (View Reports):
+আপনার জমিতে কী কী কাজ হয়েছে তা দেখতে `/report` ব্যবহার করুন:
+- চলতি মাসের সব জমির জন্য: `/report`
+- নির্দিষ্ট জমির জন্য: `/report [জমির নাম]`
+- নির্দিষ্ট জমির নির্দিষ্ট মাসের জন্য: `/report [জমির নাম] [মাস]` (যেমন: `/report উত্তরের মাঠ মে` বা `/report North Field May`)
+
+**English:**
+Log activities and view monthly summaries directly in Telegram without opening the PWA.
+
+### Log Activities:
+Type `/log` and follow the bot wizard. You can log:
+1. **Inputs**: Input type, quantity, unit, and cost.
+2. **Observations**: Crop/field observation title and description.
+3. **Harvests**: Crop type, quantity, unit, and revenue.
+
+### View Reports:
+Use `/report` to get a structured summary of your activities:
+- All plots for current month: `/report`
+- Specific plot: `/report [Plot Name]`
+- Specific plot and month: `/report [Plot Name] [Month]` (e.g., `/report North Field May` or `/report উত্তরের মাঠ মে`)
+
+---
+
+## ১১. সমস্যা হলে কী করবেন / Troubleshooting
 
 বট সাড়া না দিলে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন। জমি যোগ করতে সমস্যা হলে `/register` আবার চেষ্টা করুন। মাটির তথ্য না দেখালে আপনার IoT ডিভাইসটি সচল কি না চেক করুন।

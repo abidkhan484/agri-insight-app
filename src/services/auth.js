@@ -116,4 +116,3 @@ export function validateTelegramOAuthData(oauthData) {
     return false;
   }
 }
-

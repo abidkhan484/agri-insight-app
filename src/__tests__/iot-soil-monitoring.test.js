@@ -1,4 +1,48 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
+
+// Mock connection to look like SQLite database for this test
+vi.mock('../db/connection.js', () => {
+  const mockDb = {
+    exec: vi.fn(),
+    prepare: vi.fn((sql) => {
+      return {
+        all: vi.fn(() => {
+          if (sql.includes('table_info(soil_readings)')) {
+            return [
+              { name: 'id' },
+              { name: 'plot_id' },
+              { name: 'moisture' },
+              { name: 'temp' },
+              { name: 'humidity' },
+              { name: 'alert_level' },
+              { name: 'ts' },
+            ];
+          }
+          return [];
+        }),
+        run: vi.fn(() => ({ changes: 1 })),
+        get: vi.fn((...args) => {
+          if (sql.includes('FROM farmers WHERE telegram_id = ?')) {
+            const telegramId = args[0];
+            if (telegramId === 'unregistered_user') return undefined;
+            return { id: 1, telegram_id: telegramId };
+          }
+          if (sql.includes('FROM plots WHERE')) {
+            return { id: 2 };
+          }
+          if (sql.includes('FROM soil_readings')) {
+            return undefined;
+          }
+          return undefined;
+        }),
+      };
+    }),
+  };
+  return {
+    default: mockDb,
+  };
+});
+
 import db from '../db/connection.js';
 import { readFileSync } from 'fs';
 import { join } from 'path';

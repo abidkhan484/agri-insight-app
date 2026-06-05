@@ -279,4 +279,63 @@ export const dbService = {
     if (error) logger.error('DB Error: logWeatherAlert', { error, plotId });
     return !error;
   },
+
+  // Logging & Reporting Operations
+  async createInputLog(inputData) {
+    const { data, error } = await supabase.from('input_logs').insert(inputData).select().single();
+    if (error) logger.error('DB Error: createInputLog', { error, inputData });
+    return data;
+  },
+
+  async createObservation(observationData) {
+    const { data, error } = await supabase
+      .from('observations')
+      .insert(observationData)
+      .select()
+      .single();
+    if (error) logger.error('DB Error: createObservation', { error, observationData });
+    return data;
+  },
+
+  async createHarvest(harvestData) {
+    const { data, error } = await supabase.from('harvests').insert(harvestData).select().single();
+    if (error) logger.error('DB Error: createHarvest', { error, harvestData });
+    return data;
+  },
+
+  async getInputLogsByPlotAndMonth(plotId, startDate, endDate) {
+    const { data, error } = await supabase
+      .from('input_logs')
+      .select('*')
+      .eq('plot_id', plotId)
+      .eq('is_deleted', false)
+      .gte('date', startDate)
+      .lte('date', endDate);
+    if (error) logger.error('DB Error: getInputLogsByPlotAndMonth', { error, plotId });
+    return data || [];
+  },
+
+  async getObservationsByPlotAndMonth(plotId, startDate, endDate) {
+    const { data, error } = await supabase
+      .from('observations')
+      .select('*')
+      .eq('plot_id', plotId)
+      .eq('is_deleted', false)
+      .gte('date', startDate)
+      .lte('date', endDate);
+    if (error) logger.error('DB Error: getObservationsByPlotAndMonth', { error, plotId });
+    return data || [];
+  },
+
+  async getHarvestsByPlotAndMonth(plotId, startDate, endDate) {
+    const { data, error } = await supabase
+      .from('harvests')
+      .select('*')
+      .eq('plot_id', plotId)
+      .eq('is_deleted', false)
+      .gte('date', startDate)
+      .lte('date', endDate);
+    if (error) logger.error('DB Error: getHarvestsByPlotAndMonth', { error, plotId });
+    return data || [];
+  },
 };

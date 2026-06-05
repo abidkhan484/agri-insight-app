@@ -4,6 +4,7 @@ import { config } from '../config/index.js';
 import logger from '../config/logger.js';
 import { dbService } from '../db/service.js';
 import { registerWizard } from './scenes/register.js';
+import { logWizard } from './scenes/log.js';
 import { initPlotCommands } from './commands/plots.js';
 import { initReminderCommands } from './commands/reminders.js';
 import { registerSoilstatusCommand } from './commands/soilstatus.js';
@@ -12,6 +13,8 @@ import { registerJoinmapCommand } from './commands/joinmap.js';
 import { registerFaqCommand } from './commands/faq.js';
 import { registerCommunityCommands } from './commands/community.js';
 import { diseaseScene } from './commands/disease.js';
+import { registerWeatherCommand } from './commands/weather.js';
+import { registerReportCommand } from './commands/report.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
 import {
@@ -29,7 +32,7 @@ if (!config.botToken) {
 const bot = new Telegraf(config.botToken);
 
 // Middleware
-const stage = new Scenes.Stage([registerWizard, diseaseScene]);
+const stage = new Scenes.Stage([registerWizard, diseaseScene, logWizard]);
 bot.use(session());
 bot.use(stage.middleware());
 
@@ -70,6 +73,9 @@ bot.command('register', (ctx) => ctx.scene.enter('REGISTER_PLOT_SCENE'));
 // /disease command
 bot.command('disease', (ctx) => ctx.scene.enter('DISEASE_SCENE'));
 
+// /log command
+bot.command('log', (ctx) => ctx.scene.enter('LOG_ACTIVITY_SCENE'));
+
 // Initialize Commands
 initPlotCommands(bot);
 initReminderCommands(bot);
@@ -78,6 +84,8 @@ registerAskCommand(bot);
 registerJoinmapCommand(bot);
 registerFaqCommand(bot);
 registerCommunityCommands(bot);
+registerWeatherCommand(bot);
+registerReportCommand(bot);
 
 // Initialize Reminder Engine
 initReminderEngine(bot);
@@ -212,7 +220,10 @@ http
     }
 
     // Telegram OAuth Login Widget Endpoint (browser-based auth)
-    if (normalizedPath === '/api/auth/telegram-oauth' || normalizedPath.endsWith('/api/auth/telegram-oauth')) {
+    if (
+      normalizedPath === '/api/auth/telegram-oauth' ||
+      normalizedPath.endsWith('/api/auth/telegram-oauth')
+    ) {
       if (req.method !== 'POST') {
         logger.warn(`OAuth endpoint hit with invalid method: ${req.method}`);
         res.writeHead(405, { 'Content-Type': 'application/json' });
