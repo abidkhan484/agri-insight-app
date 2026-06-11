@@ -1,9 +1,10 @@
 name: Daily ZBNF Cron (Backup Scheduler)
 
 on:
-  schedule:
-    # 00:00 UTC = 06:00 BDT — runs as a backup if Render.com bot is sleeping
-    - cron: '0 0 * * *'
+  # TEMPORARILY DISABLED — re-enable the schedule block below when needed
+  # schedule:
+  #   # 00:00 UTC = 06:00 BDT — runs as a backup if Render.com bot is sleeping
+  #   - cron: '0 0 * * *'
   workflow_dispatch: # Allow manual trigger from GitHub UI
 
 jobs:
