@@ -14,23 +14,14 @@ Wrong values = wrong farmer advice = crop damage.
 
 ---
 
-## Build Sequence (Always Sequential)
-```
-P0 → P1 → P2 → P3 → P4 → P5 → P6 → P7 → P8
-```
-Never start a P-task before its dependencies are complete. See `tasks/_index.md` for the
-dependency map.
-
----
-
 ## Agent Roles (in `agents/` folder)
 
 | Agent | When to Invoke |
 |-------|---------------|
-| `coder` | Implement a feature or phase |
+| `coder` | Implement a feature or module |
 | `qa` | Write + run tests after implementation |
 | `reviewer` | Security, quality, and ZBNF accuracy review |
-| `doc-updater` | Update README, docs/, and task checklist |
+| `doc-updater` | Update README, docs/, and task checklists |
 | `committer` | Run ESLint + Prettier, write conventional commit |
 
 **Workflow per feature:** coder → qa → reviewer → doc-updater → committer
@@ -41,16 +32,9 @@ dependency map.
 
 | Skill | Purpose |
 |-------|---------|
-| `zbnf-formulation` | All formulation ratios, schedules, and Bangla glossary |
-| `p0-shared-foundation` | Foundation setup workflow |
-| `p1-farm-scheduler-bot` | Telegram bot + reminder engine |
-| `p2-weather-irrigation-alert` | Open-Meteo integration + decision logic |
-| `p3-farm-record-tracker` | React PWA + IndexedDB + reports |
-| `p4-iot-soil-monitoring` | ESP32 + MQTT + Node-RED + Grafana |
-| `p5-plant-disease-detection` | PlantNet API + TF.js on-device PWA |
-| `p6-zbnf-knowledge-pwa` | Offline knowledge base PWA |
-| `p7-local-ai-assistant` | Ollama + ChromaDB + RAG |
-| `p8-community-farmer-network` | Community bot + Leaflet map + wiki |
+| `zbnf-formulation` | All formulation ratios, schedules, and Bangla glossary (crucial for ZBNF calculations) |
+| `security-review` | Rules and guidelines for verifying OWASP security standards |
+| `tdd-workflow` | Enforces Test-Driven Development loops |
 
 ---
 
@@ -79,7 +63,7 @@ dependency map.
 
 ## Documentation Requirements
 
-Every P-task must produce:
+Every feature implementation must produce:
 - Updated `README.md` with new commands/features
 - `docs/architecture.md` update if new service/table added
 - Bangla + English entries in `docs/farmer-guide-bn-en.md` for user-facing features
@@ -91,7 +75,7 @@ Every P-task must produce:
 ```
 agents/         ← Sub-agent definitions (this folder)
 skills/         ← Skill workflows (this folder)
-tasks/          ← P0–P8 implementation checklists
+tasks/          ← Feature implementation checklists
 docs/           ← Architecture, setup, farmer guide
 templates/      ← ESLint, Prettier, husky pre-commit templates
 .claude/        ← Claude Code hooks and settings

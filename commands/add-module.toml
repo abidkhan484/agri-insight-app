@@ -1,0 +1,45 @@
+[command]
+name        = "add-module"
+description = "Scaffold a completely new system module or component — creates documentation, test setup, and configuration templates."
+usage       = "@add-module name='SMS Alerts' module_id='sms' description='SMS fallback notification engine'"
+
+[parameters]
+name        = { type = "string", required = true,  description = "Human-readable name, e.g. 'SMS Alerts'" }
+module_id   = { type = "string", required = true,  description = "Module identifier, e.g. sms" }
+description = { type = "string", required = false, description = "One-sentence description of what this module delivers." }
+
+[scaffold_steps]
+"1_agents_md"  = "Add a row to the Skills table in AGENTS.md: '| {module_id} | {description} |'"
+"2_claude_md"  = "Add any new tech stack entries to the Tech Stack table in CLAUDE.md."
+"3_gitignore"  = "Add any new build outputs, data volumes, or generated files to .gitignore."
+"4_readme"     = "Add a row to the Tools table in README.md: '| {module_id} | {name} | {description} |'"
+
+[steps]
+
+  [steps.1_coder]
+  agent       = "coder"
+  instruction = "Scaffold the new module '{name}' ({module_id}). Create the initial directory structure under src/ or client/src/modules/ depending on target layer. Complete all scaffold_steps above."
+  gate        = "All scaffolded files exist and are consistent. Git staging updated."
+
+  [steps.2_qa]
+  agent       = "qa"
+  instruction = "Write initial Vitest (or pytest) tests for '{name}' ({module_id}). At minimum: one happy-path test."
+  gate        = "Tests pass."
+
+  [steps.3_reviewer]
+  agent       = "reviewer"
+  instruction = "Review scaffolded structure for consistency; no OWASP issues in new skeleton code."
+  gate        = "Scaffold is internally consistent. Security clean."
+
+  [steps.4_doc_updater]
+  agent       = "doc-updater"
+  instruction = "Update docs/architecture.md with the new component. Update docs/farmer-guide-bn-en.md if the module has farmer-facing features."
+  gate        = "architecture.md and farmer guide updated."
+
+  [steps.5_committer]
+  agent       = "committer"
+  instruction = "Lint → format → test. Commit: 'feat({module_id}): scaffold module {name}'"
+  gate        = "All quality gates pass."
+
+[notes]
+bangla_first      = "All new farmer-facing Telegram messages and PWA labels: Bangla primary, English secondary."

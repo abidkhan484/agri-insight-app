@@ -9,11 +9,11 @@ fallback_models: ["gemini-3.5-flash", "gemini-3.1-pro"]
 # Doc Updater Agent — ZBNF Farming Assistant
 
 ## Trigger
-Invoked after `reviewer` approves the changeset for a phase.
+Invoked after `reviewer` approves the changeset for a feature.
 
-## Always Update After Every Phase
+## Always Update After Every Feature
 
-### 1. Task Checklist (`tasks/pN-*.md`)
+### 1. Task Checklist (`tasks/*.md`)
 Mark completed subtask items with `[x]`:
 ```markdown
 - [x] Implement `/register` command that collects plot name, area, crop, planting date

@@ -43,11 +43,11 @@ If you are running in Claude Code, execute custom TOML commands directly in the 
 
 *   **Test-Driven Development (TDD)**: Automates the Red-Green-Refactor loop:
     ```bash
-    @tdd phase=P9 feature="SMS Fallback Alerts" test_file="src/__tests__/sms.test.js"
+    @tdd phase=bot feature="SMS Fallback Alerts" test_file="src/__tests__/sms.test.js"
     ```
 *   **End-to-End Implementation**: Orchestrates all sub-agents (Architect → Developer → Reviewer → QA → Committer) for a single feature:
     ```bash
-    @full-pipeline phase=P9 feature="SMS Fallback Alerts"
+    @implement-phase phase=bot scope="SMS Alerts"
     ```
 *   **Manual Security & Code Quality Gate**:
     ```bash
@@ -58,10 +58,10 @@ If you are running in Claude Code, execute custom TOML commands directly in the 
 For environments where the assistant doesn't natively parse `@` commands, run the pipeline programmatically using standard shell commands:
 ```bash
 # Execute TDD workflow
-node scripts/run-pipeline.js tdd phase=P9 feature="SMS Fallback Alerts" test_file="src/__tests__/sms.test.js"
+node scripts/run-pipeline.js tdd phase=bot feature="SMS Fallback Alerts" test_file="src/__tests__/sms.test.js"
 
-# Execute full pipeline
-node scripts/run-pipeline.js full-pipeline phase=P9 feature="SMS Fallback Alerts"
+# Execute implementation pipeline
+node scripts/run-pipeline.js implement-phase phase=bot
 
 # Execute a quality check
 node scripts/run-pipeline.js quality-check

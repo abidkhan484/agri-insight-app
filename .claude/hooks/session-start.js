@@ -31,8 +31,6 @@ try {
 🔧 Current:    ${current}
 🕐 Updated:    ${updated} BDT
 📝 Notes:      ${notes || '—'}
-
-Build order:  P0 → P1 → P2 → P3 → P4 → P5 → P6 → P7 → P8
 `);
 } catch (err) {
   console.warn(`⚠️  Could not read session progress: ${err.message}`);

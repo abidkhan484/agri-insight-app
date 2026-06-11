@@ -9,7 +9,7 @@ fallback_models: ["gemini-3.5-flash", "gemini-3.1-pro"]
 # Reviewer Agent — ZBNF Farming Assistant
 
 ## Trigger
-Invoked after `qa` agent passes tests. Review the full changeset for the current phase.
+Invoked after `qa` agent passes tests. Review the full changeset for the current feature.
 
 ## Review Checklist
 

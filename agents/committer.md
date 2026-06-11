@@ -93,8 +93,8 @@ git commit -m "feat(bot): add /register command with plot registration wizard"
 ---
 
 ## After Commit
-Update `.session/progress.json` with the completed phase:
+Update `.session/progress.json` with the completed feature:
 ```bash
-node scripts/update-progress.js --completed "P1-phase1" --note "Plot registration working"
+node scripts/update-progress.js --completed "bot-auth" --note "Plot registration working"
 ```
 Then report back: "Committed: [commit hash] — [full commit message]."
