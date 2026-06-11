@@ -1,0 +1,44 @@
+[command]
+name        = "implement-feature"
+description = "Run the full 5-agent pipeline (coder → qa → reviewer → doc-updater → committer) for a ZBNF Farming Assistant feature."
+usage       = "@implement-feature module=bot feature='user authentication' scope='bot commands only'"
+
+[parameters]
+module  = { type = "string", required = true,  description = "Module identifier, e.g. bot, client, firmware, ai-assistant" }
+feature = { type = "string", required = true,  description = "Feature to implement" }
+scope   = { type = "string", required = false, description = "Optional narrowing — e.g. 'bot commands only'. Omit for full feature." }
+
+[steps]
+
+  [steps.1_coder]
+  agent       = "coder"
+  instruction = "Implement '{feature}' in module '{module}'{scope_clause}. Read any related docs in docs/ and skills/zbnf-formulation/SKILL.md if farming logic is involved."
+  reads       = ["skills/zbnf-formulation/SKILL.md", "CLAUDE.md"]
+  gate        = "All requirements implemented; ESLint-clean code; no console.log; Winston/loglevel/structlog used."
+
+  [steps.2_qa]
+  agent       = "qa"
+  instruction = "Write and run Vitest (or pytest) tests for '{feature}' in '{module}'. Verify all ZBNF formulation outputs against exact values in skills/zbnf-formulation/SKILL.md if applicable. Check Bangla text presence and logger calls."
+  reads       = ["skills/zbnf-formulation/SKILL.md"]
+  gate        = "All tests pass. ZBNF ratio assertions green if applicable. Coverage reasonable."
+
+  [steps.3_reviewer]
+  agent       = "reviewer"
+  instruction = "Security and quality review for '{feature}' in '{module}'. Check OWASP minimums, Winston/loglevel/structlog present in every service file, .env-only secrets, Bangla-first UI strings, and parameterized SQL."
+  reads       = ["CLAUDE.md", "AGENTS.md"]
+  gate        = "Zero OWASP violations. No hardcoded secrets. Logger present everywhere."
+
+  [steps.4_doc_updater]
+  agent       = "doc-updater"
+  instruction = "Update docs for '{feature}': README.md (new commands/features), docs/architecture.md (if new service or table), and docs/farmer-guide-bn-en.md (user-facing features in Bangla + English)."
+  reads       = ["docs/architecture.md", "docs/farmer-guide-bn-en.md", "README.md"]
+  gate        = "Documentation files updated accordingly."
+
+  [steps.5_committer]
+  agent       = "committer"
+  instruction = "Run ESLint (zero warnings), Prettier check, then test. If all pass, commit with conventional message: 'feat({module}): implement {feature}'."
+  gate        = "npm run lint exits 0. npm run format:check exits 0. npx vitest run exits 0."
+
+[notes]
+never_skip   = "Never skip the pre-commit gate. Never pass --no-verify."
+zbnf_warning = "If feature touches any formulation (ratios, schedules, thresholds) — coder MUST read skills/zbnf-formulation/SKILL.md first."

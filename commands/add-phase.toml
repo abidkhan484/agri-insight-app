@@ -1,18 +1,18 @@
 [command]
 name        = "add-phase"
-description = "Scaffold a completely new phase (P9+) — creates task file, skill file, registers it in the index, and updates root docs."
+description = "Scaffold a completely new phase or system module — creates task file, skill file, registers it in the index, and updates root docs."
 usage       = "@add-phase id=P9 name='SMS Fallback Alerts' tool-letter=I depends-on=P1"
 
 [parameters]
-id          = { type = "string", required = true,  description = "Phase ID, e.g. P9" }
+id          = { type = "string", required = true,  description = "Phase or module ID, e.g. P9 or auth" }
 name        = { type = "string", required = true,  description = "Human-readable name, e.g. 'SMS Fallback Alerts'" }
 tool_letter = { type = "string", required = true,  description = "Tool letter for the index table, e.g. I" }
-depends_on  = { type = "string", required = false, description = "Phase this one depends on, e.g. P1. Leave blank if independent." }
-description = { type = "string", required = false, description = "One-sentence description of what this phase delivers." }
+depends_on  = { type = "string", required = false, description = "Phase/module this one depends on, e.g. P1. Leave blank if independent." }
+description = { type = "string", required = false, description = "One-sentence description of what this phase/module delivers." }
 
 [scaffold_steps]
-"1_task_file"  = "Copy tasks/p8-community-farmer-network.md → tasks/{id_lower}-{name_slug}.md. Update title, weight, objective, prerequisites, subtasks, acceptance criteria, and estimated effort."
-"2_skill_file" = "Create skills/{id_lower}-{name_slug}/SKILL.md. Use skills/p8-community-farmer-network/SKILL.md as the template. Update name, description, triggers, tech choices, and all 5 agent sections."
+"1_task_file"  = "Create tasks/{id_lower}-{name_slug}.md. Update title, objective, prerequisites, subtasks, acceptance criteria, and estimated effort."
+"2_skill_file" = "Create skills/{id_lower}-{name_slug}/SKILL.md. Update name, description, triggers, tech choices, and all agent sections."
 "3_index"      = "Add a row to tasks/_index.md priority table: '| {id} | {name} | {tool_letter} | Why after {depends_on}? |'"
 "4_agents_md"  = "Add a row to the Skills table in AGENTS.md: '| `{id_lower}-{name_slug}` | {description} |'"
 "5_claude_md"  = "Add any new tech stack entries to the Tech Stack table in CLAUDE.md."
@@ -23,12 +23,12 @@ description = { type = "string", required = false, description = "One-sentence d
 
   [steps.1_coder]
   agent       = "coder"
-  instruction = "Scaffold the new phase {id} — {name}. Complete all scaffold_steps above, then implement the first subtask from the new task file."
-  gate        = "All 7 scaffold files exist and are consistent. First subtask implemented."
+  instruction = "Scaffold the new phase/module {id} — {name}. Complete all scaffold_steps above, then implement the first subtask from the new task file."
+  gate        = "All scaffolded files exist and are consistent. First subtask implemented."
 
   [steps.2_qa]
   agent       = "qa"
-  instruction = "Write initial Vitest (or pytest) tests for {id} — {name}. At minimum: one happy-path test and one edge-case test per new service."
+  instruction = "Write initial tests for {id} — {name}. At minimum: one happy-path test and one edge-case test per new service."
   gate        = "Tests pass."
 
   [steps.3_reviewer]
@@ -47,6 +47,6 @@ description = { type = "string", required = false, description = "One-sentence d
   gate        = "All quality gates pass."
 
 [notes]
-weight_convention = "Set weight in YAML frontmatter to {id_number} × 10 (e.g. P9 → weight: 90)."
+weight_convention = "Set weight in YAML frontmatter to index-based convention (e.g. weight: 90)."
 skill_triggers    = "Skill triggers must include the plain English phrases someone would type to invoke this phase — test them mentally before saving."
 bangla_first      = "All new farmer-facing Telegram messages and PWA labels: Bangla primary, English secondary."

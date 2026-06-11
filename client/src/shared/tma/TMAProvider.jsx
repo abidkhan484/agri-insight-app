@@ -16,7 +16,7 @@ const AUTH_STORAGE_KEY = 'tma_auth_session';
  *
  * Auth modes:
  * - 'telegram'  → Opened inside Telegram, auto-authenticated via initData
- * - 'browser'   → Opened in browser, authenticated via Telegram Login Widget
+ * - 'browser'   → Opened in browser, authenticated via Telegram Login Widget or email
  * - 'guest'     → Unauthenticated, limited offline-only features
  * - 'login'     → Waiting for user to sign in (shows LoginScreen)
  */
@@ -25,66 +25,178 @@ export const TMAProvider = ({ children, authEndpoint }) => {
   const [isReady, setIsReady] = useState(false);
   const [mode, setMode] = useState('login'); // 'telegram' | 'browser' | 'guest' | 'login'
 
-  /**
-   * Handles Telegram Login Widget OAuth callback.
-   * Sends the OAuth data to the backend for validation and JWT generation.
-   */
-  const loginWithTelegramOAuth = useCallback(async (telegramOAuthData) => {
+  // ---------------------------------------------------------------------------
+  // Persist / restore session helpers
+  // ---------------------------------------------------------------------------
+
+  function persistSession(authUser) {
     try {
-      log.info('Attempting Telegram OAuth login...');
-
-      const authUrl = authEndpoint.replace('/telegram', '/telegram-oauth');
-      const response = await fetch(authUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ oauthData: telegramOAuthData }),
-      });
-
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.error || `Auth failed with status ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      const authUser = {
-        ...data.user,
-        token: data.token,
-      };
-
-      setUser(authUser);
-      setMode('browser');
-
-      // Persist to sessionStorage so refreshes don't lose auth
-      try {
-        sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({
-          user: authUser,
-          timestamp: Date.now(),
-        }));
-      } catch (e) {
-        log.warn('Failed to persist auth session:', e);
-      }
-
-      log.info('Telegram OAuth login successful', { userId: data.user?.id });
-    } catch (err) {
-      log.error('Telegram OAuth login error:', err);
-      throw err;
+      sessionStorage.setItem(
+        AUTH_STORAGE_KEY,
+        JSON.stringify({ user: authUser, timestamp: Date.now() }),
+      );
+    } catch (e) {
+      log.warn('Failed to persist auth session:', e);
     }
-  }, [authEndpoint]);
+  }
 
-  /**
-   * Logs the user out and returns to the login screen.
-   */
-  const logout = useCallback(() => {
-    setUser(null);
-    setMode('login');
+  function clearSession() {
     try {
       sessionStorage.removeItem(AUTH_STORAGE_KEY);
     } catch (e) {
       log.warn('Failed to clear auth session:', e);
     }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Email / Password auth
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Register a new account with email + password.
+   * Returns the user object on success; throws on error.
+   */
+  const registerWithEmail = useCallback(
+    async ({ email, password, name }) => {
+      log.info('Attempting email registration...');
+      const registerUrl = authEndpoint.replace('/telegram', '/register');
+      const response = await fetch(registerUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `Registration failed (${response.status})`);
+
+      const authUser = { ...data.user, token: data.token };
+      setUser(authUser);
+      setMode('browser');
+      persistSession(authUser);
+      log.info('Email registration successful', { userId: data.user?.id });
+      return authUser;
+    },
+    [authEndpoint],
+  );
+
+  /**
+   * Sign in with email + password.
+   * Returns the user object on success; throws on error.
+   */
+  const loginWithEmail = useCallback(
+    async ({ email, password }) => {
+      log.info('Attempting email login...');
+      const loginUrl = authEndpoint.replace('/telegram', '/login');
+      const response = await fetch(loginUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `Login failed (${response.status})`);
+
+      const authUser = { ...data.user, token: data.token };
+      setUser(authUser);
+      setMode('browser');
+      persistSession(authUser);
+      log.info('Email login successful', { userId: data.user?.id });
+      return authUser;
+    },
+    [authEndpoint],
+  );
+
+  // ---------------------------------------------------------------------------
+  // Telegram Login Widget OAuth (browser)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Handles Telegram Login Widget OAuth callback.
+   * Sends the OAuth data to the backend for validation and JWT generation.
+   */
+  const loginWithTelegramOAuth = useCallback(
+    async (telegramOAuthData) => {
+      try {
+        log.info('Attempting Telegram OAuth login...');
+
+        const authUrl = authEndpoint.replace('/telegram', '/telegram-oauth');
+        const response = await fetch(authUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ oauthData: telegramOAuthData }),
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || `Auth failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        const authUser = { ...data.user, token: data.token };
+
+        setUser(authUser);
+        setMode('browser');
+        persistSession(authUser);
+
+        log.info('Telegram OAuth login successful', { userId: data.user?.id });
+      } catch (err) {
+        log.error('Telegram OAuth login error:', err);
+        throw err;
+      }
+    },
+    [authEndpoint],
+  );
+
+  // ---------------------------------------------------------------------------
+  // Link Telegram account to email account
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Links a Telegram account (from the Login Widget) to the current email account.
+   * Requires the user to already be logged in (user.token must exist).
+   */
+  const linkTelegramAccount = useCallback(
+    async (telegramOAuthData) => {
+      if (!user?.token) throw new Error('Not authenticated');
+
+      const linkUrl = authEndpoint.replace('/telegram', '/link-telegram');
+      const response = await fetch(linkUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ oauthData: telegramOAuthData }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to link Telegram account');
+
+      // Update local user state with the linked telegram id
+      const updatedUser = { ...user, telegram_id: data.telegram_id };
+      setUser(updatedUser);
+      persistSession(updatedUser);
+
+      log.info('Telegram account linked successfully');
+      return data;
+    },
+    [authEndpoint, user],
+  );
+
+  // ---------------------------------------------------------------------------
+  // Logout
+  // ---------------------------------------------------------------------------
+
+  const logout = useCallback(() => {
+    setUser(null);
+    setMode('login');
+    clearSession();
     log.info('User logged out');
   }, []);
+
+  // ---------------------------------------------------------------------------
+  // Initialisation — runs once on mount
+  // ---------------------------------------------------------------------------
 
   useEffect(() => {
     const initTMA = async () => {
@@ -99,7 +211,6 @@ export const TMAProvider = ({ children, authEndpoint }) => {
 
           const initData = WebApp.initData;
           if (initData) {
-            // Validate with backend
             setMode('telegram');
             const response = await fetch(authEndpoint, {
               method: 'POST',
@@ -109,10 +220,7 @@ export const TMAProvider = ({ children, authEndpoint }) => {
 
             if (response.ok) {
               const data = await response.json();
-              setUser({
-                ...data.user,
-                token: data.token,
-              });
+              setUser({ ...data.user, token: data.token });
               setIsReady(true);
               return;
             }
@@ -182,14 +290,19 @@ export const TMAProvider = ({ children, authEndpoint }) => {
   }, []);
 
   return (
-    <TMAContext.Provider value={{
-      user,
-      isReady,
-      mode,
-      WebApp,
-      loginWithTelegramOAuth,
-      logout,
-    }}>
+    <TMAContext.Provider
+      value={{
+        user,
+        isReady,
+        mode,
+        WebApp,
+        loginWithEmail,
+        registerWithEmail,
+        loginWithTelegramOAuth,
+        linkTelegramAccount,
+        logout,
+      }}
+    >
       {children}
     </TMAContext.Provider>
   );

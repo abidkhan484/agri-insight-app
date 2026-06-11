@@ -28,6 +28,54 @@ export const dbService = {
     return data;
   },
 
+  /**
+   * Upsert a farmer row keyed on Supabase Auth user id (email accounts).
+   * Does NOT touch telegram_id unless explicitly provided.
+   */
+  async upsertFarmerByAuthId(authUserId, updateData) {
+    const { data, error } = await supabase
+      .from('farmers')
+      .upsert({ auth_user_id: authUserId, ...updateData }, { onConflict: 'auth_user_id' })
+      .select()
+      .single();
+    if (error) logger.error('DB Error: upsertFarmerByAuthId', { error, authUserId });
+    return data;
+  },
+
+  /**
+   * Get farmer by Supabase Auth user id.
+   */
+  async getFarmerByAuthId(authUserId) {
+    const { data, error } = await supabase
+      .from('farmers')
+      .select('*')
+      .eq('auth_user_id', authUserId)
+      .single();
+    if (error && error.code !== 'PGRST116')
+      logger.error('DB Error: getFarmerByAuthId', { error, authUserId });
+    return data;
+  },
+
+  /**
+   * Link a Telegram account to an email-based farmer row.
+   * Finds the farmer row by auth_user_id and sets telegram_id + optional fields.
+   */
+  async linkTelegramToAuthUser(authUserId, telegramId, extraData) {
+    const { error } = await supabase
+      .from('farmers')
+      .update({ telegram_id: telegramId, ...extraData })
+      .eq('auth_user_id', authUserId);
+    if (error) {
+      logger.error('DB Error: linkTelegramToAuthUser', {
+        error,
+        farmer: 'id:' + authUserId,
+        ctx: 'farmer:' + telegramId,
+      });
+      return false;
+    }
+    return true;
+  },
+
   // Plots
   async createPlot(farmerId, plotData) {
     const { data, error } = await supabase

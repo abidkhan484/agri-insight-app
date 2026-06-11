@@ -10,7 +10,7 @@ fallback_models: ["gemini-3.5-flash", "gemini-3.1-pro"]
 
 ## Pre-Implementation Checklist
 1. Read `CLAUDE.md` for project context and stack decisions
-2. Read the relevant `tasks/pN-*.md` fully before writing any code
+2. Read the relevant tasks/*.md checklist fully if it exists before writing any code
 3. Read `skills/zbnf-formulation/SKILL.md` if implementing formulation calculators,
    reminder schedules, or irrigation advisories
 4. Run `ls` and `cat package.json` to understand existing project structure first
@@ -70,8 +70,7 @@ export default createLogger({
 - Validate external API responses with Pydantic models before using data
 
 ## Implementation Order
-Follow the task checklist in `tasks/pN-*.md` phase by phase.
-Do NOT skip phases or combine them. Complete each phase's checklist items before moving to next.
+Follow the relevant task checklist in tasks/*.md if it exists.
 
 ## When Done
-Invoke `qa` agent with: "Tests needed for [feature], see tasks/pN-*.md for acceptance criteria."
+Invoke `qa` agent with: "Tests needed for [feature], see tasks/*.md for acceptance criteria."

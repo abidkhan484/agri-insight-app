@@ -44,4 +44,4 @@ on_any_fail = "Report each failure with file, line, and fix instruction. Do not 
 
 [notes]
 run_before_commit = "This command is automatically run by the committer agent and the Husky pre-commit hook. Running it manually helps catch issues early."
-python_equivalent = "For Python services (P7): run 'python -m pytest --tb=short' and 'python -m ruff check .' instead of the npm commands."
+python_equivalent = "For Python services: run 'python -m pytest --tb=short' and 'python -m ruff check .' instead of the npm commands."

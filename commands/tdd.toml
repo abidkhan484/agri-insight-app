@@ -2,10 +2,10 @@
 [command]
 name        = "tdd"
 description = "Execute a Test-Driven Development workflow for a feature (write tests -> fail -> implement -> pass -> review -> commit)."
-usage       = "@tdd phase=P9 feature='SMS Fallback Alerts' test_file='src/__tests__/sms.test.js'"
+usage       = "@tdd phase=bot feature='SMS Fallback Alerts' test_file='src/__tests__/sms.test.js'"
 
 [parameters]
-phase     = { type = "string", required = true,  description = "Phase identifier, e.g. P9" }
+phase     = { type = "string", required = true,  description = "Phase or module identifier, e.g. bot, weather, or P9" }
 feature   = { type = "string", required = true,  description = "Feature to implement" }
 test_file = { type = "string", required = true,  description = "Target test file path to create, e.g., src/__tests__/sms.test.js" }
 
@@ -14,7 +14,7 @@ test_file = { type = "string", required = true,  description = "Target test file
   [steps.1_write_tests]
   agent       = "senior"
   instruction = "Write the initial failing Vitest tests inside '{test_file}' for the feature: '{feature}' in {phase}. Cover standard behavior, edge cases (empty inputs, nulls), and error paths. Do not implement the feature code yet."
-  reads       = ["tasks/{phase_slug}.md", "skills/tdd-workflow/SKILL.md"]
+  reads       = ["skills/tdd-workflow/SKILL.md"]
   gate        = "Test file '{test_file}' created with robust Vitest tests; no actual feature code written yet."
 
   [steps.2_verify_fail]

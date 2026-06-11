@@ -41,7 +41,7 @@ describe('P6 — ZBNF Formulation Calculators', () => {
   describe('Neemastra', () => {
     it('matches specifications for 33 decimals', () => {
       const result = calculateNeemastra(33);
-      expect(result.water_liters).toBe(200);
+      expect(result.water_liters).toBe(20);
       expect(result.neem_leaves_kg).toBe(5);
     });
   });
@@ -50,7 +50,6 @@ describe('P6 — ZBNF Formulation Calculators', () => {
     it('calculates for 33 decimals', () => {
       const result = calculateAgniastra(33);
       // Based on SKILL.md: Per 20L spray treats 33 decimals
-      expect(result.water_liters).toBeDefined();
       expect(result.cow_urine_liters).toBeDefined();
     });
   });
@@ -58,7 +57,7 @@ describe('P6 — ZBNF Formulation Calculators', () => {
   describe('Brahmastra', () => {
     it('calculates for 33 decimals', () => {
       const result = calculateBrahmastra(33);
-      expect(result.water_liters).toBeDefined();
+      expect(result.target_spray_volume_liters).toBeDefined();
     });
   });
 

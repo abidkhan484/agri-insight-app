@@ -11,27 +11,26 @@ wrong values give farmers bad advice and damage crops.
 
 ---
 
-## Build Order (Sequential — Never Parallelize P-Tasks)
+## System Architecture & Modules
 
-```
-P0 (Foundation) → P1 (Bot) → P2 (Weather) → P3 (PWA Records) → P4 (IoT)
-                                                               → P5 (Disease)
-                                                               → P6 (Knowledge PWA)
-                                             → P7 (Local AI)  → P8 (Community)
-```
-
-Each P-task has a corresponding skill in `skills/pN-*/SKILL.md`.
-Each skill defines the full implementation workflow using the agents below.
+The platform is organized into loosely coupled system modules:
+- **bot**: Telegram Bot backend (Node.js/Telegraf/Supabase)
+- **client/modules/krishi-record**: PWA Farm Record Tracker (React/Vite/Dexie.js)
+- **client/modules/disease-detect**: On-device plant disease detector (TF.js)
+- **client/modules/knowledge**: Offline ZBNF knowledge base PWA
+- **client/modules/map**: Community farmer map (Leaflet)
+- **ai-assistant**: Local AI RAG server (Flask/LlamaIndex)
+- **firmware**: ESP32 IoT soil telemetry sketches
 
 ---
 
-## Agent Workflow (Use for Every P-Task)
+## Agent Workflow (Use for Every Feature)
 
 Invoke agents in this exact sequence for each feature:
-1. **coder** — implement the feature (reads task MD + ZBNF skill)
+1. **coder** — implement the feature (reads related tasks and skills)
 2. **qa** — write and run tests (verifies ZBNF ratio outputs)
 3. **reviewer** — security + quality check (OWASP, logger presence, Bangla UI)
-4. **doc-updater** — update README, docs/, and task checklist
+4. **doc-updater** — update README, docs/, and tasks
 5. **committer** — ESLint + Prettier pass, then conventional commit
 
 Agent files live in `agents/`. Skills live in `skills/`.
@@ -82,7 +81,7 @@ logger = structlog.get_logger()
 logger.info("query_received", question=q, language="bn")
 ```
 
-### Browser/PWA Logger (P3, P5, P6)
+### Browser/PWA Logger
 ```js
 import log from 'loglevel';
 log.setLevel(import.meta.env.PROD ? 'warn' : 'debug');
@@ -176,13 +175,13 @@ Use the appropriate logger. `console.log` is blocked by ESLint rule.
 
 ## Session Progress Tracking
 
-After completing each P-task, update `.session/progress.json`:
+After completing each feature, update `.session/progress.json`:
 ```json
 {
-  "completed": ["P0", "P1"],
-  "current": "P2",
+  "completed": ["bot-auth"],
+  "current": "weather-alerts",
   "last_updated": "2026-05-08T10:00:00Z",
-  "notes": "P1 complete. Pre-commit hook confirmed working."
+  "notes": "Bot auth complete. Pre-commit hook confirmed working."
 }
 ```
 The `Stop` hook auto-saves this file. `SessionStart` hook loads it and prints current status.

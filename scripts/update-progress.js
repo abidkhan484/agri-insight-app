@@ -19,13 +19,11 @@ import { join } from 'path';
 const SESSION_DIR  = join(process.cwd(), '.session');
 const PROGRESS_FILE = join(SESSION_DIR, 'progress.json');
 
-const ALL_PHASES = ['P0', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'];
-
 function loadProgress() {
   if (!existsSync(PROGRESS_FILE)) {
     return {
       completed: [],
-      current: 'P0',
+      current: '',
       last_updated: new Date().toISOString(),
       notes: '',
     };
@@ -34,7 +32,7 @@ function loadProgress() {
     return JSON.parse(readFileSync(PROGRESS_FILE, 'utf8'));
   } catch {
     console.error('⚠️  progress.json is malformed — resetting to defaults.');
-    return { completed: [], current: 'P0', last_updated: new Date().toISOString(), notes: '' };
+    return { completed: [], current: '', last_updated: new Date().toISOString(), notes: '' };
   }
 }
 
@@ -45,22 +43,15 @@ function saveProgress(progress) {
 }
 
 function printStatus(progress) {
-  const remaining = ALL_PHASES.filter((p) => !progress.completed.includes(p));
-  const pct = Math.round((progress.completed.length / ALL_PHASES.length) * 100);
-
   console.log(`
 ╔══════════════════════════════════════════╗
 ║   ZBNF Project Progress                  ║
 ╚══════════════════════════════════════════╝
 
-Progress:  ${progress.completed.length}/${ALL_PHASES.length} phases (${pct}%)
 Completed: ${progress.completed.length > 0 ? progress.completed.join(', ') : 'none'}
 Current:   ${progress.current || 'not set'}
-Remaining: ${remaining.join(', ') || 'all done! 🎉'}
 Updated:   ${new Date(progress.last_updated).toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' })} BDT
 Notes:     ${progress.notes || '—'}
-
-Build order: P0 → P1 → P2 → P3 → P4 → P5 → P6 → P7 → P8
 `);
 }
 
@@ -81,34 +72,34 @@ if (args.includes('--auto')) {
 
 let changed = false;
 
-// --completed P0
+// --completed [feature]
 const completedIdx = args.indexOf('--completed');
 if (completedIdx !== -1) {
-  const phase = args[completedIdx + 1]?.toUpperCase();
-  if (!phase || !ALL_PHASES.includes(phase)) {
-    console.error(`❌ Unknown phase: ${phase}. Valid: ${ALL_PHASES.join(', ')}`);
+  const item = args[completedIdx + 1];
+  if (!item) {
+    console.error(`❌ Please specify a feature or module name after --completed.`);
     process.exit(1);
   }
-  if (!progress.completed.includes(phase)) {
-    progress.completed.push(phase);
-    progress.completed.sort((a, b) => ALL_PHASES.indexOf(a) - ALL_PHASES.indexOf(b));
-    console.log(`✅ Marked ${phase} as complete.`);
+  if (!progress.completed.includes(item)) {
+    progress.completed.push(item);
+    progress.completed.sort();
+    console.log(`✅ Marked "${item}" as complete.`);
     changed = true;
   } else {
-    console.log(`ℹ️  ${phase} was already marked complete.`);
+    console.log(`ℹ️  "${item}" was already marked complete.`);
   }
 }
 
-// --current P1
+// --current [feature]
 const currentIdx = args.indexOf('--current');
 if (currentIdx !== -1) {
-  const phase = args[currentIdx + 1]?.toUpperCase();
-  if (!phase || !ALL_PHASES.includes(phase)) {
-    console.error(`❌ Unknown phase: ${phase}. Valid: ${ALL_PHASES.join(', ')}`);
+  const item = args[currentIdx + 1];
+  if (!item) {
+    console.error(`❌ Please specify a feature or module name after --current.`);
     process.exit(1);
   }
-  progress.current = phase;
-  console.log(`🔧 Set current task to ${phase}.`);
+  progress.current = item;
+  console.log(`🔧 Set current task/feature to "${item}".`);
   changed = true;
 }
 
@@ -132,3 +123,4 @@ if (changed) {
   console.log('ℹ️  No changes made.');
   printStatus(progress);
 }
+

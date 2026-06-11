@@ -1,3 +1,4 @@
+import 'fake-indexeddb/auto';
 import { describe, it, expect } from 'vitest';
 import { calculateJeevamrutha } from '../utils/zbnf-formulas';
 import { db } from '../db';
@@ -39,7 +40,8 @@ describe('P3 - Farm Record Tracker Tests', () => {
     });
 
     it('can add and retrieve a plot', async () => {
-      const id = await db.plots.add({ name: 'Test Plot', area: 33, areaUnit: 'Decimal' });
+      const plotId = 'test-plot-uuid-123';
+      const id = await db.plots.add({ id: plotId, name: 'Test Plot', area: 33, areaUnit: 'Decimal' });
       const plot = await db.plots.get(id);
       expect(plot.name).toBe('Test Plot');
       expect(plot.area).toBe(33);

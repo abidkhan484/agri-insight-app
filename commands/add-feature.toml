@@ -1,27 +1,27 @@
 [command]
 name        = "add-feature"
-description = "Add a new feature or command to an existing phase without rebuilding the whole phase."
-usage       = "@add-feature phase=P3 feature='monthly yield summary command'"
+description = "Add a new feature or command to an existing phase or module without rebuilding the whole system component."
+usage       = "@add-feature phase=bot feature='monthly yield summary command'"
 
 [parameters]
-phase   = { type = "string", required = true,  description = "Existing phase to extend, e.g. P3" }
+phase   = { type = "string", required = true,  description = "Existing phase or module to extend, e.g. bot, weather, or P3" }
 feature = { type = "string", required = true,  description = "Plain-English description of the feature to add" }
 
 [pre_steps]
-"1" = "Add a subtask entry to tasks/{phase_slug}.md under the relevant phase section: '- [ ] {feature}'"
-"2" = "Add an acceptance criterion: '- [ ] {feature} verified by Vitest'"
-"3" = "If the feature introduces a reusable pattern, add a new section to skills/{phase_slug}/SKILL.md"
+"1" = "Add a subtask entry to tasks/{phase_slug}.md if it exists under the relevant section: '- [ ] {feature}'"
+"2" = "Add an acceptance criterion: '- [ ] {feature} verified by tests'"
+"3" = "If the feature introduces a reusable pattern, add a new section to skills/{phase_slug}/SKILL.md if it exists"
 
 [steps]
 
   [steps.1_coder]
   agent       = "coder"
-  instruction = "Add {feature} to {phase}. Read the relevant section of tasks/{phase_slug}.md and skills/{phase_slug}/SKILL.md. Read skills/zbnf-formulation/SKILL.md if the feature involves farming logic."
+  instruction = "Add {feature} to {phase}. Read the relevant section of tasks/{phase_slug}.md and skills/{phase_slug}/SKILL.md if they exist. Read skills/zbnf-formulation/SKILL.md if the feature involves farming logic."
   gate        = "Feature implemented. Existing tests still pass. No console.log introduced."
 
   [steps.2_qa]
   agent       = "qa"
-  instruction = "Write Vitest tests for {feature} in {phase}. Include edge cases and, if applicable, ZBNF ratio assertions."
+  instruction = "Write tests for {feature} in {phase}. Include edge cases and, if applicable, ZBNF ratio assertions."
   gate        = "New tests pass. No regressions."
 
   [steps.3_reviewer]
@@ -31,8 +31,8 @@ feature = { type = "string", required = true,  description = "Plain-English desc
 
   [steps.4_doc_updater]
   agent       = "doc-updater"
-  instruction = "Update docs/farmer-guide-bn-en.md with {feature} usage (Bangla + English). Tick off the new subtask in tasks/{phase_slug}.md."
-  gate        = "Farmer guide updated. Checklist reflects completion."
+  instruction = "Update docs/farmer-guide-bn-en.md with {feature} usage (Bangla + English). Tick off the new subtask in tasks/{phase_slug}.md if it exists."
+  gate        = "Farmer guide updated. Checklist reflects completion if it exists."
 
   [steps.5_committer]
   agent       = "committer"
@@ -40,5 +40,5 @@ feature = { type = "string", required = true,  description = "Plain-English desc
   gate        = "All quality gates pass."
 
 [notes]
-skill_update = "If the new feature pattern is something other phases might reuse, always update the skill file — not just the task file."
+skill_update = "If the new feature pattern is something other modules might reuse, always update the skill file — not just the task file."
 bangla_rule  = "Every new Telegram message or PWA label must have Bangla as the primary text."

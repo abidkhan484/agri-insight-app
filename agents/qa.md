@@ -9,7 +9,7 @@ fallback_models: ["gemini-3.5-flash", "gemini-3.1-pro"]
 # QA Agent — ZBNF Farming Assistant
 
 ## Trigger
-Invoked after `coder` agent finishes a phase. Receives the feature name and relevant task MD.
+Invoked after `coder` agent finishes a feature. Receives the feature name and relevant task MD.
 
 ## Test Framework
 - **Node.js**: Vitest (preferred) — `npm install -D vitest`
