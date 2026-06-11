@@ -17,12 +17,15 @@ import { registerWeatherCommand } from './commands/weather.js';
 import { registerReportCommand } from './commands/report.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
+import { createRouter } from '../api/router.js';
+import { requireAuth } from '../api/middleware/auth.js';
 import {
-  validateTelegramInitData,
-  validateTelegramOAuthData,
-  generateSupabaseJWT,
-  parseTelegramUser,
-} from '../services/auth.js';
+  registerWithEmail,
+  loginWithEmail,
+  loginWithTelegramTMA,
+  loginWithTelegramOAuth,
+  linkTelegramAccount,
+} from '../api/routes/auth.js';
 
 if (!config.botToken) {
   logger.error('BOT_TOKEN is missing in configuration. Exiting...');
@@ -41,17 +44,17 @@ bot.start(async (ctx) => {
   const telegramId = ctx.from.id.toString();
   const name = ctx.from.first_name || 'Farmer';
 
-  logger.info('Start command received', { chat_id: 'chat:' + ctx.chat.id, telegramId });
+  logger.info('Start command received', { chat_id: 'chat:' + ctx.chat.id, ctx: 'farmer:' + telegramId });
 
   // Register farmer if not exists
   try {
     const farmer = await dbService.getFarmerByTelegramId(telegramId);
     if (!farmer) {
       await dbService.registerFarmer(telegramId, name);
-      logger.info('New farmer registered', { telegramId, name });
+      logger.info('New farmer registered', { ctx: 'farmer:' + telegramId });
     }
   } catch (error) {
-    logger.error('Failed to register farmer on start', { error, telegramId });
+    logger.error('Failed to register farmer on start', { error, ctx: 'farmer:' + telegramId });
   }
 
   const welcomeMessage = `স্বাগতম ${name}! আমি আপনার কৃষি সহকারী।
@@ -140,171 +143,44 @@ bot.catch((err, ctx) => {
   logger.error('Telegraf error', { err, updateType: ctx.updateType });
 });
 
-// Start HTTP server for Render health checks and TMA Auth
+// ---------------------------------------------------------------------------
+// HTTP API Server
+// ---------------------------------------------------------------------------
+
+const router = createRouter();
+
+// ---- Public auth routes (no JWT required) ----------------------------------
+router.post('/api/auth/register', registerWithEmail);
+router.post('/api/auth/login', loginWithEmail);
+router.post('/api/auth/telegram', loginWithTelegramTMA);
+router.post('/api/auth/telegram-oauth', loginWithTelegramOAuth);
+
+// ---- Protected routes (JWT required) ---------------------------------------
+router.post('/api/auth/link-telegram', requireAuth, linkTelegramAccount);
+
+// ---- Health check ----------------------------------------------------------
+router.get('/health', (_req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Bot is running');
+});
+router.get('/', (_req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Bot is running');
+});
+
 http
-  .createServer(async (req, res) => {
-    // Basic Request Logging (Level: Info for visibility)
+  .createServer((req, res) => {
     logger.info(`Incoming request: ${req.method} ${req.url}`);
-
-    // CORS Headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-    if (req.method === 'OPTIONS') {
-      res.writeHead(204);
-      res.end();
-      return;
-    }
-
-    // Robust path normalization:
-    // 1. Get path without query string
-    // 2. Normalize slashes (collapse // and remove trailing)
-    const rawPath = req.url.split('?')[0];
-    const normalizedPath = rawPath.replace(/\/+/g, '/').replace(/\/+$/, '') || '/';
-
-    // TMA Authentication Endpoint
-    if (normalizedPath === '/api/auth/telegram' || normalizedPath.endsWith('/api/auth/telegram')) {
-      if (req.method !== 'POST') {
-        logger.warn(`Auth endpoint hit with invalid method: ${req.method}`);
-        res.writeHead(405, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Method Not Allowed. Use POST.' }));
-        return;
+    router.handle(req, res).catch((err) => {
+      logger.error('Unhandled router error', { error: err.message });
+      if (!res.headersSent) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Internal server error' }));
       }
-
-      logger.info('Auth endpoint hit (POST)', { path: req.url, normalized: normalizedPath });
-      let body = '';
-      req.on('data', (chunk) => {
-        body += chunk.toString();
-      });
-      req.on('end', async () => {
-        try {
-          const { initData } = JSON.parse(body);
-
-          if (!validateTelegramInitData(initData)) {
-            logger.warn('TMA Auth Failed: Invalid initData');
-            res.writeHead(401, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'Invalid Telegram data' }));
-            return;
-          }
-
-          const user = parseTelegramUser(initData);
-          if (!user || !user.id) {
-            logger.warn('TMA Auth Failed: Missing user data');
-            res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'Invalid user data' }));
-            return;
-          }
-
-          const token = generateSupabaseJWT(user.id);
-
-          logger.info('TMA Auth Success', { telegramId: user.id });
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(
-            JSON.stringify({
-              token,
-              user: {
-                id: user.id,
-                first_name: user.first_name,
-                language_code: user.language_code,
-              },
-            }),
-          );
-        } catch (error) {
-          logger.error('TMA Auth Error', { error: error.message });
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Internal server error' }));
-        }
-      });
-      return;
-    }
-
-    // Telegram OAuth Login Widget Endpoint (browser-based auth)
-    if (
-      normalizedPath === '/api/auth/telegram-oauth' ||
-      normalizedPath.endsWith('/api/auth/telegram-oauth')
-    ) {
-      if (req.method !== 'POST') {
-        logger.warn(`OAuth endpoint hit with invalid method: ${req.method}`);
-        res.writeHead(405, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Method Not Allowed. Use POST.' }));
-        return;
-      }
-
-      logger.info('OAuth endpoint hit (POST)', { path: req.url });
-      let body = '';
-      req.on('data', (chunk) => {
-        body += chunk.toString();
-      });
-      req.on('end', async () => {
-        try {
-          const { oauthData } = JSON.parse(body);
-
-          if (!validateTelegramOAuthData(oauthData)) {
-            logger.warn('Telegram OAuth Validation Failed');
-            res.writeHead(401, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'Invalid Telegram OAuth data' }));
-            return;
-          }
-
-          if (!oauthData.id) {
-            logger.warn('Telegram OAuth: Missing user id');
-            res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'Invalid user data' }));
-            return;
-          }
-
-          const token = generateSupabaseJWT(oauthData.id);
-
-          // Register farmer if not exists
-          try {
-            const farmer = await dbService.getFarmerByTelegramId(oauthData.id.toString());
-            if (!farmer) {
-              await dbService.registerFarmer(
-                oauthData.id.toString(),
-                oauthData.first_name || 'Farmer',
-              );
-              logger.info('New farmer registered via OAuth', { telegramId: oauthData.id });
-            }
-          } catch (dbErr) {
-            logger.error('Failed to register farmer via OAuth', { error: dbErr.message });
-          }
-
-          logger.info('Telegram OAuth Auth Success', { telegramId: oauthData.id });
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(
-            JSON.stringify({
-              token,
-              user: {
-                id: oauthData.id,
-                first_name: oauthData.first_name || '',
-                language_code: oauthData.language_code || 'bn',
-              },
-            }),
-          );
-        } catch (error) {
-          logger.error('Telegram OAuth Error', { error: error.message });
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Internal server error' }));
-        }
-      });
-      return;
-    }
-
-    // Health check
-    if (normalizedPath === '/health' || normalizedPath === '/') {
-      res.writeHead(200);
-      res.end('Bot is running');
-      return;
-    }
-
-    // Catch-all 404 with logging
-    logger.warn(`404 Not Found: ${req.method} ${req.url} (normalized: ${normalizedPath})`);
-    res.writeHead(404);
-    res.end();
+    });
   })
   .listen(config.port, () => {
-    logger.info(`Server listening on port ${config.port}`);
+    logger.info(`API server listening on port ${config.port}`);
   });
 
 // Launch bot

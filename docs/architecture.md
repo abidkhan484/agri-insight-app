@@ -55,17 +55,17 @@ The ZBNF Farming Assistant is a zero-cost technology platform composed of **9 lo
 
 ## Integration Strategy: TMA & Supabase Sync
 
-### 1. Authentication Bridge (TMA)
-The bot serves as an identity provider. When a farmer opens a PWA from a Telegram command, the PWA uses the **Telegram Mini App SDK** to retrieve `initData`. This data is sent to the Bot's `/api/auth/telegram` endpoint, which:
-- Validates the hash using the `BOT_TOKEN`.
-- Signs a **Supabase JWT** containing the user's `telegram_id`.
-- The PWA uses this JWT to authenticate with Supabase, enabling **Row Level Security (RLS)**.
+### 1. Dual Authentication & Mini App SDK
+The platform supports two secure entry points for farmers:
+- **Telegram Mini App (TMA) & OAuth**: When running inside Telegram, `initData` is validated by the Bot's `/api/auth/telegram` endpoint, generating a custom JWT with the user's `telegram_id` to authenticate with Supabase. Outside of Telegram, the **Telegram Login Widget** (browser OAuth) can be used.
+- **Email & Password**: Farmers can register and log in using an email and password via Supabase Auth. This creates a corresponding record in the local `farmers` table.
+- **Account Linking**: Users logged in with email/password can link their Telegram account (via Telegram OAuth) using the `/api/auth/link-telegram` endpoint. This maps their `telegram_id` to their email account, enabling unified access across Telegram commands and the web PWA.
 
 **Guest Mode Support**:
-For users outside of Telegram or those who prefer not to sign in, the system supports a **Guest Mode**. 
+For users who prefer not to sign in, the system supports a **Guest Mode**:
 - Users can access all features offline via IndexedDB.
-- A **LoginScreen** with a Telegram Login Widget is provided for browser-based OAuth authentication.
-- Users can switch from Guest to Authenticated mode at any time to enable Cloud Sync.
+- A **LoginScreen** with both Email/Password (Login/Register tabs) and a Telegram Login Widget is provided.
+- Users can log in or link accounts to activate cloud synchronization.
 
 ### 2. Bidirectional Synchronization
 To support offline-first usage in rural areas, the PWAs use **Dexie (IndexedDB)**.

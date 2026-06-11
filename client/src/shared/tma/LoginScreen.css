@@ -335,3 +335,226 @@
     color: #ef5350;
   }
 }
+
+/* ── Tabs ── */
+.login-tabs {
+  display: flex;
+  gap: 4px;
+  background: #f0f4f0;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.login-tab {
+  flex: 1;
+  padding: 9px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-tab--active {
+  background: #fff;
+  color: #1b5e20;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-tab:hover:not(.login-tab--active) {
+  color: #2e7d32;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Sub-tabs (Login / Register) ── */
+.login-subtabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #e8f5e9;
+  margin-bottom: 20px;
+}
+
+.login-subtab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.login-subtab--active {
+  color: #1b5e20;
+  border-bottom-color: #2e7d32;
+  font-weight: 700;
+}
+
+.login-subtab:hover:not(.login-subtab--active) {
+  color: #2e7d32;
+}
+
+/* ── Panel ── */
+.login-panel {
+  animation: loginFadeIn 0.25s ease-out;
+}
+
+/* ── Form ── */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+}
+
+.login-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.login-input {
+  padding: 11px 14px;
+  border: 1.5px solid #d0e8d0;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #222;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.login-input:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+}
+
+.login-input::placeholder {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.login-submit-btn {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.3);
+  margin-top: 4px;
+}
+
+.login-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(46, 125, 50, 0.4);
+}
+
+.login-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ── Success banner ── */
+.login-success {
+  background: #e8f5e9;
+  color: #1b5e20;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 4px;
+  border: 1px solid #a5d6a7;
+  animation: loginFadeIn 0.3s ease-out;
+}
+
+/* ── Small spinner (inside button) ── */
+.login-spinner--small {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+/* ── Dark mode additions ── */
+@media (prefers-color-scheme: dark) {
+  .login-tabs {
+    background: rgba(46, 125, 50, 0.12);
+  }
+
+  .login-tab {
+    color: #9ca3af;
+  }
+
+  .login-tab--active {
+    background: rgba(30, 33, 40, 0.9);
+    color: #81c784;
+  }
+
+  .login-subtabs {
+    border-bottom-color: #2e4a30;
+  }
+
+  .login-subtab {
+    color: #6b7280;
+  }
+
+  .login-subtab--active {
+    color: #81c784;
+    border-bottom-color: #81c784;
+  }
+
+  .login-label {
+    color: #d1d5db;
+  }
+
+  .login-input {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: #2e4a30;
+    color: #f3f4f6;
+  }
+
+  .login-input:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+  }
+
+  .login-input::placeholder {
+    color: #4b5563;
+  }
+
+  .login-success {
+    background: rgba(46, 125, 50, 0.15);
+    border-color: rgba(46, 125, 50, 0.3);
+    color: #81c784;
+  }
+}

@@ -213,6 +213,42 @@ Use `/report` to get a structured summary of your activities:
 
 ---
 
-## ১১. সমস্যা হলে কী করবেন / Troubleshooting
+## ১১. অ্যাকাউন্ট ও লগইন / Account & Login
+
+### ১১.১ ইমেইল ও পাসওয়ার্ড দিয়ে লগইন (Email & Password Login)
+
+**বাংলা:**
+আপনার যদি কোনো টেলিগ্রাম অ্যাকাউন্ট না থাকে বা আপনি ব্রাউজার থেকে সরাসরি আপনার তথ্য দেখতে চান, তবে আপনি ইমেইল এবং পাসওয়ার্ড ব্যবহার করে নতুন অ্যাকাউন্ট খুলতে ও লগইন করতে পারেন।
+
+১. PWA স্ক্রিনে **ইমেইল (Email)** ট্যাবে যান।
+২. **নিবন্ধন (Register)** ট্যাবে আপনার নাম, ইমেইল ও পাসওয়ার্ড দিয়ে সাবমিট করুন।
+৩. পরবর্তীতে লগইন করতে আপনার ইমেইল ও পাসওয়ার্ড ব্যবহার করুন।
+
+**English:**
+If you do not have a Telegram account or want to access your data directly from a browser, you can register and log in using an email and password.
+
+1. Go to the **Email** tab on the PWA Login Screen.
+2. Select **Register**, enter your name, email, and password, then submit.
+3. Use your email and password to log in in the future.
+
+### ১১.২ টেলিগ্রাম অ্যাকাউন্ট যুক্ত করা (Linking Telegram Account)
+
+**বাংলা:**
+আপনি যদি ইমেইল দিয়ে লগইন করে থাকেন, তবে পরবর্তীতে বটের সুবিধা পেতে আপনার টেলিগ্রাম অ্যাকাউন্টটি লিঙ্ক বা যুক্ত করতে পারেন।
+
+১. প্রোফাইল স্ক্রিনে যান এবং **টেলিগ্রাম যুক্ত করুন (Link Telegram)** বোতামে ক্লিক করুন।
+২. টেলিগ্রাম লগইন উইজেটে আপনার ফোন নম্বর বা টেলিগ্রাম আইডি দিয়ে অনুমোদন করুন।
+৩. সফলভাবে যুক্ত হওয়ার পর আপনার বটের তথ্য ও ওয়েব অ্যাপ্লিকেশন স্বয়ংক্রিয়ভাবে সিঙ্ক বা মেলাবে।
+
+**English:**
+If you logged in with an email, you can link your Telegram account to access bot commands and features.
+
+1. Go to your Profile screen and click the **Link Telegram** button.
+2. Authorize via the Telegram login widget using your phone number or Telegram account.
+3. Once linked, your Telegram bot information and PWA records will sync automatically.
+
+---
+
+## ১২. সমস্যা হলে কী করবেন / Troubleshooting
 
 বট সাড়া না দিলে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন। জমি যোগ করতে সমস্যা হলে `/register` আবার চেষ্টা করুন। মাটির তথ্য না দেখালে আপনার IoT ডিভাইসটি সচল কি না চেক করুন।

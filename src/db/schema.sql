@@ -21,14 +21,18 @@ $$ language 'plpgsql';
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS farmers (
   id SERIAL PRIMARY KEY,
-  telegram_id TEXT UNIQUE NOT NULL,
+  telegram_id TEXT UNIQUE,          -- nullable for email-only accounts
+  auth_user_id UUID UNIQUE,         -- Supabase Auth user id (email/password accounts)
+  email TEXT,                       -- email address (for email/password accounts)
   name TEXT,
   district TEXT,
   upazila TEXT,
   has_desi_cow BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now(),
-  is_deleted BOOLEAN DEFAULT false
+  is_deleted BOOLEAN DEFAULT false,
+  -- Ensure at least one identity is set
+  CONSTRAINT farmers_has_identity CHECK (telegram_id IS NOT NULL OR auth_user_id IS NOT NULL)
 );
 
 CREATE TRIGGER update_farmers_updated_at BEFORE UPDATE ON farmers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -242,36 +246,117 @@ CREATE POLICY "Public Read Locations" ON farmer_locations FOR SELECT USING (true
 CREATE POLICY "Public Read Pest Alerts" ON pest_alerts FOR SELECT USING (true);
 CREATE POLICY "Public Read FAQ" ON faq_entries FOR SELECT USING (true);
 
+-- Migration helper: add new columns to existing deployments
+ALTER TABLE farmers ADD COLUMN IF NOT EXISTS auth_user_id UUID UNIQUE;
+ALTER TABLE farmers ADD COLUMN IF NOT EXISTS email TEXT;
+-- Remove NOT NULL from telegram_id if it exists (safe on re-run)
+DO $$ BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name='farmers' AND column_name='telegram_id'
+    AND is_nullable='NO'
+  ) THEN
+    ALTER TABLE farmers ALTER COLUMN telegram_id DROP NOT NULL;
+  END IF;
+END $$;
+
 -- 2. Farmer-Specific Tables (Owner Only)
--- We use 'telegram_id' as the key. In Supabase, the user's JWT will contain 'telegram_id'.
--- For now, we assume auth.uid() is the telegram_id or mapped to it.
+-- Access is granted if the JWT's 'telegram_id' claim matches (Telegram auth)
+-- OR if auth.uid() matches the auth_user_id column (email/password auth).
 
-CREATE POLICY "Farmers: Owner Read/Update" ON farmers 
-  FOR ALL USING (telegram_id = auth.jwt() ->> 'telegram_id');
+CREATE POLICY "Farmers: Owner Read/Update" ON farmers
+  FOR ALL USING (
+    telegram_id = auth.jwt() ->> 'telegram_id'
+    OR auth_user_id = auth.uid()
+  );
 
-CREATE POLICY "Plots: Owner Access" ON plots 
-  FOR ALL USING (farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id'));
+CREATE POLICY "Plots: Owner Access" ON plots
+  FOR ALL USING (
+    farmer_id IN (
+      SELECT id FROM farmers
+      WHERE telegram_id = auth.jwt() ->> 'telegram_id'
+         OR auth_user_id = auth.uid()
+    )
+  );
 
-CREATE POLICY "Reminders: Owner Access" ON reminders 
-  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+CREATE POLICY "Reminders: Owner Access" ON reminders
+  FOR ALL USING (
+    plot_id IN (
+      SELECT id FROM plots WHERE farmer_id IN (
+        SELECT id FROM farmers
+        WHERE telegram_id = auth.jwt() ->> 'telegram_id'
+           OR auth_user_id = auth.uid()
+      )
+    )
+  );
 
-CREATE POLICY "Logs: Owner Access" ON reminder_logs 
-  FOR ALL USING (reminder_id IN (SELECT id FROM reminders WHERE plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id'))));
+CREATE POLICY "Logs: Owner Access" ON reminder_logs
+  FOR ALL USING (
+    reminder_id IN (
+      SELECT id FROM reminders WHERE plot_id IN (
+        SELECT id FROM plots WHERE farmer_id IN (
+          SELECT id FROM farmers
+          WHERE telegram_id = auth.jwt() ->> 'telegram_id'
+             OR auth_user_id = auth.uid()
+        )
+      )
+    )
+  );
 
-CREATE POLICY "Weather: Owner Access" ON weather_alerts 
-  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+CREATE POLICY "Weather: Owner Access" ON weather_alerts
+  FOR ALL USING (
+    plot_id IN (
+      SELECT id FROM plots WHERE farmer_id IN (
+        SELECT id FROM farmers
+        WHERE telegram_id = auth.jwt() ->> 'telegram_id'
+           OR auth_user_id = auth.uid()
+      )
+    )
+  );
 
-CREATE POLICY "Soil: Owner Access" ON soil_readings 
-  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+CREATE POLICY "Soil: Owner Access" ON soil_readings
+  FOR ALL USING (
+    plot_id IN (
+      SELECT id FROM plots WHERE farmer_id IN (
+        SELECT id FROM farmers
+        WHERE telegram_id = auth.jwt() ->> 'telegram_id'
+           OR auth_user_id = auth.uid()
+      )
+    )
+  );
 
-CREATE POLICY "Inputs: Owner Access" ON input_logs 
-  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+CREATE POLICY "Inputs: Owner Access" ON input_logs
+  FOR ALL USING (
+    plot_id IN (
+      SELECT id FROM plots WHERE farmer_id IN (
+        SELECT id FROM farmers
+        WHERE telegram_id = auth.jwt() ->> 'telegram_id'
+           OR auth_user_id = auth.uid()
+      )
+    )
+  );
 
-CREATE POLICY "Observations: Owner Access" ON observations 
-  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+CREATE POLICY "Observations: Owner Access" ON observations
+  FOR ALL USING (
+    plot_id IN (
+      SELECT id FROM plots WHERE farmer_id IN (
+        SELECT id FROM farmers
+        WHERE telegram_id = auth.jwt() ->> 'telegram_id'
+           OR auth_user_id = auth.uid()
+      )
+    )
+  );
 
-CREATE POLICY "Harvests: Owner Access" ON harvests 
-  FOR ALL USING (plot_id IN (SELECT id FROM plots WHERE farmer_id IN (SELECT id FROM farmers WHERE telegram_id = auth.jwt() ->> 'telegram_id')));
+CREATE POLICY "Harvests: Owner Access" ON harvests
+  FOR ALL USING (
+    plot_id IN (
+      SELECT id FROM plots WHERE farmer_id IN (
+        SELECT id FROM farmers
+        WHERE telegram_id = auth.jwt() ->> 'telegram_id'
+           OR auth_user_id = auth.uid()
+      )
+    )
+  );
 
 -- Note: The Bot (using Service Role Key) will bypass RLS for private tables.
 

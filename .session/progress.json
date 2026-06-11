@@ -39,7 +39,11 @@
     {
       "ts": "2026-05-12T09:50:46.057Z",
       "note": "Project implementation complete. All phases P0-P8 verified and tested."
+    },
+    {
+      "ts": "2026-06-11T13:12:00.000Z",
+      "note": "Dual auth (email/password + Telegram) and Telegram account linking completed, reviewed, and documented."
     }
   ],
-  "last_updated": "2026-05-12T09:50:46.057Z"
+  "last_updated": "2026-06-11T13:12:00.000Z"
 }
