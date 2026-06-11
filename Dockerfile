@@ -5,7 +5,9 @@ WORKDIR /app
 
 # Copy package files
 COPY src/package*.json ./
-RUN npm install --frozen-lockfile
+# --ignore-scripts skips the husky `prepare` hook that fails outside a git repo
+# --omit=dev excludes devDependencies (vitest, eslint, etc.) from production image
+RUN npm ci --omit=dev --ignore-scripts
 
 # Copy source code
 COPY src/ .

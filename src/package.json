@@ -14,7 +14,6 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@rolldown/binding-linux-arm64-gnu": "^1.0.0-rc.18",
     "@supabase/supabase-js": "^2.105.4",
     "dotenv": "^16.x",
     "jsonwebtoken": "^9.0.3",
