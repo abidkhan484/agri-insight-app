@@ -1,0 +1,33 @@
+# Exclude node_modules — installed fresh inside Docker via npm install
+src/node_modules/
+node_modules/
+
+# Exclude local dev files
+.env
+.env.local
+.env.*.local
+.git/
+.github/
+.husky/
+.session/
+
+# Exclude client PWA (not needed by bot backend)
+client/
+ai-assistant/
+firmware/
+grafana/
+
+# Exclude docs and dev tooling
+docs/
+agents/
+skills/
+tasks/
+templates/
+commands/
+scripts/
+
+# Exclude logs and test artefacts
+src/logs/
+src/__tests__/
+coverage/
+*.log

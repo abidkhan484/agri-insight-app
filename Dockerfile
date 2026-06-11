@@ -3,11 +3,11 @@ FROM node:24-slim AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY src/package*.json ./
-# --ignore-scripts skips the husky `prepare` hook that fails outside a git repo
-# --omit=dev excludes devDependencies (vitest, eslint, etc.) from production image
-RUN npm ci --omit=dev --ignore-scripts
+# Copy package.json only (no lockfile — npm install resolves from scratch)
+COPY src/package.json ./
+# --ignore-scripts suppresses the husky `prepare` hook (no git repo in Docker)
+# --omit=dev excludes devDependencies (vitest, eslint, prettier, husky) from the image
+RUN npm install --omit=dev --ignore-scripts
 
 # Copy source code
 COPY src/ .
