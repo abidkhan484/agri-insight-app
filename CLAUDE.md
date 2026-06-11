@@ -42,7 +42,7 @@ Agent files live in `agents/`. Skills live in `skills/`.
 
 | Layer | Choice | Reason |
 |-------|--------|--------|
-| Bot runtime | Node.js 20+ + Telegraf v4 | Free, mature Telegram library |
+| Bot runtime | Node.js 24+ + Telegraf v4 | Free, mature Telegram library |
 | Bot DB | Supabase (PostgreSQL + RLS + Triggers) | Centralized sync, free tier, row-level security |
 | Scheduling | node-cron + GitHub Actions | In-process + backup cron |
 | PWA framework | React 19 + Vite 8 + vite-plugin-pwa | Offline-first, small bundle |

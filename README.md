@@ -24,7 +24,7 @@ The ZBNF Farming Assistant is a production-grade ecosystem supporting natural fa
 
 | Layer | Choice |
 | :--- | :--- |
-| **Bot Backend** | Node.js 20+ · Telegraf v4 · Supabase · node-cron |
+| **Bot Backend** | Node.js 24+ · Telegraf v4 · Supabase · node-cron |
 | **Unified PWA** | React 19 · Vite 8 · Telegram Mini Apps · Dexie.js |
 | **IoT Hardware** | ESP32 · MQTT · Node-RED · InfluxDB · Grafana |
 | **AI Engine** | Ollama (Gemma2:2b) · ChromaDB · Flask RAG |

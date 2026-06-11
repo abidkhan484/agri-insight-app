@@ -4,7 +4,7 @@
 
 | Tool | Version | Install |
 |------|---------|---------|
-| Node.js | 20+ (LTS) | https://nodejs.org — use `nvm` recommended |
+| Node.js | 24+ (LTS) | https://nodejs.org — use `nvm` recommended |
 | npm | 9+ (bundled with Node) | — |
 | Git | 2.x+ | `sudo apt install git` / `brew install git` |
 | Python | 3.10+ (P7 only) | https://python.org / `pyenv` |

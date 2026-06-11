@@ -83,10 +83,10 @@ Business logic is centralized in the database.
 ## Service Descriptions
 
 ### P0 — Shared Foundation
-- **Runtime**: Node.js 20+ ESM
+- **Runtime**: Node.js 24+ ESM
 - **Bot framework**: Telegraf v4
 - **Database**: Supabase (PostgreSQL with RLS, Triggers, and PostGIS)
-- **Scheduler**: node-cron (in-process) + GitHub Actions daily-cron.yml (backup, not yet deployed)
+- **Scheduler**: node-cron (in-process) + GitHub Actions daily-cron.yml (backup, schedule temporarily disabled — enable when needed)
 - **Logger**: Winston (JSON to files, colorized to console)
 - **Hosting**: Render.com free tier (750 hrs/month)
 
