@@ -35,10 +35,7 @@ export const dbService = {
   async upsertFarmerByAuthId(authUserId, updateData) {
     const { data, error } = await supabase
       .from('farmers')
-      .upsert(
-        { auth_user_id: authUserId, ...updateData },
-        { onConflict: 'auth_user_id' },
-      )
+      .upsert({ auth_user_id: authUserId, ...updateData }, { onConflict: 'auth_user_id' })
       .select()
       .single();
     if (error) logger.error('DB Error: upsertFarmerByAuthId', { error, authUserId });

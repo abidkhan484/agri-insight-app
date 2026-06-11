@@ -3,10 +3,10 @@ import {
   validateTelegramOAuthData,
   generateSupabaseJWT,
   parseTelegramUser,
-} from '../services/auth.js';
-import { dbService } from '../db/service.js';
-import supabaseAuth from '../db/authClient.js';
-import logger from '../config/logger.js';
+} from '../../services/auth.js';
+import { dbService } from '../../db/service.js';
+import supabaseAuth from '../../db/authClient.js';
+import logger from '../../config/logger.js';
 
 // ---------------------------------------------------------------------------
 // Helper
@@ -110,8 +110,10 @@ export async function loginWithEmail(req, res) {
   }
 
   try {
-    const { data: authData, error: authError } =
-      await supabaseAuth.auth.signInWithPassword({ email, password });
+    const { data: authData, error: authError } = await supabaseAuth.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (authError) {
       logger.warn('Email login failed', { error: authError.message });
@@ -256,7 +258,8 @@ export async function linkTelegramAccount(req, res) {
     const existingFarmerByTelegram = await dbService.getFarmerByTelegramId(telegramId);
     if (existingFarmerByTelegram && existingFarmerByTelegram.auth_user_id !== authUserId) {
       res.json(409, {
-        error: 'এই টেলিগ্রাম অ্যাকাউন্টটি ইতিমধ্যে অন্য একটি অ্যাকাউন্টের সাথে যুক্ত। (Telegram account already linked to another account.)',
+        error:
+          'এই টেলিগ্রাম অ্যাকাউন্টটি ইতিমধ্যে অন্য একটি অ্যাকাউন্টের সাথে যুক্ত। (Telegram account already linked to another account.)',
       });
       return;
     }

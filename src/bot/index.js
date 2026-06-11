@@ -44,7 +44,10 @@ bot.start(async (ctx) => {
   const telegramId = ctx.from.id.toString();
   const name = ctx.from.first_name || 'Farmer';
 
-  logger.info('Start command received', { chat_id: 'chat:' + ctx.chat.id, ctx: 'farmer:' + telegramId });
+  logger.info('Start command received', {
+    chat_id: 'chat:' + ctx.chat.id,
+    ctx: 'farmer:' + telegramId,
+  });
 
   // Register farmer if not exists
   try {

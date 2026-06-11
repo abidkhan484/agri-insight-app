@@ -37,6 +37,7 @@ describe('P9 — Auth Fix & Robustness Tests', () => {
       });
 
       render(<LoginScreen />);
+      fireEvent.click(screen.getByRole('tab', { name: /টেলিগ্রাম/i }));
       expect(screen.getByText(/লোড হচ্ছে/)).toBeDefined();
     });
 
@@ -47,6 +48,7 @@ describe('P9 — Auth Fix & Robustness Tests', () => {
       });
 
       render(<LoginScreen />);
+      fireEvent.click(screen.getByRole('tab', { name: /টেলিগ্রাম/i }));
       
       // Initially not present
       expect(screen.queryByText(/উইজেট লোড হতে দেরি হচ্ছে/)).toBeNull();
@@ -67,6 +69,7 @@ describe('P9 — Auth Fix & Robustness Tests', () => {
       });
 
       render(<LoginScreen />);
+      fireEvent.click(screen.getByRole('tab', { name: /টেলিগ্রাম/i }));
       
       act(() => {
         vi.advanceTimersByTime(8001);
