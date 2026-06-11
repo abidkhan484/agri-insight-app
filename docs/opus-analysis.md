@@ -180,9 +180,11 @@ Project rules mandate `loglevel` for PWA code, not `console.error`.
 
 `src/data/agri.sqlite` and `data/agri.sqlite` exist in the repo despite `.gitignore` having `*.sqlite`. These are likely committed before the gitignore rule was added.
 
-### 🟢 Low: Node Engine Requirement Too Strict
+### ✅ Resolved: Node Engine Requirement Mismatch (Fixed)
 
-`src/package.json` has `"engines": { "node": ">=24.0.0" }`. Docs say Node 20+. Deploy workflow uses Node 24 anyway, but this blocks local dev on Node 20-23.
+~~`src/package.json` has `"engines": { "node": ">=24.0.0" }`. Docs say Node 20+. Deploy workflow uses Node 24 anyway, but this blocks local dev on Node 20-23.~~
+
+**Fixed:** All documentation (`README.md`, `CLAUDE.md`, `docs/developer-setup.md`, `docs/deployment-guide.md`, `docs/architecture.md`) updated to require Node.js 24+, consistent with `engines` in `package.json`.
 
 ### 🟢 Low: `SUPABASE_JWT_SECRET` Missing from `.env`
 

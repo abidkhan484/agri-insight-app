@@ -117,7 +117,7 @@ cp github_workflow/workflows/daily-cron.yml .github/workflows/daily-cron.yml
 Before deploying to the cloud, you can test everything on your local machine.
 
 ### 1. Prerequisites
-- **Node.js**: v20 or newer.
+- **Node.js**: v24 or newer.
 - **Git**: To clone and manage the repo.
 
 ### 2. Environment Setup
