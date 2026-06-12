@@ -16,16 +16,23 @@ Invoked after `doc-updater` finishes updates. Receives a brief description of wh
 Run these checks in order. Stop and return to `coder` if either fails.
 
 ```bash
+# ⚠️ node/npm/npx are NOT in host PATH — use Docker for all Node commands
+# Run from the project root (agri-insight-app/)
+
 # Step 1: ESLint — zero warnings allowed
-npm run lint
+docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+  node node_modules/.bin/eslint . --max-warnings 0
 # If this fails: return to coder with the exact error lines and file paths
 
 # Step 2: Prettier format check
-npm run format:check
-# If this fails: run "npm run format" first, then re-run lint, then come back here
+docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+  node node_modules/.bin/prettier --check .
+# If this fails: run format first, then re-check:
+#   docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine node node_modules/.bin/prettier --write .
 
 # Step 3: Tests must still pass
-npx vitest run
+docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+  node node_modules/.bin/vitest run
 # If tests fail: return to qa agent
 ```
 

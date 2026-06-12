@@ -89,11 +89,21 @@ Key operations must log at correct level:
 - `warn`: invalid input, API timeout
 - `error`: DB write failure, bot send failure
 
-## Running Tests
+## ⚠️ Running Commands in This Environment
+
+`node`, `npm`, `npx` are **NOT in the host shell PATH**. Always use Docker:
+
 ```bash
-npx vitest run          # Node.js
-pytest --cov=. tests/   # Python
+# Tests (run from project root)
+docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+  node node_modules/.bin/vitest run
+
+# Python
+pytest --cov=. tests/
 ```
+
+> Do NOT `find / -name node`. Do NOT hardcode `.cursor-server` paths.
+> `docker run --rm node:24-alpine` is the canonical, stable way.
 
 ## Coverage Target
 - Formulation services: 100%

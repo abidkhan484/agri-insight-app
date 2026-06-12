@@ -10,6 +10,16 @@ triggers:
 
 # Test-Driven Development (TDD) Workflow
 
+## Running Tests
+```bash
+# Node.js — always via Docker (node/npx not in host PATH)
+docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+  node node_modules/.bin/vitest run
+
+# Python
+pytest --cov=. tests/
+```
+
 This skill ensures all feature development, bug fixes, and API integrations follow strict TDD principles to deliver robust, correct software.
 
 ## Core Principles
@@ -23,11 +33,39 @@ This skill ensures all feature development, bug fixes, and API integrations foll
 
 ---
 
+## ⚠️ Running Node.js Commands in This Environment
+
+`node`, `npm`, and `npx` are **NOT available in the host shell PATH**.
+Always run Node commands via Docker:
+
+```bash
+# Run tests (from project root — mounts src/ into container)
+docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+  node node_modules/.bin/vitest run
+
+# ESLint
+docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+  node node_modules/.bin/eslint . --max-warnings 0
+
+# Prettier check
+docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+  node node_modules/.bin/prettier --check .
+
+# npm install (if needed)
+docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine npm install
+```
+
+> **Do NOT** search the filesystem for a `node` binary (`find / -name node`).
+> **Do NOT** use paths like `/home/polymath/.cursor-server/...` — they are fragile.
+> `docker run --rm node:24-alpine` is the canonical, stable way.
+
+---
+
 ## The TDD Red-Green-Refactor Loop
 
 ```mermaid
 graph LR
-    Red[1. Write Failing Test] -->|npx vitest| Green[2. Write Minimal Implementation]
+    Red[1. Write Failing Test] -->|docker run --rm node:24-alpine vitest| Green[2. Write Minimal Implementation]
     Green -->|Tests Pass| Refactor[3. Clean Code & DRY]
     Refactor -->|Tests Stay Green| Red
 ```

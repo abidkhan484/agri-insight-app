@@ -54,6 +54,7 @@ We use a single root `.env.example` to manage settings for all services.
 4.  **Environment Variables**:
     - `BOT_TOKEN`: Your Telegram Token.
     - `VITE_SUPABASE_URL`: Your Supabase Project URL.
+    - `VITE_SUPABASE_ANON_KEY`: Your Supabase Anon Key — used by both the Node.js backend and the frontend PWAs (single shared key; the old `SUPABASE_ANON_KEY` fallback has been removed).
     - `SUPABASE_SERVICE_KEY`: Your Supabase **Service Role Key** (required for backend bypass).
     - `NODE_ENV`: `production`
     - `TZ`: `Asia/Dhaka`

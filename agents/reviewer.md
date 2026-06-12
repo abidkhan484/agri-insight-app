@@ -59,11 +59,14 @@ Invoked after `qa` agent passes tests. Review the full changeset for the current
   ```
 - [ ] ESLint passes:
   ```bash
-  npm run lint
+  # ⚠️ node/npm/npx NOT in host PATH — use Docker
+  docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+    node node_modules/.bin/eslint . --max-warnings 0
   ```
 - [ ] Prettier check passes:
   ```bash
-  npm run format:check
+  docker run --rm -v "$(pwd)/src:/app" -w /app node:24-alpine \
+    node node_modules/.bin/prettier --check .
   ```
 
 ### 🇧🇩 Bangla UI (Any Fail = Block for Farmer-Facing Code)

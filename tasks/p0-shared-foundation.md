@@ -78,6 +78,7 @@ Set up the shared infrastructure that multiple advanced-technology tools depend 
 - [x] `npm run format:check` passes (Prettier)
 - [x] Husky pre-commit hook is installed and verified working
 - [x] No hardcoded secrets — all tokens/keys loaded from `.env`
+- [x] `src/db/authClient.js` uses `VITE_SUPABASE_ANON_KEY` exclusively — `|| config.supabaseKey` service-role fallback removed (security fix)
 - [x] `README.md` updated with setup instructions for P0
 - [x] `docs/architecture.md` updated with bot + DB + cron description
 

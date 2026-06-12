@@ -50,7 +50,7 @@ BOT_TOKEN=your_bot_token_here
 VITE_SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_KEY=your-service-role-key
 SUPABASE_JWT_SECRET=your-jwt-secret-from-settings
-VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_SUPABASE_ANON_KEY=your-anon-key   # sole key for auth client (Node.js backend + frontend PWAs); no service-role fallback
 
 # Scheduling
 TZ=Asia/Dhaka

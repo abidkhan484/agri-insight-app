@@ -4,7 +4,8 @@ import logger from '../config/logger.js';
 
 if (!config.supabaseUrl || !config.supabaseAnonKey) {
   logger.warn(
-    'Supabase Auth client: SUPABASE_ANON_KEY is not set. Email/password auth will not work.',
+    'Supabase Auth client: VITE_SUPABASE_ANON_KEY is not set — email/password auth will not work.',
+    { supabaseUrl: !!config.supabaseUrl, supabaseAnonKey: !!config.supabaseAnonKey },
   );
 }
 
@@ -15,7 +16,7 @@ if (!config.supabaseUrl || !config.supabaseAnonKey) {
  */
 const supabaseAuth = createClient(
   config.supabaseUrl,
-  config.supabaseAnonKey || config.supabaseKey, // fallback to service key in dev
+  config.supabaseAnonKey, // must be the anon (public) key — never the service-role key
   {
     auth: {
       persistSession: false,
