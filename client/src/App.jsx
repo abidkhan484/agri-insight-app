@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { useTMA } from '@shared/tma/TMAProvider';
 import { TMATheme } from '@shared/tma/TMATheme';
 import { LoginScreen } from '@shared/tma/LoginScreen';
