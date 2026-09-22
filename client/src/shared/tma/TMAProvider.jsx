@@ -10,6 +10,14 @@ const WebApp = WebAppImport?.default || WebAppImport || (typeof window !== 'unde
 // Session storage key for persisting auth across reloads
 const AUTH_STORAGE_KEY = 'tma_auth_session';
 
+function getAuthUrl(authEndpoint, route) {
+  const endpoint = authEndpoint.replace(/\/+$/, '');
+  if (endpoint.endsWith('/telegram')) {
+    return `${endpoint.slice(0, -'/telegram'.length)}/${route}`;
+  }
+  return `${endpoint}/${route}`;
+}
+
 /**
  * TMAProvider initializes the Telegram WebApp SDK and handles authentication
  * with the backend to receive a Supabase JWT.
@@ -59,7 +67,7 @@ export const TMAProvider = ({ children, authEndpoint }) => {
   const registerWithEmail = useCallback(
     async ({ email, password, name }) => {
       log.info('Attempting email registration...');
-      const registerUrl = authEndpoint.replace('/telegram', '/register');
+      const registerUrl = getAuthUrl(authEndpoint, 'register');
       const response = await fetch(registerUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -70,10 +78,16 @@ export const TMAProvider = ({ children, authEndpoint }) => {
       if (!response.ok) throw new Error(data.error || `Registration failed (${response.status})`);
 
       const authUser = { ...data.user, token: data.token };
-      setUser(authUser);
-      setMode('browser');
-      persistSession(authUser);
-      log.info('Email registration successful', { userId: data.user?.id });
+      if (data.token) {
+        setUser(authUser);
+        setMode('browser');
+        persistSession(authUser);
+        log.info('Email registration and login successful', { userId: data.user?.id });
+      } else {
+        log.info('Email registration successful; email confirmation required', {
+          userId: data.user?.id,
+        });
+      }
       return authUser;
     },
     [authEndpoint],
@@ -86,7 +100,7 @@ export const TMAProvider = ({ children, authEndpoint }) => {
   const loginWithEmail = useCallback(
     async ({ email, password }) => {
       log.info('Attempting email login...');
-      const loginUrl = authEndpoint.replace('/telegram', '/login');
+      const loginUrl = getAuthUrl(authEndpoint, 'login');
       const response = await fetch(loginUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -119,7 +133,7 @@ export const TMAProvider = ({ children, authEndpoint }) => {
       try {
         log.info('Attempting Telegram OAuth login...');
 
-        const authUrl = authEndpoint.replace('/telegram', '/telegram-oauth');
+        const authUrl = getAuthUrl(authEndpoint, 'telegram-oauth');
         const response = await fetch(authUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -159,7 +173,7 @@ export const TMAProvider = ({ children, authEndpoint }) => {
     async (telegramOAuthData) => {
       if (!user?.token) throw new Error('Not authenticated');
 
-      const linkUrl = authEndpoint.replace('/telegram', '/link-telegram');
+      const linkUrl = getAuthUrl(authEndpoint, 'link-telegram');
       const response = await fetch(linkUrl, {
         method: 'POST',
         headers: {
