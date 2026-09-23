@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { NavLink, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Calculator from './pages/Calculator';
 import PestGallery from './pages/PestGallery';
@@ -8,12 +8,20 @@ import './App.css';
 
 export default function App() {
   return (
-    <div className="app-container">
+    <div className="knowledge-page">
       <header className="main-header">
-        <h1>ZBNF <span className="bn">কৃষি জ্ঞানভাণ্ডার</span></h1>
+        <p className="knowledge-eyebrow">কৃষি সহায়তা</p>
+        <h1><span className="bn">কৃষি জ্ঞানভাণ্ডার</span><span className="en">ZBNF Knowledge Base</span></h1>
+        <nav className="knowledge-nav" aria-label="জ্ঞানভাণ্ডার নেভিগেশন">
+          <NavLink to="." end>শুরু</NavLink>
+          <NavLink to="calculator">হিসাব</NavLink>
+          <NavLink to="pests">পোকা ও রোগ</NavLink>
+          <NavLink to="calendar">ফসল পঞ্জিকা</NavLink>
+          <NavLink to="glossary">শব্দকোষ</NavLink>
+        </nav>
       </header>
       
-      <main className="content">
+      <main className="knowledge-content">
         <Routes>
           <Route index element={<Home />} />
           <Route path="calculator" element={<Calculator />} />
