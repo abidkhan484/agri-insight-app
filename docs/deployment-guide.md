@@ -58,6 +58,7 @@ We use a single root `.env.example` to manage settings for all services.
     - `SUPABASE_SERVICE_KEY`: Your Supabase **Service Role Key** (required for backend bypass).
     - `NODE_ENV`: `production`
     - `TZ`: `Asia/Dhaka`
+    - `PLANTNET_API_KEY`: PlantNet API key used by the secure disease-detection proxy.
     - `AI_API_URL`: (Optional) URL of your AI Assistant if deployed.
 
 ---
@@ -72,7 +73,8 @@ Since this is a static site, environment variables are baked in at build time. Y
 
 - `VITE_SUPABASE_URL`: Your Supabase URL.
 - `VITE_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
-- `VITE_PLANTNET_API_KEY`: (Optional) Your PlantNet API Key.
+- `VITE_PLANTNET_API_KEY`: (Optional) Browser-side PlantNet key. The recommended path is the backend proxy, which uses `PLANTNET_API_KEY` on Render.
+- `VITE_API_BASE_URL`: (Optional) Public bot API base URL. Defaults to the deployed Render bot URL.
 - `VITE_AUTH_ENDPOINT`: The URL of your bot's auth endpoint (e.g., `https://agri-insight-app.onrender.com/api/auth/telegram`).
 
 ### Automatic Deployment

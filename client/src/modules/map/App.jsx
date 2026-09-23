@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
-import { createClient } from '@supabase/supabase-js';
 import log from 'loglevel';
 import 'leaflet/dist/leaflet.css';
 import { filterFarmerLocations, normalizeFarmerLocation, uniqueSorted } from './mapData';
+import { getPublicApiBaseUrl } from '../../shared/public-api.js';
 import './index.css';
 
 log.setLevel(import.meta.env.PROD ? 'warn' : 'debug');
@@ -11,15 +11,12 @@ const BANGLADESH_CENTER = [23.685, 90.356];
 const BANGLADESH_BOUNDS = [[20.5, 88.0], [26.7, 92.7]];
 const PUBLIC_LOCATION_FIELDS = 'id, display_name, district, upazila, crop_type, method, latitude, longitude, created_at';
 
-function createPublicMapClient() {
-  const { VITE_SUPABASE_URL: url, VITE_SUPABASE_ANON_KEY: key } = import.meta.env;
-  return url && key ? createClient(url, key) : null;
-}
-
-const supabase = createPublicMapClient();
-
-export async function fetchPublicFarmerLocations(client = supabase) {
-  if (!client) throw new Error('Map service is not configured');
+export async function fetchPublicFarmerLocations(client) {
+  if (!client) {
+    const response = await fetch(`${getPublicApiBaseUrl()}/api/map/locations`);
+    if (!response.ok) throw new Error(`Map service failed (${response.status})`);
+    return ((await response.json()).locations || []).map(normalizeFarmerLocation).filter(Boolean);
+  }
   const { data, error } = await client.from('farmer_locations').select(PUBLIC_LOCATION_FIELDS).limit(500);
   if (error) throw error;
   return (data || []).map(normalizeFarmerLocation).filter(Boolean);
@@ -38,7 +35,7 @@ function MapState({ title, message, action }) {
   </section>;
 }
 
-export default function FarmerMap({ client = supabase }) {
+export default function FarmerMap({ client }) {
   const [farmers, setFarmers] = useState([]);
   const [status, setStatus] = useState(navigator.onLine ? 'loading' : 'offline');
   const [filters, setFilters] = useState({ district: '', upazila: '', crop: '' });

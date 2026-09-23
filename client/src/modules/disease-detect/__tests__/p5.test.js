@@ -93,12 +93,15 @@ describe('P5 — Plant Disease Detection Tests', () => {
       await expect(identifyDisease(mockFile)).rejects.toThrow('NETWORK_ERROR');
     });
 
-    it('requires an environment-provided API key', async () => {
+    it('uses the public backend proxy when no browser API key is configured', async () => {
       vi.stubEnv('VITE_PLANTNET_API_KEY', '');
       const mockFile = new File([''], 'test-image.jpg', { type: 'image/jpeg' });
 
-      await expect(identifyDisease(mockFile)).rejects.toThrow('CONFIG_ERROR');
-      expect(fetch).not.toHaveBeenCalled();
+      fetch.mockResolvedValue({ ok: false, status: 503 });
+      await expect(identifyDisease(mockFile)).rejects.toThrow('API_ERROR');
+      expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/api/disease/identify'), expect.objectContaining({
+        headers: { 'Content-Type': 'application/json' },
+      }));
     });
 
     it('returns an API error for non-rate-limited responses', async () => {

@@ -29,7 +29,7 @@ The ZBNF Farming Assistant is a production-grade ecosystem supporting natural fa
 | **IoT Hardware** | ESP32 · MQTT · Node-RED · InfluxDB · Grafana |
 | **AI Engine** | Ollama (Gemma2:2b) · ChromaDB · Flask RAG |
 | **Database** | Supabase (PostgreSQL + RLS + Triggers + PostGIS) |
-| **APIs** | Open-Meteo (Weather) · PlantNet API (Disease) |
+| **APIs** | Open-Meteo (Weather) · PlantNet API (Disease via backend proxy) |
 | **Hosting** | Render.com (Bot) · GitHub Pages (PWA) |
 
 ---

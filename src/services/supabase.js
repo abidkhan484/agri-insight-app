@@ -21,7 +21,7 @@ export async function registerFarmerLocation({ displayName, district, upazila, l
     upazila,
     latitude: lat,
     longitude: lon,
-    crops,
+    crop_type: Array.isArray(crops) ? crops[0] || null : crops || null,
   });
 
   if (error) {
@@ -34,13 +34,15 @@ export async function registerFarmerLocation({ displayName, district, upazila, l
 export async function getFarmerLocations() {
   const { data, error } = await supabase
     .from('farmer_locations')
-    .select('display_name, district, upazila, latitude, longitude, crops, joined_at')
-    .order('joined_at', { ascending: false })
+    .select(
+      'id, display_name, district, upazila, crop_type, method, latitude, longitude, created_at',
+    )
+    .order('created_at', { ascending: false })
     .limit(500);
 
   if (error) {
     logger.error('farmer_locations_fetch_failed', { error: error.message });
-    return [];
+    throw error;
   }
   return data;
 }

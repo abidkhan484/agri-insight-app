@@ -131,7 +131,7 @@ If you don't want to sign in with Telegram, you can choose **'Continue as Guest'
 ## ৭. রোগ শনাক্তকরণ / Plant Disease Detection
 
 **বাংলা:**
-আক্রান্ত পাতার ছবি তুলে রোগের নাম এবং ZBNF প্রতিকার জানতে আমাদের 'Disease Detector' অ্যাপ ব্যবহার করুন অথবা সরাসরি টেলিগ্রাম বটে `/disease` কমান্ডটি ব্যবহার করুন।
+আক্রান্ত পাতার ছবি তুলে রোগের নাম এবং ZBNF প্রতিকার জানতে আমাদের 'Disease Detector' অ্যাপ ব্যবহার করুন অথবা সরাসরি টেলিগ্রাম বটে `/disease` কমান্ডটি ব্যবহার করুন। অতিথি মোডেও ছবি শনাক্তকরণ চালু থাকে; ছবিটি নিরাপদ অনলাইন সেবায় পাঠাতে ইন্টারনেট প্রয়োজন।
 
 **কিভাবে বটের মাধ্যমে ব্যবহার করবেন:**
 1. টাইপ করুন: `/disease`
@@ -139,7 +139,7 @@ If you don't want to sign in with Telegram, you can choose **'Continue as Guest'
 3. বট ছবি বিশ্লেষণ করে রোগের নাম, আত্মবিশ্বাসের হার এবং ZBNF প্রতিকার বাংলা ও ইংরেজিতে জানিয়ে দেবে।
 
 **English:**
-Take a photo of an infected leaf to identify the disease and get ZBNF treatment. You can use the 'Disease Detector' PWA or use the `/disease` command directly in the Telegram bot.
+Take a photo of an infected leaf to identify the disease and get ZBNF treatment. You can use the 'Disease Detector' PWA or use the `/disease` command directly in the Telegram bot. Guest mode is supported, but internet access is required for image analysis.
 
 **How to use via Bot:**
 1. Type: `/disease`

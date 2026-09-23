@@ -26,6 +26,7 @@ import {
   loginWithTelegramOAuth,
   linkTelegramAccount,
 } from '../api/routes/auth.js';
+import { publicDiseaseIdentify, publicMapLocations } from '../api/routes/public.js';
 
 if (!config.botToken) {
   logger.error('BOT_TOKEN is missing in configuration. Exiting...');
@@ -160,6 +161,8 @@ router.post('/api/auth/telegram-oauth', loginWithTelegramOAuth);
 
 // ---- Protected routes (JWT required) ---------------------------------------
 router.post('/api/auth/link-telegram', requireAuth, linkTelegramAccount);
+router.get('/api/map/locations', publicMapLocations);
+router.post('/api/disease/identify', publicDiseaseIdentify);
 
 // ---- Health check ----------------------------------------------------------
 router.get('/health', (_req, res) => {

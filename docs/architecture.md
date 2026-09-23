@@ -117,6 +117,7 @@ Business logic is centralized in the database.
 
 ### P5 — Plant Disease Detection
 - **Primary**: PlantNet API (Online identification)
+- **Guest API path**: PWA sends images to `/api/disease/identify`; `PLANTNET_API_KEY` remains server-side.
 - **Fallback**: TensorFlow.js (Offline on-device inference)
 - **Mapping**: Scientific name → Local disease name → ZBNF Treatment (local JSON)
 - **Path**: `disease-detect/`
@@ -138,6 +139,7 @@ Business logic is centralized in the database.
 
 ### P8 — Community Farmer Network
 - **Backend**: Supabase PostgreSQL (Free Tier)
+- **Guest API path**: PWA reads public locations through `/api/map/locations`, keeping database service credentials on the backend.
 - **Map Interface**: Leaflet.js + OpenStreetMap (no-cost tiles)
 - **Features**: 
   - **Farmer Map**: Geolocation of farms with crop/method filters.
