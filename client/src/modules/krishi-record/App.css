@@ -126,6 +126,159 @@ button[type="submit"]:hover {
   color: var(--primary-color);
 }
 
+.quick-record-intro {
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  color: var(--primary-color);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.quick-record-intro h2 {
+  margin-bottom: 6px;
+}
+
+.quick-record-intro p:last-child {
+  color: #5c665d;
+}
+
+.quick-record-types {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 16px;
+}
+
+.quick-type {
+  background: #edf7ed;
+  border: 1px solid #cce5cc;
+  border-radius: 8px;
+  color: #245b28;
+  cursor: pointer;
+  font-size: 14px;
+  min-height: 48px;
+  padding: 8px;
+}
+
+.quick-type.active {
+  background: var(--primary-color);
+  color: var(--white);
+}
+
+.quick-record-form {
+  margin-bottom: 12px;
+}
+
+.quick-record-form input:focus,
+.quick-record-form select:focus,
+.quick-record-form textarea:focus,
+.quick-type:focus-visible,
+.text-btn:focus-visible,
+.delete-btn:focus-visible,
+.secondary-btn:focus-visible {
+  outline: 3px solid rgba(76, 175, 80, 0.35);
+  outline-offset: 2px;
+}
+
+.quantity-row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.field-error {
+  color: #b3261e;
+  font-size: 13px;
+}
+
+.quick-form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.secondary-btn,
+.text-btn {
+  background: transparent;
+  border: 1px solid #a8c9aa;
+  border-radius: 4px;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 10px 12px;
+}
+
+.quick-feedback {
+  color: var(--primary-color);
+  min-height: 28px;
+  padding: 6px 0;
+}
+
+.quick-feedback .text-btn {
+  border: 0;
+  font-weight: 700;
+  margin-left: 8px;
+  padding: 2px 4px;
+}
+
+.quick-history h3 {
+  border-bottom: 1px solid #dce9dc;
+  padding-bottom: 8px;
+}
+
+.quick-history-item {
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 13px 0;
+}
+
+.quick-history-item div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.quick-history-item small {
+  color: #657166;
+}
+
+.record-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.record-actions .text-btn,
+.record-actions .delete-btn {
+  font-size: 13px;
+  padding: 7px 9px;
+}
+
+.empty-state {
+  color: #657166;
+  padding: 14px 0;
+}
+
+@media (max-width: 560px) {
+  .quick-record-types {
+    grid-template-columns: 1fr;
+  }
+
+  .quantity-row {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-history-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 canvas {
   max-width: 100%;
   margin-top: 20px;

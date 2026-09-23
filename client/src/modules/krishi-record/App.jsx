@@ -4,6 +4,7 @@ import InputLogger from './components/InputLogger';
 import ObservationTracker from './components/ObservationTracker';
 import HarvestRecorder from './components/HarvestRecorder';
 import Reports from './components/Reports';
+import QuickRecordEntry from './components/QuickRecordEntry';
 import './App.css';
 
 import { useTMA } from '@shared/tma/TMAProvider';
@@ -15,7 +16,7 @@ import { db } from './db';
 
 function App() {
   const { user, isReady, error } = useTMA();
-  const [activeTab, setActiveTab] = useState('plots');
+  const [activeTab, setActiveTab] = useState('quick');
   const [syncManagers, setSyncManagers] = useState([]);
 
   useEffect(() => {
@@ -33,16 +34,17 @@ function App() {
       );
 
       const managers = [
-        new SyncManager(db, supabase, 'plots'),
-        new SyncManager(db, supabase, 'inputs'),
-        new SyncManager(db, supabase, 'observations'),
-        new SyncManager(db, supabase, 'harvests'),
+        new SyncManager(db, supabase, 'plots', { user }),
+        new SyncManager(db, supabase, 'inputs', { user }),
+        new SyncManager(db, supabase, 'observations', { user }),
+        new SyncManager(db, supabase, 'harvests', { user }),
       ];
       setSyncManagers(managers);
     }
   }, [user]);
 
   const tabs = [
+    { id: 'quick', label: 'দ্রুত রেকর্ড' },
     { id: 'plots', label: 'জমি (Plots)' },
     { id: 'inputs', label: 'উপকরণ (Inputs)' },
     { id: 'observations', label: 'পর্যবেক্ষণ (Observations)' },
@@ -82,6 +84,7 @@ function App() {
         </nav>
 
         <main className="tab-content">
+          {activeTab === 'quick' && <QuickRecordEntry />}
           {activeTab === 'plots' && <PlotManager />}
           {activeTab === 'inputs' && <InputLogger />}
           {activeTab === 'observations' && <ObservationTracker />}

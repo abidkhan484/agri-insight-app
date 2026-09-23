@@ -21,6 +21,15 @@ db.version(2).stores({
   // but for a fresh project we can just use the new schema.
 });
 
+// Version 3: Keep the local UUID while remembering the remote serial plot id.
+// Child records use this bridge when mapping plotId -> plot_id.
+db.version(3).stores({
+  plots: 'id, remote_id, name, area, areaUnit, sync_status, updated_at',
+  inputs: 'id, plotId, date, type, sync_status, updated_at',
+  observations: 'id, plotId, date, sync_status, updated_at',
+  harvests: 'id, plotId, date, sync_status, updated_at'
+});
+
 export default db;
 
 /**

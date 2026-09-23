@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Calculator from './pages/Calculator';
 import PestGallery from './pages/PestGallery';
@@ -23,33 +23,6 @@ export default function App() {
         </Routes>
       </main>
 
-      <nav className="module-nav">
-        <Link to="" className="nav-item">
-          <span className="icon">🏠</span>
-          <span className="bn">হোম</span>
-          <span className="en">Home</span>
-        </Link>
-        <Link to="calculator" className="nav-item">
-          <span className="icon">🧮</span>
-          <span className="bn">হিসাব</span>
-          <span className="en">Calc</span>
-        </Link>
-        <Link to="pests" className="nav-item">
-          <span className="icon">🐛</span>
-          <span className="bn">পোকা</span>
-          <span className="en">Pests</span>
-        </Link>
-        <Link to="calendar" className="nav-item">
-          <span className="icon">📅</span>
-          <span className="bn">পঞ্জিকা</span>
-          <span className="en">Cal</span>
-        </Link>
-        <Link to="glossary" className="nav-item">
-          <span className="icon">📖</span>
-          <span className="bn">শব্দকোষ</span>
-          <span className="en">Gloss</span>
-        </Link>
-      </nav>
     </div>
   );
 }

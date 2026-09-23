@@ -29,7 +29,7 @@ export default function PestGallery() {
       <div className="pest-grid">
         {filteredPests.map(pest => (
           <article key={pest.id} className="pest-card">
-            <img src={pest.image} alt={pest.name_en} loading="lazy" />
+            <div className="pest-placeholder" role="img" aria-label={`${pest.name_bn} / ${pest.name_en}`}>🐛</div>
             <div className="info">
               <h3>
                 <span className="bn">{pest.name_bn}</span>

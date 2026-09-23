@@ -65,10 +65,10 @@
     "symptoms_bn": "নিশ্চিত শনাক্ত করা যায়নি",
     "symptoms_en": "Could not identify with confidence",
     "treatment": {
-      "primary": "neemastra",
+      "primary": null,
       "secondary": null,
-      "schedule_bn": "সতর্কতামূলক নিমাস্ত্র স্প্রে করুন, কৃষি বিশেষজ্ঞের পরামর্শ নিন",
-      "schedule_en": "Apply preventive Neemastra spray; consult agriculture expert"
+      "schedule_bn": "কোনো নির্দিষ্ট চিকিৎসা শুরু করবেন না। ছবি আবার তুলুন বা কৃষি বিশেষজ্ঞের পরামর্শ নিন।",
+      "schedule_en": "Do not start a specific treatment. Retake the photo or consult an agriculture expert."
     }
   }
 }

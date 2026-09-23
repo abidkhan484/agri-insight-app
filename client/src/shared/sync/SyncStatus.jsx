@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import log from 'loglevel';
 
 /**
  * SyncStatus provides a visual indicator of the application's connection and 
@@ -8,26 +9,32 @@ export const SyncStatus = ({ syncManagers = [] }) => {
   const [status, setStatus] = useState('synced'); // 'synced', 'syncing', 'offline', 'error'
   const [lastSync, setLastSync] = useState(null);
 
+  const syncAll = async () => {
+    if (!navigator.onLine || syncManagers.length === 0) return false;
+    setStatus('syncing');
+    try {
+      // Plots must finish first: child records map local plotId to remote plot_id.
+      for (const manager of syncManagers) await manager.sync();
+      setStatus('synced');
+      setLastSync(new Date());
+      return true;
+    } catch (error) {
+      log.error('Auto-sync failed', error.message || error);
+      setStatus('error');
+      return false;
+    }
+  };
+
   useEffect(() => {
-    const handleOnline = () => setStatus('synced');
+    const handleOnline = () => { setStatus('syncing'); void syncAll(); };
     const handleOffline = () => setStatus('offline');
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    // Sync all managers every 30 seconds
+    void syncAll();
     const interval = setInterval(async () => {
-      if (navigator.onLine && syncManagers.length > 0) {
-        setStatus('syncing');
-        try {
-          await Promise.all(syncManagers.map(m => m.sync()));
-          setStatus('synced');
-          setLastSync(new Date());
-        } catch (e) {
-          console.error('Auto-sync failed', e);
-          setStatus('error');
-        }
-      }
+      await syncAll();
     }, 30000);
 
     return () => {
@@ -59,6 +66,11 @@ export const SyncStatus = ({ syncManagers = [] }) => {
     }}>
       <span>{current.icon}</span>
       <span>{current.text}</span>
+      {syncManagers.length > 0 && (
+        <button type="button" onClick={syncAll} disabled={status === 'syncing'}>
+          Sync
+        </button>
+      )}
       {lastSync && status === 'synced' && (
         <span style={{ fontSize: '10px', marginLeft: '4px' }}>
           ({lastSync.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})

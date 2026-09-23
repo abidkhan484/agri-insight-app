@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import FarmerMap from './FarmerMap'
+import FarmerMap from './App'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(

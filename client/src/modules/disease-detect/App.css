@@ -12,8 +12,34 @@
 
 .upload-section {
   display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   justify-content: center;
 }
+
+.upload-section input[type='file'] { display: none; }
+
+.upload-section select {
+  border: 1px solid #a7c957;
+  border-radius: 8px;
+  padding: 0.75rem;
+  background: white;
+  font: inherit;
+}
+
+.online-note, .qualified-note { color: #386641; margin: 0; }
+
+.guidance-card, .uncertain-message {
+  background: #f1f8e9;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.guidance-card h2, .uncertain-message h2 { color: #386641; margin-top: 0; }
+.guidance-card li { margin: 0.4rem 0; }
+.uncertain-message { border-left: 8px solid #f0ad4e; }
+.uncertain-message button, .save-observation { border: 0; border-radius: 8px; padding: 0.75rem 1rem; background: #386641; color: white; cursor: pointer; font: inherit; }
+.save-observation:disabled { background: #6a994e; cursor: default; }
 
 .upload-btn {
   background-color: #6a994e;

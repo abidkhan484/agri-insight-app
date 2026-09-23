@@ -27,8 +27,8 @@ export function calculateJeevamrutha(areaDecimal) {
     soil_handful: Math.max(1, Math.round(ratio)),
     application_interval_days: 15,
     shelf_life_days: 7,
-    notes_bn: 'দেশি গরুর গোবর ও গোমূত্র ব্যবহার করুন। ব্যবহারের আগে ৭ দিন রেখে দিন।',
-    notes_en: 'Use desi cow dung and urine. Let it ferment for 7 days before use.'
+    notes_bn: 'দেশি গরুর গোবর ও গোমূত্র ব্যবহার করুন। তৈরি জীবামৃত ৭ দিনের মধ্যে ব্যবহার করুন। প্রতি ১৫ দিনে প্রয়োগ করুন।',
+    notes_en: 'Use desi cow dung and urine. Use within 7 days of preparation and apply every 15 days.'
   };
 }
 
@@ -49,10 +49,8 @@ export function calculateBeejamrutha(seedKg) {
     cow_urine_liters: parseFloat((5 * ratio).toFixed(1)),
     lime_grams: parseFloat((50 * ratio).toFixed(1)),
     soil_handful: Math.max(1, Math.round(ratio)),
-    soak_hours: 12,
-    shade_dry_hours: 24,
-    notes_bn: 'বীজ বপনের আগে ছায়ায় শুকিয়ে নিন। ২৪ ঘণ্টার মধ্যে বপন করুন।',
-    notes_en: 'Dry in shade before sowing. Sow within 24 hours.'
+    notes_bn: 'বপনের আগে প্রলেপ দিন, সরাসরি রোদে নয়—ছায়ায় শুকিয়ে ২৪ ঘণ্টার মধ্যে বপন করুন। এটি একবারের প্রক্রিয়া।',
+    notes_en: 'Coat before sowing, dry in shade rather than direct sun, and sow within 24 hours. One-time treatment.'
   };
 }
 
@@ -72,11 +70,10 @@ export function calculateNeemastra(areaDecimal) {
     neem_leaves_kg: parseFloat((5 * ratio).toFixed(1)),
     cow_urine_liters: parseFloat((5 * ratio).toFixed(1)),
     cow_dung_grams: Math.round(500 * ratio),
-    steep_hours: 48,
     application_interval_days_prevention: 14,
     application_interval_days_active_pest: 7,
-    notes_bn: '৪৬ ঘণ্টা রেখে দিন। ছেঁকে বিকেলে স্প্রে করুন।',
-    notes_en: 'Steep for 48 hours. Strain and spray in the evening.'
+    notes_bn: 'কাপড়ে ছেঁকে ভোরে বা সন্ধ্যায় স্প্রে করুন। আগামী ৬ ঘণ্টায় বৃষ্টি বা ৩৮°সে.-র বেশি তাপমাত্রায় স্প্রে করবেন না।',
+    notes_en: 'Strain through cloth and spray morning or evening. Do not spray if rain is expected within 6 hours or temperature exceeds 38°C.'
   };
 }
 
@@ -137,14 +134,12 @@ export function calculateMulch(areaDecimal) {
   if (!areaDecimal || areaDecimal <= 0) {
     throw new Error('Area must be > 0');
   }
-  // 1 bigha (33 decimal) needs approx. 1500 kg dry straw for 4-6 inch depth
-  const ratio = areaDecimal / 33;
-  log.debug('mulch_calculated', { areaDecimal, ratio });
+  log.debug('mulch_calculated', { areaDecimal });
   return {
-    straw_kg: Math.round(1500 * ratio),
     depth_inches: 4,
+    depth_centimeters: 10,
     check_interval_days: 7,
-    notes_bn: 'মাটির উপরে ৪-৬ ইঞ্চি পুরু স্তর তৈরি করুন।',
-    notes_en: 'Maintain a 4-6 inch thick layer on the soil.'
+    notes_bn: 'শুকনো ঘাস, খড় বা ফসলের অবশিষ্টাংশ দিয়ে অন্তত ৪ ইঞ্চি (১০ সেমি) স্তর রাখুন। প্রতি ৭ দিনে পরীক্ষা করুন।',
+    notes_en: 'Maintain at least a 4-inch (10 cm) layer of dry organic matter and check every 7 days.'
   };
 }

@@ -64,7 +64,9 @@ describe('P6 — ZBNF Formulation Calculators', () => {
   describe('Mulch', () => {
     it('matches specifications for 33 decimals', () => {
       const result = calculateMulch(33);
-      expect(result.straw_kg).toBe(1500);
+      expect(result.depth_inches).toBe(4);
+      expect(result.depth_centimeters).toBe(10);
+      expect(result.check_interval_days).toBe(7);
     });
   });
 });
