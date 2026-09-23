@@ -13,25 +13,23 @@ function renderGuestApp() {
     </TMAProvider>,
   );
 
-  return waitFor(() => screen.getByText(/অতিথি হিসেবে চালিয়ে যান/));
+  return waitFor(() => screen.getByRole('heading', { name: /কী করতে চান/i }));
 }
 
 async function continueAsGuest() {
-  (await renderGuestApp()).click();
-  await waitFor(() => screen.getByRole('heading', { name: /কী করতে চান/i }));
+  await renderGuestApp();
 }
 
 describe('guest mode routing', () => {
-  it('renders the dashboard after continuing as guest', async () => {
+  it('renders the guest dashboard as the landing page', async () => {
     render(
       <TMAProvider authEndpoint="https://example.com/api/auth/telegram">
         <App />
       </TMAProvider>,
     );
 
-    await waitFor(() => expect(screen.getByText(/অতিথি হিসেবে চালিয়ে যান/)).toBeTruthy());
-    screen.getByText(/অতিথি হিসেবে চালিয়ে যান/).click();
     await waitFor(() => expect(screen.getByRole('heading', { name: /কী করতে চান/i })).toBeTruthy());
+    expect(screen.getByRole('status', { name: /অতিথি মোড/i })).toBeTruthy();
   });
 
   it('explains guest data storage and offers a dismissible onboarding guide', async () => {
@@ -40,9 +38,6 @@ describe('guest mode routing', () => {
         <App />
       </TMAProvider>,
     );
-
-    await waitFor(() => expect(screen.getByText(/অতিথি হিসেবে চালিয়ে যান/)).toBeTruthy());
-    screen.getByText(/অতিথি হিসেবে চালিয়ে যান/).click();
 
     await waitFor(() => expect(screen.getByRole('status', { name: /অতিথি মোড/i })).toBeTruthy());
     expect(screen.getByText(/এই ডিভাইসেই সংরক্ষিত/)).toBeTruthy();
@@ -58,9 +53,6 @@ describe('guest mode routing', () => {
         <App />
       </TMAProvider>,
     );
-
-    await waitFor(() => expect(screen.getByText(/অতিথি হিসেবে চালিয়ে যান/)).toBeTruthy());
-    screen.getByText(/অতিথি হিসেবে চালিয়ে যান/).click();
 
     const navigation = await waitFor(() => screen.getByRole('navigation', { name: /প্রধান নেভিগেশন/i }));
     expect(within(navigation).getByRole('link', { name: /আমার রেকর্ড/i })).toBeTruthy();

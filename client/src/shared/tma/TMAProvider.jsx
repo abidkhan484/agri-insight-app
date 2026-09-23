@@ -278,13 +278,14 @@ export const TMAProvider = ({ children, authEndpoint }) => {
           return;
         }
 
-        // 4. No auth context — show login screen
-        log.info('No auth context found. Showing login screen.');
-        setMode('login');
+        // 4. No auth context — let visitors start in the offline guest experience.
+        // The dashboard still provides a clear path to LoginScreen when sync is needed.
+        log.info('No auth context found. Starting in Guest Mode.');
+        setMode('guest');
         setIsReady(true);
       } catch (err) {
         log.error('TMA Initialization Error:', err);
-        setMode('login');
+        setMode('guest');
         setIsReady(true);
       }
     };
