@@ -13,11 +13,11 @@ export default function App() {
         <p className="knowledge-eyebrow">কৃষি সহায়তা</p>
         <h1><span className="bn">কৃষি জ্ঞানভাণ্ডার</span><span className="en">ZBNF Knowledge Base</span></h1>
         <nav className="knowledge-nav" aria-label="জ্ঞানভাণ্ডার নেভিগেশন">
-          <NavLink to="." end>শুরু</NavLink>
-          <NavLink to="calculator">হিসাব</NavLink>
-          <NavLink to="pests">পোকা ও রোগ</NavLink>
-          <NavLink to="calendar">ফসল পঞ্জিকা</NavLink>
-          <NavLink to="glossary">শব্দকোষ</NavLink>
+          <NavLink to="/knowledge" end>শুরু</NavLink>
+          <NavLink to="/knowledge/calculator">হিসাব</NavLink>
+          <NavLink to="/knowledge/pests">পোকা ও রোগ</NavLink>
+          <NavLink to="/knowledge/calendar">ফসল পঞ্জিকা</NavLink>
+          <NavLink to="/knowledge/glossary">শব্দকোষ</NavLink>
         </nav>
       </header>
       

@@ -1,6 +1,6 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../../../App.jsx';
 import { TMAProvider } from '../TMAProvider.jsx';
 
@@ -21,6 +21,11 @@ async function continueAsGuest() {
 }
 
 describe('guest mode routing', () => {
+  beforeEach(() => {
+    cleanup();
+    window.location.hash = '#/';
+  });
+
   it('renders the guest dashboard as the landing page', async () => {
     render(
       <TMAProvider authEndpoint="https://example.com/api/auth/telegram">
@@ -79,5 +84,26 @@ describe('guest mode routing', () => {
 
     fireEvent.click(screen.getByRole('link', { name: /কমিউনিটি ম্যাপ/i }));
     expect(await screen.findByText(/মানচিত্র লোড হচ্ছে/i)).toBeTruthy();
+  });
+
+  it('keeps every knowledge top-menu destination rendered after navigation', async () => {
+    await continueAsGuest();
+
+    fireEvent.click(within(screen.getByRole('navigation', { name: /প্রধান নেভিগেশন/i })).getByRole('link', { name: /জ্ঞানভাণ্ডার/i }));
+    expect(await screen.findByRole('heading', { name: /স্বাগতম!/i })).toBeTruthy();
+
+    const knowledgeNavigation = screen.getByRole('navigation', { name: /জ্ঞানভাণ্ডার নেভিগেশন/i });
+    const destinations = [
+      { label: 'হিসাব', heading: /হিসাব করুন/i },
+      { label: 'পোকা ও রোগ', heading: /পোকামাকড় ও রোগ/i },
+      { label: 'ফসল পঞ্জিকা', heading: /ফসল পঞ্জিকা/i },
+      { label: 'শব্দকোষ', heading: /শব্দকোষ/i },
+      { label: 'শুরু', heading: /স্বাগতম!/i },
+    ];
+
+    for (const destination of destinations) {
+      fireEvent.click(within(knowledgeNavigation).getByRole('link', { name: destination.label }));
+      expect(await screen.findByRole('heading', { name: destination.heading })).toBeTruthy();
+    }
   });
 });
