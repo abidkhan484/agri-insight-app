@@ -27,4 +27,26 @@ describe('Multi-layer compatibility page', () => {
     expect(screen.getByText(/কোনো সমন্বয় পাওয়া যায়নি/)).toBeTruthy();
     expect(screen.getByText('0 / 110')).toBeTruthy();
   });
+
+  it('shows twelve combinations per page and moves to the next page', () => {
+    render(<MultiLayer />);
+
+    expect(screen.getAllByRole('article')).toHaveLength(12);
+    expect(screen.getByRole('navigation').textContent).toContain('পৃষ্ঠা 1 / 10');
+
+    fireEvent.click(screen.getByRole('button', { name: /পরের পৃষ্ঠা/i }));
+
+    expect(screen.getByRole('navigation').textContent).toContain('পৃষ্ঠা 2 / 10');
+    expect(screen.getByText('13')).toBeTruthy();
+  });
+
+  it('resets to the first page after filtering', () => {
+    render(<MultiLayer />);
+
+    fireEvent.click(screen.getByRole('button', { name: /পরের পৃষ্ঠা/i }));
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'Turmeric' } });
+
+    expect(screen.getByRole('navigation').textContent).toContain('পৃষ্ঠা 1 / 6');
+    expect(screen.getByText('31')).toBeTruthy();
+  });
 });
