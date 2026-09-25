@@ -93,6 +93,8 @@ commands/          ← Custom workflow orchestrators (.toml files)
 skills/            ← Shared reference guides (TDD, Security checks, ZBNF recipe ratios)
 ```
 
+The Knowledge Base calculator includes curated YouTube preparation videos for Jeevamrutha, Beejamrutha, Neemastra and Agniastra. Videos appear only on the matching calculator tab.
+
 ---
 
 ## Code Quality (Non-Negotiable)

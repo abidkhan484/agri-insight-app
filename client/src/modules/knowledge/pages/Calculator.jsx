@@ -9,6 +9,7 @@ import {
   calculateMulch,
 } from '../utils/zbnf-formulas.js';
 import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
+import { getTutorialVideos } from '../data/tutorial-videos.js';
 
 const FORMULAS = {
   jeevamrutha: { 
@@ -80,6 +81,7 @@ export default function Calculator() {
   }
 
   const formula = FORMULAS[selected];
+  const tutorialVideos = getTutorialVideos(selected);
 
   return (
     <div className="page calculator">
@@ -144,6 +146,32 @@ export default function Calculator() {
             <p className="en"><strong>Note:</strong> {result.notes_en}</p>
           </div>
         </div>
+      )}
+
+      {tutorialVideos.length > 0 && (
+        <section className="calculator-videos" aria-labelledby="calculator-videos-heading">
+          <h3 id="calculator-videos-heading">
+            <span className="bn">এই হিসাবের ভিডিও</span>
+            <span className="en">Videos for this calculation</span>
+          </h3>
+          <div className="calculator-video-list">
+            {tutorialVideos.map((video) => (
+              <a
+                className="card calculator-video"
+                href={`https://www.youtube.com/watch?v=${video.id}`}
+                key={video.id}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="calculator-video-icon" aria-hidden="true">▶</span>
+                <span>
+                  <span className="bn">ভিডিও দেখুন</span>
+                  <span className="en">{video.title}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

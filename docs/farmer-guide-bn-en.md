@@ -161,6 +161,7 @@ Take a photo of an infected leaf to identify the disease and get ZBNF treatment.
 
 **বাংলা:**
 সঠিক পরিমাণে ZBNF উপকরণ তৈরির জন্য 'ZBNF জ্ঞানভান্ডার' ক্যালকুলেটর ব্যবহার করুন। এটি ১০০% অফলাইনে কাজ করে।
+নির্বাচিত হিসাবের পাতায় জীবামৃত, বীজামৃত, নীমাস্ত্র ও অগ্নিঅস্ত্র তৈরির প্রাসঙ্গিক ভিডিও লিংকও দেখা যাবে।
 
 ### বহুস্তর চাষ / Multi-layer crops
 
@@ -170,6 +171,7 @@ Use the **Multi-layer crops** page to browse 110 crop combinations for growing t
 
 **English:**
 Use the 'ZBNF Knowledge Base' for offline dosage calculators and pest management info.
+The selected calculator tab also shows relevant preparation videos for Jeevamrutha, Beejamrutha, Neemastra and Agniastra.
 
 ---
 

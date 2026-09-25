@@ -7,8 +7,21 @@ import {
   calculateBrahmastra,
   calculateMulch,
 } from '../utils/zbnf-formulas';
+import { getTutorialVideos, TUTORIAL_VIDEOS } from '../data/tutorial-videos';
 
 describe('P6 — ZBNF Formulation Calculators', () => {
+  describe('Tutorial videos', () => {
+    it('keeps only relevant middle playlist videos mapped to calculators', () => {
+      expect(Object.values(TUTORIAL_VIDEOS).flat()).toHaveLength(5);
+      expect(getTutorialVideos('jeevamrutha').map((video) => video.id)).toEqual([
+        'tXG2ztBX1DA',
+        'f5NTD-Qx1Q8',
+      ]);
+      expect(getTutorialVideos('mulch')).toEqual([]);
+      expect(getTutorialVideos('unknown')).toEqual([]);
+    });
+  });
+
   describe('Jeevamrutha', () => {
     it('matches specifications for 33 decimals', () => {
       const result = calculateJeevamrutha(33);
