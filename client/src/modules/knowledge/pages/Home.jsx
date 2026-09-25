@@ -72,6 +72,10 @@ export default function Home() {
             <span className="en">Crop Calendar</span>
           </div>
         </Link>
+        <Link to="/knowledge/multi-layer" className="card link-card">
+          <span className="icon">🌿</span>
+          <div><span className="bn">বহুস্তর চাষ</span><span className="en">Multi-layer crops</span></div>
+        </Link>
         <Link to="glossary" className="card link-card">
           <span className="icon">📖</span>
           <div>

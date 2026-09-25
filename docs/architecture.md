@@ -125,7 +125,7 @@ Business logic is centralized in the database.
 ### P6 — ZBNF Knowledge PWA
 - **Framework**: React 19 + Vite 8 + `vite-plugin-pwa`
 - **Calculators**: Area-based dosage for Jeevamrutha, Beejamrutha, Neemastra, Agniastra, Brahmastra, and Mulch.
-- **Content**: Pest gallery with photos/symptoms/ZBNF-treatment, crop calendar by BD division.
+- **Content**: Pest gallery with photos/symptoms/ZBNF-treatment, crop calendar by BD division, and searchable/filterable multi-layer crop compatibility combinations.
 - **Offline Strategy**: Service Workers (Workbox) pre-caching all assets and JSON data.
 - **Path**: `zbnf-knowledge/`
 

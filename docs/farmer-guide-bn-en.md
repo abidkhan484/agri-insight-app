@@ -153,6 +153,12 @@ Take a photo of an infected leaf to identify the disease and get ZBNF treatment.
 **বাংলা:**
 সঠিক পরিমাণে ZBNF উপকরণ তৈরির জন্য 'ZBNF জ্ঞানভান্ডার' ক্যালকুলেটর ব্যবহার করুন। এটি ১০০% অফলাইনে কাজ করে।
 
+### বহুস্তর চাষ / Multi-layer crops
+
+জ্ঞানভান্ডারের **বহুস্তর চাষ** পাতায় একই জমিতে একসঙ্গে চাষের জন্য ১১০টি ফসলের সমন্বয় দেখুন। ফসলের নাম লিখে খুঁজুন, অথবা প্রধান ফসল, সঙ্গী ফসল ও লতানো ফসল দিয়ে ফিল্টার করুন।
+
+Use the **Multi-layer crops** page to browse 110 crop combinations for growing together. Search by crop name or filter by base, companion and vine crop. These are planning examples from the linked four-layer guide; check local soil, climate, trellis space and disease risk before planting.
+
 **English:**
 Use the 'ZBNF Knowledge Base' for offline dosage calculators and pest management info.
 

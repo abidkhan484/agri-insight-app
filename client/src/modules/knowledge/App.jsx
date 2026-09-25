@@ -4,6 +4,7 @@ import Calculator from './pages/Calculator';
 import PestGallery from './pages/PestGallery';
 import Calendar from './pages/Calendar';
 import Glossary from './pages/Glossary';
+import MultiLayer from './pages/MultiLayer';
 import './App.css';
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
           <NavLink to="/knowledge/calculator">হিসাব</NavLink>
           <NavLink to="/knowledge/pests">পোকা ও রোগ</NavLink>
           <NavLink to="/knowledge/calendar">ফসল পঞ্জিকা</NavLink>
+          <NavLink to="/knowledge/multi-layer">বহুস্তর চাষ</NavLink>
           <NavLink to="/knowledge/glossary">শব্দকোষ</NavLink>
         </nav>
       </header>
@@ -27,6 +29,7 @@ export default function App() {
           <Route path="calculator" element={<Calculator />} />
           <Route path="pests" element={<PestGallery />} />
           <Route path="calendar" element={<Calendar />} />
+          <Route path="multi-layer" element={<MultiLayer />} />
           <Route path="glossary" element={<Glossary />} />
         </Routes>
       </main>

@@ -77,7 +77,7 @@ client/            ← Unified React PWA (React 19 + Vite 8)
   src/modules/
     krishi-record/ ← Farm Record Tracker PWA
     disease-detect/← Plant Disease Detection PWA
-    knowledge/     ← ZBNF Knowledge Base PWA
+    knowledge/     ← ZBNF Knowledge Base PWA (including multi-layer crop search)
     map/           ← Farmer Map (Leaflet)
 ai-assistant/      ← Local AI RAG server (Flask + LlamaIndex)
 firmware/          ← ESP32 Arduino telemetry sketches
