@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { KNOWLEDGE_CATEGORIES, searchKnowledge } from '../utils/knowledge';
 
+const knowledgePath = (path) => `/knowledge/${path.replace(/^\//, '')}`;
+
 export default function Home() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
@@ -44,28 +46,28 @@ export default function Home() {
             <div className="knowledge-card-heading"><span className="knowledge-icon" aria-hidden="true">{item.icon}</span><h3><span className="bn">{item.title_bn}</span><span className="en">{item.title_en}</span></h3></div>
             <p className="bn">{item.summary_bn}</p><p className="en">{item.summary_en}</p>
             <details><summary><span className="bn">বিস্তারিত নির্দেশনা</span><span className="en">Read guidance</span></summary><p className="bn">{item.body_bn}</p><p className="en">{item.body_en}</p></details>
-            <div className="related-links"><span className="related-label bn">সম্পর্কিত:</span>{item.links.map((link) => <Link key={link.to} to={link.to.replace(/^\//, '')}><span className="bn">{link.label_bn}</span><span className="en">{link.label_en}</span></Link>)}</div>
+            <div className="related-links"><span className="related-label bn">সম্পর্কিত:</span>{item.links.map((link) => <Link key={link.to} to={knowledgePath(link.to)}><span className="bn">{link.label_bn}</span><span className="en">{link.label_en}</span></Link>)}</div>
           </article>
         ))}
         {results.length === 0 && <p className="empty-state bn">এই বিষয়ের কোনো নির্দেশনা পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজুন।</p>}
       </section>
 
       <div className="quick-links">
-        <Link to="calculator" className="card link-card">
+        <Link to="/knowledge/calculator" className="card link-card">
           <span className="icon">🧮</span>
           <div>
             <span className="bn">ক্যালকুলেটর</span>
             <span className="en">Calculator</span>
           </div>
         </Link>
-        <Link to="pests" className="card link-card">
+        <Link to="/knowledge/pests" className="card link-card">
           <span className="icon">🐛</span>
           <div>
             <span className="bn">পোকামাকড় ও রোগ</span>
             <span className="en">Pests & Diseases</span>
           </div>
         </Link>
-        <Link to="calendar" className="card link-card">
+        <Link to="/knowledge/calendar" className="card link-card">
           <span className="icon">📅</span>
           <div>
             <span className="bn">ফসল পঞ্জিকা</span>
@@ -76,7 +78,7 @@ export default function Home() {
           <span className="icon">🌿</span>
           <div><span className="bn">বহুস্তর চাষ</span><span className="en">Multi-layer crops</span></div>
         </Link>
-        <Link to="glossary" className="card link-card">
+        <Link to="/knowledge/glossary" className="card link-card">
           <span className="icon">📖</span>
           <div>
             <span className="bn">শব্দকোষ</span>

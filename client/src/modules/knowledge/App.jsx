@@ -1,4 +1,4 @@
-import { NavLink, Routes, Route } from 'react-router-dom';
+import { Navigate, NavLink, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Calculator from './pages/Calculator';
 import PestGallery from './pages/PestGallery';
@@ -28,6 +28,7 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="calculator" element={<Calculator />} />
           <Route path="pests" element={<PestGallery />} />
+          <Route path="pests/calculator" element={<Navigate to="/knowledge/calculator" replace />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="multi-layer" element={<MultiLayer />} />
           <Route path="glossary" element={<Glossary />} />

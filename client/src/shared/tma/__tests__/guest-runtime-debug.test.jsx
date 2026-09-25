@@ -106,4 +106,16 @@ describe('guest mode routing', () => {
       expect(await screen.findByRole('heading', { name: destination.heading })).toBeTruthy();
     }
   });
+
+  it('opens the calculator from the reported deep-link path', async () => {
+    window.location.hash = '#/knowledge/pests/calculator';
+
+    render(
+      <TMAProvider authEndpoint="https://example.com/api/auth/telegram">
+        <App />
+      </TMAProvider>,
+    );
+
+    expect(await screen.findByRole('heading', { name: /হিসাব করুন/i })).toBeTruthy();
+  });
 });
