@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import log from 'loglevel';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 import { identifyDisease } from '../services/plantnet.js';
 import { saveDiseaseObservation } from '../services/observation.js';
 import { prepareImage } from '../utils/image.js';
@@ -38,6 +39,7 @@ function confidenceLabel(confidence) {
 }
 
 export default function DiseaseDetector() {
+  const { isBangla } = useLanguage();
   const [crop, setCrop] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -112,26 +114,26 @@ export default function DiseaseDetector() {
       <section className="upload-section" aria-label="Disease photo upload">
         <label htmlFor="crop-select"><span className="bn">ফসল নির্বাচন করুন</span><span className="en">Select crop</span></label>
         <select id="crop-select" value={crop} onChange={(event) => setCrop(event.target.value)}>
-          <option value="">ফসল বেছে নিন (Optional)</option>
-          {crops.map((item) => <option key={item.value} value={item.value}>{item.label} ({item.en})</option>)}
+          <option value="">{isBangla ? 'ফসল বেছে নিন (ঐচ্ছিক)' : 'Select crop (optional)'}</option>
+          {crops.map((item) => <option key={item.value} value={item.value}>{isBangla ? item.label : item.en}</option>)}
         </select>
         <label className="upload-btn" htmlFor="disease-photo"><span className="bn">ছবি তুলুন বা আপলোড করুন</span><span className="en">Take photo or upload</span></label>
         <input ref={inputRef} id="disease-photo" type="file" accept="image/*" capture="environment" onChange={handleImageChange} />
       </section>
 
-      {previewUrl && <img src={previewUrl} alt="আপলোড করা গাছের ছবি / Uploaded plant" className="image-preview" />}
+      {previewUrl && <img src={previewUrl} alt={isBangla ? 'আপলোড করা গাছের ছবি' : 'Uploaded plant'} className="image-preview" />}
       {loading && <div className="loading-spinner" role="status"><span className="bn">ছবি বিশ্লেষণ করা হচ্ছে...</span><span className="en">Checking photo online...</span></div>}
       {error && <div className="error-message" role="alert"><span className="bn">{error[0]}</span><span className="en">{error[1]}</span></div>}
 
-      {result?.uncertain && <div className="uncertain-message" role="status"><h2><span className="bn">ছবি থেকে নিশ্চিত শনাক্ত করা যায়নি</span><span className="en">No qualified result</span></h2><p><span className="bn">আরও পরিষ্কার ছবি তুলে আবার চেষ্টা করুন। এই ফলকে নিশ্চিত রোগ ধরে কোনো চিকিৎসা শুরু করবেন না।</span><span className="en">Retake a clearer photo. Do not start treatment based on this result.</span></p><button type="button" onClick={() => inputRef.current?.click()}>আবার ছবি তুলুন (Try another photo)</button></div>}
+      {result?.uncertain && <div className="uncertain-message" role="status"><h2><span className="bn">ছবি থেকে নিশ্চিত শনাক্ত করা যায়নি</span><span className="en">No qualified result</span></h2><p><span className="bn">আরও পরিষ্কার ছবি তুলে আবার চেষ্টা করুন। এই ফলকে নিশ্চিত রোগ ধরে কোনো চিকিৎসা শুরু করবেন না।</span><span className="en">Retake a clearer photo. Do not start treatment based on this result.</span></p><button type="button" onClick={() => inputRef.current?.click()}><LanguageText bn="আবার ছবি তুলুন" en="Try another photo" /></button></div>}
 
       {result && !result.uncertain && topResult && (
         <article className="result-card fade-in">
           <div className="result-header"><div><h2 className="disease-name"><span className="bn">{result.treatment.name_bn}</span><span className="en">{result.treatment.name_en}</span></h2><p className="qualified-note"><span className="bn">PlantNet-এর সম্ভাব্য মিল — রোগ নিশ্চিত নয়</span><span className="en">PlantNet qualified match — not a confirmed diagnosis</span></p></div><div className="confidence-badge"><span className="bn">{confidenceText[0]}</span><span className="en">{confidence}% · {confidenceText[1]}</span></div></div>
           <div className="result-section"><h3><span className="bn">সম্ভাব্য উপসর্গ</span><span className="en">Possible symptoms</span></h3><p className="bn">{result.treatment.symptoms_bn}</p><p className="en">{result.treatment.symptoms_en}</p></div>
-          <div className="result-section treatment"><h3><span className="bn">নথিভুক্ত ZBNF নির্দেশনা</span><span className="en">Documented ZBNF guidance</span></h3><p className="treatment-step bn">{result.treatment.treatment.schedule_bn}</p><p className="treatment-step en">{result.treatment.treatment.schedule_en}</p>{result.treatment.treatment.secondary && <p className="secondary-hint">Secondary formulation: {result.treatment.treatment.secondary}</p>}</div>
+          <div className="result-section treatment"><h3><span className="bn">নথিভুক্ত ZBNF নির্দেশনা</span><span className="en">Documented ZBNF guidance</span></h3><p className="treatment-step bn">{result.treatment.treatment.schedule_bn}</p><p className="treatment-step en">{result.treatment.treatment.schedule_en}</p>{result.treatment.treatment.secondary && <p className="secondary-hint">{isBangla ? 'Secondary formulation' : 'Secondary formulation'}: {result.treatment.treatment.secondary}</p>}</div>
           <p className="detection-metadata">PlantNet: {topResult.scientificName || 'Unknown'} · {confidence}%</p>
-          <button type="button" className="save-observation" onClick={handleSaveObservation} disabled={saved}>{saved ? 'সংরক্ষিত হয়েছে (Saved)' : 'পর্যবেক্ষণ হিসেবে সংরক্ষণ করুন (Save observation)'}</button>
+          <button type="button" className="save-observation" onClick={handleSaveObservation} disabled={saved}><LanguageText bn={saved ? 'সংরক্ষিত হয়েছে' : 'পর্যবেক্ষণ হিসেবে সংরক্ষণ করুন'} en={saved ? 'Saved' : 'Save observation'} /></button>
         </article>
       )}
     </main>

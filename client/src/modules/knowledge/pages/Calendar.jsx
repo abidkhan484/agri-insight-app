@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import crops from '../data/crops.json';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 
 const DIVISIONS = ["Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh"];
 const MONTHS_BN = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
 
 export default function Calendar() {
+  const { isBangla } = useLanguage();
   const [selectedDivision, setSelectedDivision] = useState('Dhaka');
   const currentMonth = new Date().getMonth() + 1; // 1-based
 
@@ -57,7 +59,7 @@ export default function Calendar() {
                     <span className="en">Planting: {s.planting_months.join(', ')}</span>
                   </p>
                   {s.planting_months.includes(currentMonth) && (
-                    <div className="tag active-tag bn">বপনের উপযুক্ত সময়!</div>
+                    <div className="tag active-tag"><LanguageText bn="বপনের উপযুক্ত সময়!" en="Good time to plant!" /></div>
                   )}
                 </div>
               ))}

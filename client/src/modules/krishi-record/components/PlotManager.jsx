@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, generateId } from '../db';
 import log from '../logger';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 
 const PlotManager = () => {
+  const { isBangla } = useLanguage();
   const [name, setName] = useState('');
   const [area, setArea] = useState('');
   const [unit, setUnit] = useState('Decimal');
@@ -46,20 +48,20 @@ const PlotManager = () => {
 
   return (
     <div>
-      <h2>জমি ব্যবস্থাপনা (Plot Management)</h2>
+      <h2><LanguageText bn="জমি ব্যবস্থাপনা" en="Plot management" /></h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>জমির নাম (Plot Name):</label>
+          <label><LanguageText bn="জমির নাম" en="Plot name" />:</label>
           <input 
             type="text" 
             value={name} 
             onChange={(e) => setName(e.target.value)} 
             required 
-            placeholder="উদাঃ উত্তর মাঠ"
+            placeholder={isBangla ? 'উদাঃ উত্তর মাঠ' : 'For example: North field'}
           />
         </div>
         <div className="form-group">
-          <label>পরিমাণ (Area):</label>
+          <label><LanguageText bn="পরিমাণ" en="Area" />:</label>
           <input 
             type="number" 
             step="0.01" 
@@ -69,24 +71,24 @@ const PlotManager = () => {
           />
         </div>
         <div className="form-group">
-          <label>একক (Unit):</label>
+          <label><LanguageText bn="একক" en="Unit" />:</label>
           <select value={unit} onChange={(e) => setUnit(e.target.value)}>
-            <option value="Decimal">শতাংশ (Decimal)</option>
-            <option value="Acre">একর (Acre)</option>
-            <option value="Bigha">বিঘা (Bigha)</option>
+            <option value="Decimal">{isBangla ? 'শতাংশ' : 'Decimal'}</option>
+            <option value="Acre">{isBangla ? 'একর' : 'Acre'}</option>
+            <option value="Bigha">{isBangla ? 'বিঘা' : 'Bigha'}</option>
           </select>
         </div>
-        <button type="submit">যোগ করুন (Add Plot)</button>
+        <button type="submit"><LanguageText bn="যোগ করুন" en="Add plot" /></button>
       </form>
 
       <div className="list">
-        <h3>জমি তালিকা (Plot List)</h3>
+        <h3><LanguageText bn="জমি তালিকা" en="Plot list" /></h3>
         {plots?.map(plot => (
           <div key={plot.id} className="list-item">
             <div>
               <strong>{plot.name}</strong> - {plot.area} {plot.areaUnit}
             </div>
-            <button className="delete-btn" onClick={() => deletePlot(plot.id)}>মুছুন (Delete)</button>
+            <button className="delete-btn" onClick={() => deletePlot(plot.id)}><LanguageText bn="মুছুন" en="Delete" /></button>
           </div>
         ))}
       </div>

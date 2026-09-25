@@ -6,40 +6,40 @@ export const QUICK_RECORD_TYPES = {
 
 export const QUICK_RECORD_OPTIONS = {
   [QUICK_RECORD_TYPES.input]: {
-    label: 'উপকরণ দিয়েছি',
+    label: 'উপকরণ দিয়েছি', en: 'Added input',
     table: 'inputs',
   },
   [QUICK_RECORD_TYPES.observation]: {
-    label: 'জমিতে কিছু দেখেছি',
+    label: 'জমিতে কিছু দেখেছি', en: 'Observed the field',
     table: 'observations',
   },
   [QUICK_RECORD_TYPES.harvest]: {
-    label: 'ফসল তুলেছি',
+    label: 'ফসল তুলেছি', en: 'Recorded harvest',
     table: 'harvests',
   },
 };
 
 export const INPUT_UNITS = [
-  { value: 'liter', label: 'লিটার (L)' },
-  { value: 'kg', label: 'কেজি (kg)' },
-  { value: 'gram', label: 'গ্রাম (g)' },
-  { value: 'bag', label: 'বস্তা' },
+  { value: 'liter', label: 'লিটার (L)', en: 'Liters (L)' },
+  { value: 'kg', label: 'কেজি (kg)', en: 'Kilograms (kg)' },
+  { value: 'gram', label: 'গ্রাম (g)', en: 'Grams (g)' },
+  { value: 'bag', label: 'বস্তা', en: 'Bags' },
 ];
 
 export const HARVEST_UNITS = [
-  { value: 'kg', label: 'কেজি (kg)' },
-  { value: 'quintal', label: 'কুইন্টাল' },
-  { value: 'maund', label: 'মণ' },
-  { value: 'ton', label: 'টন' },
+  { value: 'kg', label: 'কেজি (kg)', en: 'Kilograms (kg)' },
+  { value: 'quintal', label: 'কুইন্টাল', en: 'Quintals' },
+  { value: 'maund', label: 'মণ', en: 'Maunds' },
+  { value: 'ton', label: 'টন', en: 'Tons' },
 ];
 
 export const INPUT_TYPES = [
-  { value: 'Jeevamrutha', label: 'জীবামৃত' },
-  { value: 'Neemastra', label: 'নিমাস্ত্র' },
-  { value: 'Beejamrutha', label: 'বীজামৃত' },
-  { value: 'Ghanajeevamrutha', label: 'ঘনজীবামৃত' },
-  { value: 'Labor', label: 'শ্রম' },
-  { value: 'Other', label: 'অন্যান্য' },
+  { value: 'Jeevamrutha', label: 'জীবামৃত', en: 'Jeevamrutha' },
+  { value: 'Neemastra', label: 'নিমাস্ত্র', en: 'Neemastra' },
+  { value: 'Beejamrutha', label: 'বীজামৃত', en: 'Beejamrutha' },
+  { value: 'Ghanajeevamrutha', label: 'ঘনজীবামৃত', en: 'Ghanajeevamrutha' },
+  { value: 'Labor', label: 'শ্রম', en: 'Labor' },
+  { value: 'Other', label: 'অন্যান্য', en: 'Other' },
 ];
 
 export const QUICK_DEFAULTS_KEY = 'krishi-record-quick-defaults';

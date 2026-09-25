@@ -35,6 +35,11 @@ export function useLanguage() {
   return { language: 'bn', setLanguage: () => {}, t: (key) => translations.bn[key] || key, isBangla: true };
 }
 
+export function LanguageText({ bn, en }) {
+  const { isBangla } = useLanguage();
+  return isBangla ? bn : en;
+}
+
 export function LanguageSwitcher() {
   const { language, setLanguage, t } = useLanguage();
   return (

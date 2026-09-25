@@ -3,8 +3,10 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db, generateId } from '../db';
 import { calculateJeevamrutha } from '../utils/zbnf-formulas';
 import log from '../logger';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 
 const InputLogger = () => {
+  const { isBangla } = useLanguage();
   const [plotId, setPlotId] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [type, setType] = useState('Jeevamrutha');
@@ -33,7 +35,7 @@ const InputLogger = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!plotId) return alert('Please select a plot');
+    if (!plotId) return alert(isBangla ? 'জমি নির্বাচন করুন' : 'Please select a plot');
     try {
       await db.inputs.add({
         id: generateId(),
@@ -68,12 +70,12 @@ const InputLogger = () => {
 
   return (
     <div>
-      <h2>উপকরণ প্রয়োগ (Input Logging)</h2>
+      <h2><LanguageText bn="উপকরণ প্রয়োগ" en="Input logging" /></h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>জমি নির্বাচন করুন (Select Plot):</label>
+          <label><LanguageText bn="জমি নির্বাচন করুন" en="Select plot" />:</label>
           <select value={plotId} onChange={(e) => setPlotId(e.target.value)} required>
-            <option value="">জমি বেছে নিন (Choose Plot)</option>
+            <option value="">{isBangla ? 'জমি বেছে নিন' : 'Choose plot'}</option>
             {plots?.map(plot => (
               <option key={plot.id} value={plot.id}>{plot.name}</option>
             ))}
@@ -81,18 +83,18 @@ const InputLogger = () => {
         </div>
 
         <div className="form-group">
-          <label>তারিখ (Date):</label>
+          <label><LanguageText bn="তারিখ" en="Date" />:</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
         </div>
 
         <div className="form-group">
-          <label>উপকরণের ধরন (Input Type):</label>
+          <label><LanguageText bn="উপকরণের ধরন" en="Input type" />:</label>
           <select value={type} onChange={(e) => setType(e.target.value)}>
-            <option value="Jeevamrutha">জীওয়ামৃত (Jeevamrutha)</option>
-            <option value="Ghanajeevamrutha">ঘনজীওয়ামৃত (Ghanajeevamrutha)</option>
-            <option value="Seeds">বীজ (Seeds)</option>
-            <option value="Labor">শ্রম (Labor)</option>
-            <option value="Other">অন্যান্য (Other)</option>
+            <option value="Jeevamrutha">{isBangla ? 'জীবামৃত' : 'Jeevamrutha'}</option>
+            <option value="Ghanajeevamrutha">{isBangla ? 'ঘনজীবামৃত' : 'Ghanajeevamrutha'}</option>
+            <option value="Seeds">{isBangla ? 'বীজ' : 'Seeds'}</option>
+            <option value="Labor">{isBangla ? 'শ্রম' : 'Labor'}</option>
+            <option value="Other">{isBangla ? 'অন্যান্য' : 'Other'}</option>
           </select>
         </div>
 
@@ -109,7 +111,7 @@ const InputLogger = () => {
         )}
 
         <div className="form-group">
-          <label>পরিমাণ (Quantity):</label>
+          <label><LanguageText bn="পরিমাণ" en="Quantity" />:</label>
           <input 
             type="number" 
             step="0.01" 
@@ -120,7 +122,7 @@ const InputLogger = () => {
         </div>
 
         <div className="form-group">
-          <label>একক (Unit):</label>
+          <label><LanguageText bn="একক" en="Unit" />:</label>
           <input 
             type="text" 
             value={unit} 
@@ -130,7 +132,7 @@ const InputLogger = () => {
         </div>
 
         <div className="form-group">
-          <label>খরচ (Cost - TK):</label>
+          <label><LanguageText bn="খরচ (টাকা)" en="Cost (TK)" />:</label>
           <input 
             type="number" 
             value={cost} 
@@ -138,11 +140,11 @@ const InputLogger = () => {
           />
         </div>
 
-        <button type="submit">সংরক্ষণ করুন (Save Input)</button>
+        <button type="submit"><LanguageText bn="সংরক্ষণ করুন" en="Save input" /></button>
       </form>
 
       <div className="list">
-        <h3>প্রয়োগের তালিকা (Input History)</h3>
+        <h3><LanguageText bn="প্রয়োগের তালিকা" en="Input history" /></h3>
         {inputs?.map(input => {
           const plot = plots?.find(p => p.id === input.plotId);
           return (
@@ -150,9 +152,9 @@ const InputLogger = () => {
               <div>
                 <strong>{input.date}</strong>: {input.type} ({input.quantity} {input.quantityUnit}) 
                 <br />
-                <small>জমি: {plot?.name || 'Unknown'}</small>
+                <small>{isBangla ? 'জমি' : 'Plot'}: {plot?.name || 'Unknown'}</small>
               </div>
-              <button className="delete-btn" onClick={() => deleteInput(input.id)}>মুছুন</button>
+              <button className="delete-btn" onClick={() => deleteInput(input.id)}><LanguageText bn="মুছুন" en="Delete" /></button>
             </div>
           );
         })}

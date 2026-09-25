@@ -8,6 +8,7 @@ import {
   calculateBrahmastra,
   calculateMulch,
 } from '../utils/zbnf-formulas.js';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 
 const FORMULAS = {
   jeevamrutha: { 
@@ -55,6 +56,7 @@ const FORMULAS = {
 };
 
 export default function Calculator() {
+  const { isBangla } = useLanguage();
   const [selected, setSelected] = useState('jeevamrutha');
   const [input, setInput] = useState('');
   const [result, setResult] = useState(null);
@@ -64,7 +66,7 @@ export default function Calculator() {
     const value = parseFloat(input);
     setError(null);
     if (isNaN(value) || value <= 0) {
-      setError('সঠিক পরিমাণ লিখুন / Please enter a valid value');
+      setError(isBangla ? 'সঠিক পরিমাণ লিখুন' : 'Please enter a valid value');
       return;
     }
     try {
@@ -93,7 +95,7 @@ export default function Calculator() {
             className={selected === key ? 'tab active' : 'tab'}
             onClick={() => { setSelected(key); setResult(null); setInput(''); setError(null); }}
           >
-            <span className="bn">{f.label_bn}</span>
+            <LanguageText bn={f.label_bn} en={f.label_en} />
           </button>
         ))}
       </div>
@@ -131,7 +133,7 @@ export default function Calculator() {
                 .filter(([k]) => !['notes_bn', 'notes_en'].includes(k))
                 .map(([key, val]) => (
                   <tr key={key}>
-                    <td className="key">{key.replace(/_/g, ' ')}</td>
+                    <td className="key">{isBangla ? key.replace(/_/g, ' ') : key.replace(/_/g, ' ')}</td>
                     <td className="val">{val}</td>
                   </tr>
                 ))}

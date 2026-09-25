@@ -13,9 +13,11 @@ import { SyncManager } from '@shared/sync/SyncManager';
 import { SyncStatus } from '@shared/sync/SyncStatus';
 import { createClient } from '@supabase/supabase-js';
 import { db } from './db';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 
 function App() {
   const { user, isReady, error } = useTMA();
+  const { isBangla } = useLanguage();
   const [activeTab, setActiveTab] = useState('quick');
   const [syncManagers, setSyncManagers] = useState([]);
 
@@ -44,16 +46,16 @@ function App() {
   }, [user]);
 
   const tabs = [
-    { id: 'quick', label: 'দ্রুত রেকর্ড' },
-    { id: 'plots', label: 'জমি (Plots)' },
-    { id: 'inputs', label: 'উপকরণ (Inputs)' },
-    { id: 'observations', label: 'পর্যবেক্ষণ (Observations)' },
-    { id: 'harvests', label: 'ফসল সংগ্রহ (Harvests)' },
-    { id: 'reports', label: 'রিপোর্ট (Reports)' }
+    { id: 'quick', bn: 'দ্রুত রেকর্ড', en: 'Quick records' },
+    { id: 'plots', bn: 'জমি', en: 'Plots' },
+    { id: 'inputs', bn: 'উপকরণ', en: 'Inputs' },
+    { id: 'observations', bn: 'পর্যবেক্ষণ', en: 'Observations' },
+    { id: 'harvests', bn: 'ফসল সংগ্রহ', en: 'Harvests' },
+    { id: 'reports', bn: 'রিপোর্ট', en: 'Reports' },
   ];
 
   if (!isReady) {
-    return <div className="app-loading">কৃষি সহকারী লোড হচ্ছে... (Loading Assistant...)</div>;
+    return <div className="app-loading"><LanguageText bn="কৃষি সহকারী লোড হচ্ছে..." en="Loading assistant..." /></div>;
   }
 
   if (error) {
@@ -65,10 +67,10 @@ function App() {
       <div className="app-container">
         <header>
           <div className="header-main">
-            <h1>কৃষি রেকর্ড (Krishi Record)</h1>
+            <h1><LanguageText bn="কৃষি রেকর্ড" en="Farm records" /></h1>
             <SyncStatus syncManagers={syncManagers} />
           </div>
-          {user && <div className="user-welcome">স্বাগতম, {user.first_name}!</div>}
+          {user && <div className="user-welcome"><LanguageText bn={`স্বাগতম, ${user.first_name}!`} en={`Welcome, ${user.first_name}!`} /></div>}
         </header>
         
         <nav className="tab-nav">
@@ -78,7 +80,7 @@ function App() {
               className={activeTab === tab.id ? 'active' : ''}
               onClick={() => setActiveTab(tab.id)}
             >
-              {tab.label}
+              {isBangla ? tab.bn : tab.en}
             </button>
           ))}
         </nav>

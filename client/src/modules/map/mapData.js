@@ -21,7 +21,7 @@ export function normalizeFarmerLocation(record) {
   if (!record || !isValidBangladeshCoordinate(record.latitude, record.longitude)) return null;
   return {
     id: getFarmerLocationId(record),
-    displayName: record.display_name || 'ZBNF কৃষক',
+    displayName: record.display_name || '',
     district: record.district || '',
     upazila: record.upazila || '',
     crops: asCrops(record),

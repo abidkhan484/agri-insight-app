@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTMA } from './TMAProvider';
 import log from 'loglevel';
 import './LoginScreen.css';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 
 /**
  * LoginScreen renders two auth methods side by side:
@@ -10,6 +11,7 @@ import './LoginScreen.css';
  */
 export const LoginScreen = () => {
   const { loginWithEmail, registerWithEmail, loginWithTelegramOAuth, mode } = useTMA();
+  const { isBangla } = useLanguage();
 
   // ---- Tab state ----
   const [activeTab, setActiveTab] = useState('email'); // 'email' | 'telegram'
@@ -48,7 +50,7 @@ export const LoginScreen = () => {
         await loginWithEmail({ email: formData.email, password: formData.password });
       } else {
         if (formData.password.length < 8) {
-          setFormError('পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে। (Password must be at least 8 chars.)');
+          setFormError(isBangla ? 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।' : 'Password must be at least 8 characters.');
           return;
         }
         const result = await registerWithEmail({
@@ -59,14 +61,14 @@ export const LoginScreen = () => {
         // If Supabase requires email confirmation, user might be null
         if (!result?.token) {
           setFormSuccess(
-            'নিবন্ধন সফল! আপনার ইমেইল নিশ্চিত করুন তারপর লগইন করুন। (Registration successful! Please confirm your email.)',
+            isBangla ? 'নিবন্ধন সফল! আপনার ইমেইল নিশ্চিত করুন তারপর লগইন করুন।' : 'Registration successful! Please confirm your email.',
           );
           setEmailSubTab('login');
         }
       }
     } catch (err) {
       log.error('Email auth error:', err);
-      setFormError(err.message || 'একটি ত্রুটি ঘটেছে। আবার চেষ্টা করুন। (An error occurred.)');
+      setFormError(err.message || (isBangla ? 'একটি ত্রুটি ঘটেছে। আবার চেষ্টা করুন।' : 'An error occurred. Please try again.'));
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +95,7 @@ export const LoginScreen = () => {
         await loginWithTelegramOAuth(telegramUser);
       } catch (err) {
         log.error('Telegram OAuth login failed:', err);
-        setWidgetError('লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন। (Login failed. Please try again.)');
+        setWidgetError(isBangla ? 'লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।' : 'Login failed. Please try again.');
       }
     };
 
@@ -113,7 +115,7 @@ export const LoginScreen = () => {
     script.onerror = () => {
       log.error('Failed to load Telegram Login Widget script');
       setWidgetLoaded(true);
-      setWidgetError('টেলিগ্রাম উইজেট লোড করা যায়নি। (Failed to load Telegram Widget.)');
+      setWidgetError(isBangla ? 'টেলিগ্রাম উইজেট লোড করা যায়নি।' : 'Failed to load Telegram Widget.');
     };
 
     widgetRef.current.appendChild(script);
@@ -133,8 +135,8 @@ export const LoginScreen = () => {
         <div className="login-icon-wrapper">
           <span className="login-icon">🌾</span>
         </div>
-        <h1 className="login-title">কৃষি সহকারী</h1>
-        <p className="login-subtitle">Agriculture Assistant</p>
+        <h1 className="login-title"><LanguageText bn="কৃষি সহকারী" en="Agriculture Assistant" /></h1>
+        <p className="login-subtitle"><LanguageText bn="Agriculture Assistant" en="কৃষি সহকারী" /></p>
 
         <div className="login-divider" />
 
@@ -148,7 +150,7 @@ export const LoginScreen = () => {
             onClick={() => setActiveTab('email')}
             type="button"
           >
-            ✉️ ইমেইল
+            ✉️ {isBangla ? 'ইমেইল' : 'Email'}
           </button>
           <button
             id="tab-telegram"
@@ -158,7 +160,7 @@ export const LoginScreen = () => {
             onClick={() => setActiveTab('telegram')}
             type="button"
           >
-            ✈️ টেলিগ্রাম
+            ✈️ {isBangla ? 'টেলিগ্রাম' : 'Telegram'}
           </button>
         </div>
 
@@ -177,7 +179,7 @@ export const LoginScreen = () => {
                 }}
                 type="button"
               >
-                লগইন
+                {isBangla ? 'লগইন' : 'Sign in'}
               </button>
               <button
                 id="subtab-register"
@@ -189,7 +191,7 @@ export const LoginScreen = () => {
                 }}
                 type="button"
               >
-                নিবন্ধন
+                {isBangla ? 'নিবন্ধন' : 'Register'}
               </button>
             </div>
 
@@ -208,7 +210,7 @@ export const LoginScreen = () => {
               {emailSubTab === 'register' && (
                 <div className="login-field">
                   <label htmlFor="login-name" className="login-label">
-                    নাম (Name)
+                    <LanguageText bn="নাম" en="Name" />
                   </label>
                   <input
                     id="login-name"
@@ -217,7 +219,7 @@ export const LoginScreen = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInput}
-                    placeholder="আপনার নাম লিখুন"
+                    placeholder={isBangla ? 'আপনার নাম লিখুন' : 'Enter your name'}
                     autoComplete="name"
                   />
                 </div>
@@ -225,7 +227,7 @@ export const LoginScreen = () => {
 
               <div className="login-field">
                 <label htmlFor="login-email" className="login-label">
-                  ইমেইল (Email)
+                  <LanguageText bn="ইমেইল" en="Email" />
                 </label>
                 <input
                   id="login-email"
@@ -242,7 +244,7 @@ export const LoginScreen = () => {
 
               <div className="login-field">
                 <label htmlFor="login-password" className="login-label">
-                  পাসওয়ার্ড (Password)
+                  <LanguageText bn="পাসওয়ার্ড" en="Password" />
                 </label>
                 <input
                   id="login-password"
@@ -251,7 +253,7 @@ export const LoginScreen = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleInput}
-                  placeholder={emailSubTab === 'register' ? 'কমপক্ষে ৮ অক্ষর' : '••••••••'}
+                  placeholder={emailSubTab === 'register' ? (isBangla ? 'কমপক্ষে ৮ অক্ষর' : 'At least 8 characters') : '••••••••'}
                   autoComplete={emailSubTab === 'register' ? 'new-password' : 'current-password'}
                   required
                 />
@@ -266,12 +268,12 @@ export const LoginScreen = () => {
                 {isLoading ? (
                   <span className="login-btn-content">
                     <span className="login-spinner login-spinner--small" />
-                    লোড হচ্ছে...
+                    {isBangla ? 'লোড হচ্ছে...' : 'Loading...'}
                   </span>
                 ) : emailSubTab === 'login' ? (
-                  'লগইন করুন'
+                  isBangla ? 'লগইন করুন' : 'Sign in'
                 ) : (
-                  'নিবন্ধন করুন'
+                  isBangla ? 'নিবন্ধন করুন' : 'Register'
                 )}
               </button>
             </form>
@@ -282,7 +284,7 @@ export const LoginScreen = () => {
         {activeTab === 'telegram' && (
           <div className="login-panel" role="tabpanel" aria-labelledby="tab-telegram">
             <p className="login-description">
-              টেলিগ্রাম দিয়ে লগইন করুন আপনার কৃষি ডেটা সিঙ্ক করতে।
+              <LanguageText bn="টেলিগ্রাম দিয়ে লগইন করুন আপনার কৃষি ডেটা সিঙ্ক করতে।" en="Sign in with Telegram to sync your farm data." />
             </p>
             <p className="login-description-en">
               Sign in with Telegram to sync your farm data.
@@ -301,11 +303,11 @@ export const LoginScreen = () => {
               className="login-telegram-link-btn"
             >
               <span className="login-telegram-icon">✈️</span>
-              টেলিগ্রাম অ্যাপে খুলুন (Open in Telegram)
+              {isBangla ? 'টেলিগ্রাম অ্যাপে খুলুন' : 'Open in Telegram'}
             </a>
 
             <div className="login-or-divider">
-              <span>অথবা (or)</span>
+              <span>{isBangla ? 'অথবা' : 'or'}</span>
             </div>
 
             <div className="login-widget-container" ref={widgetRef} />
@@ -313,18 +315,18 @@ export const LoginScreen = () => {
             {!widgetLoaded && !loadTimeout && (
               <div className="login-widget-loader">
                 <div className="login-spinner" />
-                <span>লোড হচ্ছে...</span>
+                <span>{isBangla ? 'লোড হচ্ছে...' : 'Loading...'}</span>
               </div>
             )}
 
             {loadTimeout && !widgetLoaded && (
               <div className="login-timeout">
-                <p>উইজেট লোড হতে দেরি হচ্ছে...</p>
+                <p>{isBangla ? 'উইজেট লোড হতে দেরি হচ্ছে...' : 'The widget is taking too long to load.'}</p>
                 <button
                   className="login-retry-btn"
                   onClick={() => setRetryCount((prev) => prev + 1)}
                 >
-                  আবার চেষ্টা করুন (Retry)
+                  {isBangla ? 'আবার চেষ্টা করুন' : 'Retry'}
                 </button>
               </div>
             )}
@@ -335,11 +337,11 @@ export const LoginScreen = () => {
         <div className="login-info">
           <div className="login-info-item">
             <span className="login-info-icon">🔒</span>
-            <span>আপনার তথ্য নিরাপদ</span>
+            <span><LanguageText bn="আপনার তথ্য নিরাপদ" en="Your data is secure" /></span>
           </div>
           <div className="login-info-item">
             <span className="login-info-icon">📱</span>
-            <span>টেলিগ্রামে খুলুন সেরা অভিজ্ঞতার জন্য</span>
+            <span><LanguageText bn="টেলিগ্রামে খুলুন সেরা অভিজ্ঞতার জন্য" en="Open in Telegram for the best experience" /></span>
           </div>
         </div>
 
@@ -353,7 +355,7 @@ export const LoginScreen = () => {
           }}
           type="button"
         >
-          অতিথি হিসেবে চালিয়ে যান (Continue as Guest)
+          {isBangla ? 'অতিথি হিসেবে চালিয়ে যান' : 'Continue as guest'}
         </button>
       </div>
     </div>

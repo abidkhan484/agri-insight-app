@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import pests from '../data/pests.json';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 
 export default function PestGallery() {
+  const { isBangla } = useLanguage();
   const [search, setSearch] = useState('');
 
   const filteredPests = pests.filter(p => 
@@ -20,7 +22,7 @@ export default function PestGallery() {
       <div className="input-row card">
         <input 
           type="text" 
-          placeholder="অনুসন্ধান করুন / Search..." 
+          placeholder={isBangla ? 'অনুসন্ধান করুন...' : 'Search...'}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -35,10 +37,10 @@ export default function PestGallery() {
                 <span className="bn">{pest.name_bn}</span>
                 <span className="en">{pest.name_en}</span>
               </h3>
-              <p className="bn"><strong>লক্ষণ:</strong> {pest.symptoms_bn}</p>
+              <p className={isBangla ? 'bn' : 'en'}><strong><LanguageText bn="লক্ষণ:" en="Symptoms:" /></strong> {isBangla ? pest.symptoms_bn : pest.symptoms_en}</p>
               <p className="affected">
-                <span className="bn">আক্রান্ত ফসল: </span>
-                {pest.crops_affected_bn.join(', ')}
+                <span>{isBangla ? 'আক্রান্ত ফসল: ' : 'Affected crops: '}</span>
+                {isBangla ? pest.crops_affected_bn.join(', ') : pest.crops_affected_en.join(', ')}
               </p>
               <div className="treatment-tag">Treatment: {pest.treatment_primary}</div>
             </div>
@@ -47,7 +49,7 @@ export default function PestGallery() {
       </div>
       
       {filteredPests.length === 0 && (
-        <p className="error bn">কোনো তথ্য পাওয়া যায়নি</p>
+          <p className="error"><LanguageText bn="কোনো তথ্য পাওয়া যায়নি" en="No information found" /></p>
       )}
     </div>
   );

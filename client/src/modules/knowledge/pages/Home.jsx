@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { KNOWLEDGE_CATEGORIES, searchKnowledge } from '../utils/knowledge';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 
 const knowledgePath = (path) => `/knowledge/${path.replace(/^\//, '')}`;
 
 export default function Home() {
+  const { isBangla } = useLanguage();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const results = useMemo(() => searchKnowledge(query, category), [query, category]);
@@ -19,15 +21,15 @@ export default function Home() {
 
       <section className="card knowledge-search" aria-labelledby="knowledge-search-title">
         <h2 id="knowledge-search-title"><span className="bn">যা জানতে চান খুঁজুন</span><span className="en">Search the knowledge base</span></h2>
-        <label className="sr-only" htmlFor="knowledge-query">জ্ঞানভাণ্ডারে খুঁজুন / Search knowledge</label>
+        <label className="sr-only" htmlFor="knowledge-query"><LanguageText bn="জ্ঞানভাণ্ডারে খুঁজুন" en="Search knowledge" /></label>
         <input
           id="knowledge-query"
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="জীবামৃত, নীমাস্ত্র, ওয়াপাসা..."
+          placeholder={isBangla ? 'জীবামৃত, নীমাস্ত্র, ওয়াপাসা...' : 'Jeevamrutha, Neemastra, Waapasa...'}
         />
-        <div className="category-filters" aria-label="জ্ঞানভাণ্ডারের বিষয় / Knowledge topics">
+        <div className="category-filters" aria-label={isBangla ? 'জ্ঞানভাণ্ডারের বিষয়' : 'Knowledge topics'}>
           {KNOWLEDGE_CATEGORIES.map((item) => (
             <button type="button" key={item.id} className={category === item.id ? 'filter-button active' : 'filter-button'} aria-pressed={category === item.id} onClick={() => setCategory(item.id)}>
               <span className="bn">{item.label_bn}</span><span className="en">{item.label_en}</span>
@@ -39,7 +41,7 @@ export default function Home() {
       <section className="knowledge-results" aria-live="polite">
         <div className="section-heading">
           <h2><span className="bn">কাজ অনুযায়ী নির্দেশনা</span><span className="en">Guidance by task</span></h2>
-          <span className="result-count">{results.length}টি</span>
+          <span className="result-count">{results.length} {isBangla ? 'টি' : 'results'}</span>
         </div>
         {results.map((item) => (
           <article className="card knowledge-card" key={item.id}>
@@ -49,7 +51,7 @@ export default function Home() {
             <div className="related-links"><span className="related-label bn">সম্পর্কিত:</span>{item.links.map((link) => <Link key={link.to} to={knowledgePath(link.to)}><span className="bn">{link.label_bn}</span><span className="en">{link.label_en}</span></Link>)}</div>
           </article>
         ))}
-        {results.length === 0 && <p className="empty-state bn">এই বিষয়ের কোনো নির্দেশনা পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজুন।</p>}
+        {results.length === 0 && <p className="empty-state"><LanguageText bn="এই বিষয়ের কোনো নির্দেশনা পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজুন।" en="No guidance was found for this topic. Try another search term." /></p>}
       </section>
 
       <div className="quick-links">
@@ -88,11 +90,11 @@ export default function Home() {
       </div>
 
       <section className="card note-card">
-        <h3><span className="bn">সতর্কতা</span><span className="en">Caution</span></h3>
-        <ul className="bn">
-          <li>সব সময় দেশি গরুর গোবর ও গোমূত্র ব্যবহার করুন।</li>
-          <li>কীটনাশক বিকেলে স্প্রে করা ভালো।</li>
-          <li>বৃষ্টির সম্ভাবনা থাকলে স্প্রে করবেন না।</li>
+        <h3><LanguageText bn="সতর্কতা" en="Caution" /></h3>
+        <ul>
+          <li><LanguageText bn="সব সময় দেশি গরুর গোবর ও গোমূত্র ব্যবহার করুন।" en="Always use dung and urine from a desi cow." /></li>
+          <li><LanguageText bn="কীটনাশক বিকেলে স্প্রে করা ভালো।" en="Spray pest treatments in the afternoon." /></li>
+          <li><LanguageText bn="বৃষ্টির সম্ভাবনা থাকলে স্প্রে করবেন না।" en="Do not spray when rain is expected." /></li>
         </ul>
       </section>
     </div>

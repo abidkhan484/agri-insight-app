@@ -3,6 +3,7 @@ import { fireEvent } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../../../App.jsx';
 import { TMAProvider } from '../TMAProvider.jsx';
+import { LanguageProvider } from '../../i18n/LanguageContext.jsx';
 
 vi.stubEnv('DEV', false);
 
@@ -117,5 +118,22 @@ describe('guest mode routing', () => {
     );
 
     expect(await screen.findByRole('heading', { name: /হিসাব করুন/i })).toBeTruthy();
+  });
+
+  it('keeps the dashboard and records page in English after switching language', async () => {
+    render(
+      <LanguageProvider>
+        <TMAProvider authEndpoint="https://example.com/api/auth/telegram">
+          <App />
+        </TMAProvider>
+      </LanguageProvider>,
+    );
+
+    await waitFor(() => screen.getByRole('heading', { name: /কী করতে চান/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'English' }));
+    expect(await screen.findByRole('heading', { name: /What would you like to do/i })).toBeTruthy();
+    fireEvent.click(screen.getByRole('link', { name: /My records/i }));
+    expect(await screen.findByRole('heading', { name: /Record today.s farm work/i })).toBeTruthy();
+    expect(screen.queryByText(/আজকের জমির কাজ লিখুন/i)).toBeNull();
   });
 });

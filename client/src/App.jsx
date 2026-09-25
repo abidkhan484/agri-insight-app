@@ -192,7 +192,7 @@ function App() {
       <Router>
         <div className="app-shell">
           <ModuleHeader />
-          <Suspense fallback={<div className="module-loading">লোড হচ্ছে...</div>}>
+          <Suspense fallback={<div className="module-loading">{t('loading')}</div>}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/records/*" element={<KrishiRecord />} />

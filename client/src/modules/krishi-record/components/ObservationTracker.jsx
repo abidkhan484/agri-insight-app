@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, generateId } from '../db';
 import log from '../logger';
+import { LanguageText, useLanguage } from '@shared/i18n/LanguageContext';
 
 const ObservationTracker = () => {
+  const { isBangla } = useLanguage();
   const [plotId, setPlotId] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [title, setTitle] = useState('');
@@ -18,7 +20,7 @@ const ObservationTracker = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!plotId) return alert('Please select a plot');
+    if (!plotId) return alert(isBangla ? 'জমি নির্বাচন করুন' : 'Please select a plot');
     try {
       await db.observations.add({
         id: generateId(),
@@ -51,12 +53,12 @@ const ObservationTracker = () => {
 
   return (
     <div>
-      <h2>পর্যবেক্ষণ (Observation Tracker)</h2>
+      <h2><LanguageText bn="পর্যবেক্ষণ" en="Observation tracker" /></h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>জমি নির্বাচন করুন (Select Plot):</label>
+          <label><LanguageText bn="জমি নির্বাচন করুন" en="Select plot" />:</label>
           <select value={plotId} onChange={(e) => setPlotId(e.target.value)} required>
-            <option value="">জমি বেছে নিন</option>
+            <option value="">{isBangla ? 'জমি বেছে নিন' : 'Choose plot'}</option>
             {plots?.map(plot => (
               <option key={plot.id} value={plot.id}>{plot.name}</option>
             ))}
@@ -64,23 +66,23 @@ const ObservationTracker = () => {
         </div>
 
         <div className="form-group">
-          <label>তারিখ (Date):</label>
+          <label><LanguageText bn="তারিখ" en="Date" />:</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
         </div>
 
         <div className="form-group">
-          <label>বিষয় (Title):</label>
+          <label><LanguageText bn="বিষয়" en="Title" />:</label>
           <input 
             type="text" 
             value={title} 
             onChange={(e) => setTitle(e.target.value)} 
             required 
-            placeholder="উদাঃ গাছের বৃদ্ধি ভালো"
+            placeholder={isBangla ? 'উদাঃ গাছের বৃদ্ধি ভালো' : 'For example: Plant growth is good'}
           />
         </div>
 
         <div className="form-group">
-          <label>বর্ণনা (Description):</label>
+          <label><LanguageText bn="বর্ণনা" en="Description" />:</label>
           <textarea 
             value={description} 
             onChange={(e) => setDescription(e.target.value)} 
@@ -88,11 +90,11 @@ const ObservationTracker = () => {
           />
         </div>
 
-        <button type="submit">সংরক্ষণ করুন (Save Observation)</button>
+        <button type="submit"><LanguageText bn="সংরক্ষণ করুন" en="Save observation" /></button>
       </form>
 
       <div className="list">
-        <h3>পর্যবেক্ষণ তালিকা (Observations)</h3>
+        <h3><LanguageText bn="পর্যবেক্ষণ তালিকা" en="Observations" /></h3>
         {observations?.map(obs => {
           const plot = plots?.find(p => p.id === obs.plotId);
           return (
@@ -100,10 +102,10 @@ const ObservationTracker = () => {
               <div>
                 <strong>{obs.date}</strong> - {obs.title}
                 <br />
-                <small>জমি: {plot?.name || 'Unknown'}</small>
+                <small>{isBangla ? 'জমি' : 'Plot'}: {plot?.name || 'Unknown'}</small>
                 <p style={{margin: '5px 0 0 0'}}>{obs.description}</p>
               </div>
-              <button className="delete-btn" onClick={() => deleteObservation(obs.id)}>মুছুন</button>
+              <button className="delete-btn" onClick={() => deleteObservation(obs.id)}><LanguageText bn="মুছুন" en="Delete" /></button>
             </div>
           );
         })}
