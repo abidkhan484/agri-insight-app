@@ -17,6 +17,7 @@ The ZBNF Farming Assistant is a production-grade ecosystem supporting natural fa
 *   **IoT Soil Telemetry**: Capacitive and environmental sensors broadcasting soil hydration alerts.
 *   **Desi Cow Finder & FAQ**: A peer-to-peer directory for sourcing local ingredients.
 *   **Bangla AI Q&A Assistant**: Offline-first RAG querying ZBNF manuals natively in Bangla.
+*   **Bangla / English UI**: Use the language switcher in the PWA; the choice is saved on the device and defaults to Bangla.
 
 ---
 
@@ -117,5 +118,7 @@ cd client
 npm install
 npm run dev                  # Serves PWA on http://localhost:5173
 ```
+
+The PWA defaults to Bangla and supports English from the language switcher in the top-right corner. The selected language is persisted locally in the browser.
 
 Refer to [docs/developer-setup.md](docs/developer-setup.md) for full configurations.

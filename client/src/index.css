@@ -9,6 +9,18 @@ html { min-width: 320px; background: #f5faf6; }
 #root { min-height: 100svh; }
 p { margin: 0; }
 
+body.language-bn .en { display: none !important; }
+body.language-en .bn { display: none !important; }
+
+.language-switcher {
+  position: fixed; z-index: 20; top: 10px; right: 10px; display: flex; align-items: center; gap: 5px;
+  padding: 4px 7px; border: 1px solid #c9d8cc; border-radius: 999px; background: rgba(255, 255, 255, .95);
+  color: #1b4332; font-size: 12px; box-shadow: 0 2px 8px rgba(27, 67, 50, .12);
+}
+.language-switcher button { border: 0; padding: 2px 4px; border-radius: 5px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+.language-switcher button.active { background: #d8f3dc; font-weight: 700; }
+.language-switcher-label { font-weight: 600; }
+
 .app-error-boundary {
   box-sizing: border-box;
   display: grid;

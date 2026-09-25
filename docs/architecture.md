@@ -89,6 +89,7 @@ Business logic is centralized in the database.
 - **Scheduler**: node-cron (in-process) + GitHub Actions daily-cron.yml (backup, schedule temporarily disabled — enable when needed)
 - **Logger**: Winston (JSON to files, colorized to console)
 - **Hosting**: Render.com free tier (750 hrs/month)
+- **PWA language support**: `client/src/shared/i18n/LanguageContext.jsx` provides persisted Bangla (`bn`) and English (`en`) selection, updates the document language, and controls bilingual UI content.
 
 ### P1 — Farm Scheduler Bot
 - **Commands**: `/register`, `/myplots`, `/deleteplot`, `/myreminders`, `/cancelreminder`, `/remind`

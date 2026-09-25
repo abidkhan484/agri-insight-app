@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { TMAProvider } from '@shared/tma/TMAProvider'
+import { LanguageProvider } from '@shared/i18n/LanguageContext'
 import log from 'loglevel'
 
 class AppErrorBoundary extends Component {
@@ -41,9 +42,11 @@ const AUTH_ENDPOINT = import.meta.env.VITE_AUTH_ENDPOINT || 'https://agri-insigh
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AppErrorBoundary>
-      <TMAProvider authEndpoint={AUTH_ENDPOINT}>
-        <App />
-      </TMAProvider>
+      <LanguageProvider>
+        <TMAProvider authEndpoint={AUTH_ENDPOINT}>
+          <App />
+        </TMAProvider>
+      </LanguageProvider>
     </AppErrorBoundary>
   </StrictMode>,
 )

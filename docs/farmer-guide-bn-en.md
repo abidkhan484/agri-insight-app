@@ -4,6 +4,12 @@
 > **ভাষা নির্দেশিকা:** এই গাইডে বাংলা (প্রাথমিক) ও ইংরেজি (মাধ্যমিক) উভয় ভাষায় তথ্য দেওয়া হয়েছে।
 > **Language note:** This guide is written in Bangla (primary) and English (secondary).
 
+## PWA ভাষা পরিবর্তন / Change PWA language
+
+**বাংলা:** PWA-র উপরের ডানদিকে **ভাষা / Language** বাটনে চাপ দিয়ে বাংলা বা English বেছে নিন। আপনার পছন্দ এই ডিভাইসে সংরক্ষিত থাকবে এবং পরের বার একই ভাষা চালু হবে। ডিফল্ট ভাষা বাংলা।
+
+**English:** Use the **ভাষা / Language** switcher in the top-right corner of the PWA to choose Bangla or English. Your choice is saved on this device and restored next time. Bangla is the default.
+
 ---
 
 ## ১. শুরু করার পদ্ধতি / Getting Started

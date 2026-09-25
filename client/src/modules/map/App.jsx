@@ -4,6 +4,7 @@ import log from 'loglevel';
 import 'leaflet/dist/leaflet.css';
 import { filterFarmerLocations, normalizeFarmerLocation, uniqueSorted } from './mapData';
 import { getPublicApiBaseUrl } from '../../shared/public-api.js';
+import { useLanguage } from '../../shared/i18n/LanguageContext';
 import './index.css';
 
 log.setLevel(import.meta.env.PROD ? 'warn' : 'debug');
@@ -23,9 +24,10 @@ export async function fetchPublicFarmerLocations(client) {
 }
 
 function JoinMapGuidance() {
+  const { isBangla } = useLanguage();
   return <aside className="map-join-guidance" aria-labelledby="join-map-title">
     <span className="map-guidance-icon" aria-hidden="true">🗺️</span>
-    <div><h2 id="join-map-title">মানচিত্রে যোগ দিতে চান?</h2><p>Telegram-এ <strong>/joinmap</strong> কমান্ড লিখে আপনার জেলা ও অবস্থান শেয়ার করুন।</p></div>
+    <div><h2 id="join-map-title">{isBangla ? 'মানচিত্রে যোগ দিতে চান?' : 'Want to join the map?'}</h2><p>{isBangla ? <>Telegram-এ <strong>/joinmap</strong> কমান্ড লিখে আপনার জেলা ও অবস্থান শেয়ার করুন।</> : <>Send <strong>/joinmap</strong> in Telegram to share your district and location.</>}</p></div>
   </aside>;
 }
 
@@ -36,6 +38,7 @@ function MapState({ title, message, action }) {
 }
 
 export default function FarmerMap({ client }) {
+  const { isBangla } = useLanguage();
   const [farmers, setFarmers] = useState([]);
   const [status, setStatus] = useState(navigator.onLine ? 'loading' : 'offline');
   const [filters, setFilters] = useState({ district: '', upazila: '', crop: '' });
@@ -69,18 +72,18 @@ export default function FarmerMap({ client }) {
     setFilters((current) => ({ ...current, [name]: value, ...(name === 'district' ? { upazila: '' } : {}) }));
   }
 
-  if (status === 'offline') return <div className="map-page"><MapState title="ইন্টারনেট সংযোগ নেই" message="কৃষক মানচিত্র দেখতে ইন্টারনেট সংযোগ চালু করুন।" /><JoinMapGuidance /></div>;
-  if (status === 'loading') return <div className="map-page"><MapState title="মানচিত্র লোড হচ্ছে…" message="কাছের কৃষকদের তথ্য আনা হচ্ছে।" /></div>;
-  if (status === 'error') return <div className="map-page"><MapState title="মানচিত্রের তথ্য আনা যায়নি" message="ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।" action={<button type="button" className="map-retry-button" onClick={loadFarmers}>আবার চেষ্টা করুন</button>} /><JoinMapGuidance /></div>;
+  if (status === 'offline') return <div className="map-page"><MapState title={isBangla ? 'ইন্টারনেট সংযোগ নেই' : 'No internet connection'} message={isBangla ? 'কৃষক মানচিত্র দেখতে ইন্টারনেট সংযোগ চালু করুন।' : 'Connect to the internet to view the farmer map.'} /><JoinMapGuidance /></div>;
+  if (status === 'loading') return <div className="map-page"><MapState title={isBangla ? 'মানচিত্র লোড হচ্ছে…' : 'Loading map…'} message={isBangla ? 'কাছের কৃষকদের তথ্য আনা হচ্ছে।' : 'Fetching nearby farmers.'} /></div>;
+  if (status === 'error') return <div className="map-page"><MapState title={isBangla ? 'মানচিত্রের তথ্য আনা যায়নি' : 'Could not load map data'} message={isBangla ? 'ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।' : 'Check your internet connection and try again.'} action={<button type="button" className="map-retry-button" onClick={loadFarmers}>{isBangla ? 'আবার চেষ্টা করুন' : 'Try again'}</button>} /><JoinMapGuidance /></div>;
 
   return <main className="map-page" aria-labelledby="farmer-map-title">
-    <header className="map-header"><div><p className="map-eyebrow">কমিউনিটি</p><h1 id="farmer-map-title">কৃষক মানচিত্র</h1><p>বাংলাদেশের ZBNF কৃষকদের খুঁজে দেখুন। অবস্থানগুলো নিরাপত্তার জন্য আনুমানিক।</p></div><span className="map-count" aria-label={`${visibleFarmers.length} জন কৃষক`}>{visibleFarmers.length} জন</span></header>
-    <section className="map-filters" aria-label="কৃষক মানচিত্র ফিল্টার">
-      <label>জেলা<select aria-label="জেলা" value={filters.district} onChange={(event) => updateFilter('district', event.target.value)}><option value="">সব জেলা</option>{districts.map((district) => <option key={district} value={district}>{district}</option>)}</select></label>
-      <label>উপজেলা<select aria-label="উপজেলা" value={filters.upazila} onChange={(event) => updateFilter('upazila', event.target.value)}><option value="">সব উপজেলা</option>{upazilas.map((upazila) => <option key={upazila} value={upazila}>{upazila}</option>)}</select></label>
-      <label>ফসল<select aria-label="ফসল" value={filters.crop} onChange={(event) => updateFilter('crop', event.target.value)}><option value="">সব ফসল</option>{crops.map((crop) => <option key={crop} value={crop}>{crop}</option>)}</select></label>
+    <header className="map-header"><div><p className="map-eyebrow">{isBangla ? 'কমিউনিটি' : 'Community'}</p><h1 id="farmer-map-title">{isBangla ? 'কৃষক মানচিত্র' : 'Farmer map'}</h1><p>{isBangla ? 'বাংলাদেশের ZBNF কৃষকদের খুঁজে দেখুন। অবস্থানগুলো নিরাপত্তার জন্য আনুমানিক।' : 'Find ZBNF farmers in Bangladesh. Locations are approximate for privacy.'}</p></div><span className="map-count" aria-label={`${visibleFarmers.length} ${isBangla ? 'জন কৃষক' : 'farmers'}`}>{visibleFarmers.length} {isBangla ? 'জন' : ''}</span></header>
+    <section className="map-filters" aria-label={isBangla ? 'কৃষক মানচিত্র ফিল্টার' : 'Farmer map filters'}>
+      <label>{isBangla ? 'জেলা' : 'District'}<select aria-label={isBangla ? 'জেলা' : 'District'} value={filters.district} onChange={(event) => updateFilter('district', event.target.value)}><option value="">{isBangla ? 'সব জেলা' : 'All districts'}</option>{districts.map((district) => <option key={district} value={district}>{district}</option>)}</select></label>
+      <label>{isBangla ? 'উপজেলা' : 'Upazila'}<select aria-label={isBangla ? 'উপজেলা' : 'Upazila'} value={filters.upazila} onChange={(event) => updateFilter('upazila', event.target.value)}><option value="">{isBangla ? 'সব উপজেলা' : 'All upazilas'}</option>{upazilas.map((upazila) => <option key={upazila} value={upazila}>{upazila}</option>)}</select></label>
+      <label>{isBangla ? 'ফসল' : 'Crop'}<select aria-label={isBangla ? 'ফসল' : 'Crop'} value={filters.crop} onChange={(event) => updateFilter('crop', event.target.value)}><option value="">{isBangla ? 'সব ফসল' : 'All crops'}</option>{crops.map((crop) => <option key={crop} value={crop}>{crop}</option>)}</select></label>
     </section>
-    {farmers.length === 0 ? <MapState title="এখনও কোনো কৃষক মানচিত্রে নেই" message="আপনার এলাকার কৃষকদের সঙ্গে যুক্ত হতে মানচিত্রে যোগ দিন।" /> : visibleFarmers.length === 0 ? <MapState title="এই ফিল্টারে কোনো কৃষক পাওয়া যায়নি" message="অন্য জেলা, উপজেলা বা ফসল নির্বাচন করে দেখুন।" /> : <div className="map-canvas" aria-label="কৃষক মানচিত্র"><MapContainer center={BANGLADESH_CENTER} zoom={7} maxBounds={BANGLADESH_BOUNDS}><TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' />{visibleFarmers.map((farmer) => <CircleMarker key={farmer.id} center={[farmer.latitude, farmer.longitude]} radius={8} pathOptions={{ color: '#2d6a4f', fillColor: '#52b788', fillOpacity: 0.8 }}><Popup><strong>{farmer.displayName}</strong><br />{farmer.district}{farmer.upazila ? `, ${farmer.upazila}` : ''}<br />{farmer.crops.length ? `ফসল: ${farmer.crops.join(', ')}` : 'ফসলের তথ্য নেই'}<br /><small>আনুমানিক অবস্থান</small></Popup></CircleMarker>)}</MapContainer></div>}
+    {farmers.length === 0 ? <MapState title={isBangla ? 'এখনও কোনো কৃষক মানচিত্রে নেই' : 'No farmers on the map yet'} message={isBangla ? 'আপনার এলাকার কৃষকদের সঙ্গে যুক্ত হতে মানচিত্রে যোগ দিন।' : 'Join the map to connect with farmers in your area.'} /> : visibleFarmers.length === 0 ? <MapState title={isBangla ? 'এই ফিল্টারে কোনো কৃষক পাওয়া যায়নি' : 'No farmers match this filter'} message={isBangla ? 'অন্য জেলা, উপজেলা বা ফসল নির্বাচন করে দেখুন।' : 'Try another district, upazila, or crop.'} /> : <div className="map-canvas" aria-label={isBangla ? 'কৃষক মানচিত্র' : 'Farmer map'}><MapContainer center={BANGLADESH_CENTER} zoom={7} maxBounds={BANGLADESH_BOUNDS}><TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' />{visibleFarmers.map((farmer) => <CircleMarker key={farmer.id} center={[farmer.latitude, farmer.longitude]} radius={8} pathOptions={{ color: '#2d6a4f', fillColor: '#52b788', fillOpacity: 0.8 }}><Popup><strong>{farmer.displayName}</strong><br />{farmer.district}{farmer.upazila ? `, ${farmer.upazila}` : ''}<br />{farmer.crops.length ? `${isBangla ? 'ফসল' : 'Crops'}: ${farmer.crops.join(', ')}` : (isBangla ? 'ফসলের তথ্য নেই' : 'No crop data')}<br /><small>{isBangla ? 'আনুমানিক অবস্থান' : 'Approximate location'}</small></Popup></CircleMarker>)}</MapContainer></div>}
     <JoinMapGuidance />
   </main>;
 }

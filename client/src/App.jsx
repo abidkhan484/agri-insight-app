@@ -12,6 +12,7 @@ import {
 import { useTMA } from '@shared/tma/TMAProvider';
 import { TMATheme } from '@shared/tma/TMATheme';
 import { LoginScreen } from '@shared/tma/LoginScreen';
+import { LanguageSwitcher, useLanguage } from '@shared/i18n/LanguageContext';
 import './App.css';
 
 // Lazy load modules
@@ -21,10 +22,10 @@ const MapPWA = lazy(() => import('@modules/map/App'));
 const ZBNFKnowledge = lazy(() => import('@modules/knowledge/App'));
 
 const dashboardModules = [
-  { id: 'records', label: 'দ্রুত রেকর্ড', sub: 'আজকের জমির কাজ লিখুন', icon: '📒', path: '/records' },
-  { id: 'disease', label: 'রোগ ও পোকা', sub: 'ছবি দিয়ে জানুন', icon: '🔍', path: '/disease' },
-  { id: 'knowledge', label: 'জ্ঞানভাণ্ডার', sub: 'ZBNF পরামর্শ ও হিসাব', icon: '📚', path: '/knowledge' },
-  { id: 'map', label: 'কমিউনিটি ম্যাপ', sub: 'কাছের কৃষক খুঁজুন', icon: '📍', path: '/map' },
+  { id: 'records', label: 'দ্রুত রেকর্ড', labelEn: 'Quick records', sub: 'আজকের জমির কাজ লিখুন', subEn: 'Record today’s farm work', icon: '📒', path: '/records' },
+  { id: 'disease', label: 'রোগ ও পোকা', labelEn: 'Pests & diseases', sub: 'ছবি দিয়ে জানুন', subEn: 'Check from a photo', icon: '🔍', path: '/disease' },
+  { id: 'knowledge', label: 'জ্ঞানভাণ্ডার', labelEn: 'Knowledge base', sub: 'ZBNF পরামর্শ ও হিসাব', subEn: 'ZBNF guidance and calculators', icon: '📚', path: '/knowledge' },
+  { id: 'map', label: 'কমিউনিটি ম্যাপ', labelEn: 'Community map', sub: 'কাছের কৃষক খুঁজুন', subEn: 'Find nearby farmers', icon: '📍', path: '/map' },
 ];
 
 const navigationItems = [
@@ -37,6 +38,7 @@ const navigationItems = [
 
 function Dashboard() {
   const { user, mode, logout } = useTMA();
+  const { isBangla, t } = useLanguage();
   const [showOnboarding, setShowOnboarding] = useState(true);
 
   return (
@@ -46,7 +48,7 @@ function Dashboard() {
           <span className="brand-mark" aria-hidden="true">🌾</span>
           <div>
             <p className="eyebrow">AGRI INSIGHT</p>
-            <h1 id="dashboard-title">কৃষি সহকারী</h1>
+            <h1 id="dashboard-title">{t('appName')}</h1>
           </div>
         </div>
         {user ? (
@@ -58,7 +60,7 @@ function Dashboard() {
                 onClick={logout}
                 type="button"
               >
-                লগআউট (Logout)
+                {isBangla ? 'লগআউট' : 'Log out'}
               </button>
             )}
           </div>
@@ -67,15 +69,15 @@ function Dashboard() {
             <div className="guest-status" role="status" aria-label="অতিথি মোড">
               <div className="guest-status-icon" aria-hidden="true">✓</div>
               <div>
-                <strong>অতিথি মোড</strong>
-                <p>আপনার রেকর্ড এই ডিভাইসেই সংরক্ষিত থাকবে।</p>
+                <strong>{isBangla ? 'অতিথি মোড' : 'Guest mode'}</strong>
+                <p>{isBangla ? 'আপনার রেকর্ড এই ডিভাইসেই সংরক্ষিত থাকবে।' : 'Your records will stay on this device.'}</p>
               </div>
               <button
                 className="guest-login-btn button button--quiet"
                 onClick={logout}
                 type="button"
               >
-                লগইন করুন
+                {isBangla ? 'লগইন করুন' : 'Sign in'}
               </button>
             </div>
           )
@@ -83,24 +85,24 @@ function Dashboard() {
       </header>
 
       <section className="dashboard-intro" aria-labelledby="intro-title">
-        <p className="section-kicker">আজকের কৃষি সহায়তা</p>
-        <h2 id="intro-title">আপনার জমির যত্ন, আরও সহজে</h2>
-        <p>রেকর্ড রাখুন, রোগের লক্ষণ দেখুন এবং ZBNF পদ্ধতি সম্পর্কে জানুন।</p>
+        <p className="section-kicker">{isBangla ? 'আজকের কৃষি সহায়তা' : 'Today’s farm support'}</p>
+        <h2 id="intro-title">{isBangla ? 'আপনার জমির যত্ন, আরও সহজে' : 'Care for your farm, more easily'}</h2>
+        <p>{isBangla ? 'রেকর্ড রাখুন, রোগের লক্ষণ দেখুন এবং ZBNF পদ্ধতি সম্পর্কে জানুন।' : 'Keep records, check symptoms, and learn about ZBNF farming.'}</p>
       </section>
 
       {showOnboarding && mode === 'guest' && (
         <section className="onboarding-card" aria-labelledby="onboarding-title">
           <div>
-            <p className="section-kicker">প্রথমবার ব্যবহার করছেন?</p>
-            <h2 id="onboarding-title">কীভাবে শুরু করবেন</h2>
+            <p className="section-kicker">{isBangla ? 'প্রথমবার ব্যবহার করছেন?' : 'First time here?'}</p>
+            <h2 id="onboarding-title">{isBangla ? 'কীভাবে শুরু করবেন' : 'How to get started'}</h2>
             <ol>
-              <li><span>১</span> প্রথমে আপনার জমির রেকর্ড যোগ করুন</li>
-              <li><span>২</span> কাজের হিসাব নিয়মিত লিখে রাখুন</li>
-              <li><span>৩</span> লগইন করলে রেকর্ড সিঙ্ক করা যাবে</li>
+              <li><span>১</span> {isBangla ? 'প্রথমে আপনার জমির রেকর্ড যোগ করুন' : 'Add your farm record first'}</li>
+              <li><span>২</span> {isBangla ? 'কাজের হিসাব নিয়মিত লিখে রাখুন' : 'Record farm work regularly'}</li>
+              <li><span>৩</span> {isBangla ? 'লগইন করলে রেকর্ড সিঙ্ক করা যাবে' : 'Sign in to sync your records'}</li>
             </ol>
           </div>
           <button className="button button--outline" type="button" onClick={() => setShowOnboarding(false)}>
-            বুঝেছি
+            {isBangla ? 'বুঝেছি' : 'Got it'}
           </button>
         </section>
       )}
@@ -108,18 +110,18 @@ function Dashboard() {
       <section aria-labelledby="tools-title">
         <div className="section-heading">
           <div>
-            <p className="section-kicker">আপনার সরঞ্জাম</p>
-            <h2 id="tools-title">কী করতে চান?</h2>
+            <p className="section-kicker">{isBangla ? 'আপনার সরঞ্জাম' : 'Your tools'}</p>
+            <h2 id="tools-title">{isBangla ? 'কী করতে চান?' : 'What would you like to do?'}</h2>
           </div>
-          <span className="tool-count">৪টি সেবা</span>
+          <span className="tool-count">{isBangla ? '৪টি সেবা' : '4 services'}</span>
         </div>
         <div className="module-grid">
           {dashboardModules.map((module) => (
             <Link key={module.id} to={module.path} className="module-card">
               <span className="module-icon" aria-hidden="true">{module.icon}</span>
               <span className="module-card-copy">
-                <h3>{module.label}</h3>
-                <p>{module.sub}</p>
+              <h3>{isBangla ? module.label : module.labelEn}</h3>
+              <p>{isBangla ? module.sub : module.subEn}</p>
               </span>
               <span className="module-arrow" aria-hidden="true">→</span>
             </Link>
@@ -133,21 +135,24 @@ function Dashboard() {
 function ModuleHeader() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLanguage();
 
   if (location.pathname === '/') return null;
 
   return (
     <div className="module-header">
-      <button className="back-button" type="button" onClick={() => navigate('/')}>← <span>হোমে ফিরুন</span></button>
-      <span className="module-path" aria-label="বর্তমান সেবা">কৃষি সহকারী</span>
+      <button className="back-button" type="button" onClick={() => navigate('/')}>← <span>{t('backHome')}</span></button>
+      <span className="module-path" aria-label={t('appName')}>{t('appName')}</span>
     </div>
   );
 }
 
 function AppNavigation() {
+  const { isBangla } = useLanguage();
+  const englishLabels = ['Home', 'My records', 'Pests & diseases', 'Community map', 'Knowledge base'];
   return (
-    <nav className="bottom-nav" aria-label="প্রধান নেভিগেশন">
-      {navigationItems.map((item) => (
+    <nav className="bottom-nav" aria-label={isBangla ? 'প্রধান নেভিগেশন' : 'Main navigation'}>
+      {navigationItems.map((item, index) => (
         <NavLink
           key={item.path}
           to={item.path}
@@ -155,7 +160,7 @@ function AppNavigation() {
           className={({ isActive }) => `nav-item${isActive ? ' nav-item--active' : ''}`}
         >
           <span className="nav-icon" aria-hidden="true">{item.icon}</span>
-          <span>{item.label}</span>
+          <span>{isBangla ? item.label : englishLabels[index]}</span>
         </NavLink>
       ))}
     </nav>
@@ -164,9 +169,10 @@ function AppNavigation() {
 
 function App() {
   const { isReady, error, mode } = useTMA();
+  const { t } = useLanguage();
 
   if (!isReady) {
-    return <div className="app-loading">কৃষি সহকারী লোড হচ্ছে...</div>;
+    return <><LanguageSwitcher /><div className="app-loading">{t('loading')}</div></>;
   }
 
   if (error) {
@@ -176,14 +182,13 @@ function App() {
   // Show login screen when user is not authenticated and not in guest mode
   if (mode === 'login') {
     return (
-      <TMATheme>
-        <LoginScreen />
-      </TMATheme>
+      <TMATheme><LanguageSwitcher /><LoginScreen /></TMATheme>
     );
   }
 
   return (
     <TMATheme>
+      <LanguageSwitcher />
       <Router>
         <div className="app-shell">
           <ModuleHeader />
