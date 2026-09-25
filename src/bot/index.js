@@ -15,6 +15,7 @@ import { registerCommunityCommands } from './commands/community.js';
 import { diseaseScene } from './commands/disease.js';
 import { registerWeatherCommand } from './commands/weather.js';
 import { registerReportCommand } from './commands/report.js';
+import { registerActionControls } from './commands/action-controls.js';
 import { initReminderEngine } from '../scheduler/reminders.js';
 import { initWeatherAlertEngine } from '../scheduler/weather-alerts.js';
 import { createRouter } from '../api/router.js';
@@ -82,6 +83,7 @@ bot.command('disease', (ctx) => ctx.scene.enter('DISEASE_SCENE'));
 
 // /log command
 bot.command('log', (ctx) => ctx.scene.enter('LOG_ACTIVITY_SCENE'));
+registerActionControls(bot);
 
 // Initialize Commands
 initPlotCommands(bot);
@@ -105,6 +107,8 @@ bot.help((ctx) => {
   const helpMessage = `সাহায্য প্রয়োজন? আমি এই কমান্ডগুলো বুঝি:
 /start - শুরু করুন
 /register - জমি নিবন্ধিত করুন
+/cancel - চলমান কাজ বাতিল করুন
+/reset - চলমান কাজ নতুন করে শুরু করুন
 /myplots - আপনার জমিগুলো দেখুন
 /deleteplot <নাম> - জমি মুছে ফেলুন
 /remind - রিমাইন্ডার সেট করুন
@@ -123,6 +127,8 @@ bot.help((ctx) => {
 Need help? I understand:
 /start - Start the bot
 /register - Register a new plot
+/cancel - Cancel the current action
+/reset - Reset the current action
 /myplots - List your plots
 /deleteplot <নাম> - Remove a plot
 /remind - Set custom reminders

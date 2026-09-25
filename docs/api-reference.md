@@ -30,6 +30,9 @@ Start with /register.
 
 **Parameters:** none (starts a multi-step wizard)
 
+At any point, send `/cancel` or `/reset` to leave the wizard without saving.
+The same controls work while using `/log`.
+
 **Wizard steps:**
 1. আপনার নাম / Your name
 2. জেলা / District
@@ -100,6 +103,8 @@ Jeevamrutha reminder has been set.
 **English:** Log a farm activity
 
 **Parameters:** inline or wizard
+
+Send `/cancel` or `/reset` at any point to leave the current action without saving.
 
 ---
 

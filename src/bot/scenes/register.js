@@ -15,7 +15,7 @@ export const registerWizard = new Scenes.WizardScene(
   async (ctx) => {
     ctx.wizard.state.plotData = {};
     await ctx.reply(
-      'জমির নাম লিখুন (যেমন: উত্তরের মাঠ):\nPlease enter the plot name (e.g., North Field):',
+      'জমির নাম লিখুন (যেমন: উত্তরের মাঠ):\nPlease enter the plot name (e.g., North Field).\n\nবাতিল করতে /cancel বা /reset লিখুন।\nType /cancel or /reset to start over.',
     );
     return ctx.wizard.next();
   },
@@ -23,7 +23,7 @@ export const registerWizard = new Scenes.WizardScene(
   async (ctx) => {
     ctx.wizard.state.plotData.name = ctx.message.text;
     await ctx.reply(
-      'জমির পরিমাণ লিখুন (যেমন: ২ বিঘা বা ৬৬ শতাংশ):\nPlease enter the area (e.g., 2 bigha or 66 decimal):',
+      'জমির পরিমাণ লিখুন (যেমন: ২ বিঘা বা ৬৬ শতাংশ):\nPlease enter the area (e.g., 2 bigha or 66 decimal).\n\nবাতিল করতে /cancel বা /reset লিখুন।\nType /cancel or /reset to start over.',
     );
     return ctx.wizard.next();
   },
@@ -48,14 +48,16 @@ export const registerWizard = new Scenes.WizardScene(
     }
 
     ctx.wizard.state.plotData.area_decimal = areaDecimal;
-    await ctx.reply('প্রধান ফসলের নাম লিখুন:\nPlease enter the primary crop name:');
+    await ctx.reply(
+      'প্রধান ফসলের নাম লিখুন:\nPlease enter the primary crop name.\n\nবাতিল করতে /cancel বা /reset লিখুন।\nType /cancel or /reset to start over.',
+    );
     return ctx.wizard.next();
   },
   // Step 4: Planting Date
   async (ctx) => {
     ctx.wizard.state.plotData.crop = ctx.message.text;
     await ctx.reply(
-      'রোপণের তারিখ লিখুন (দিন-মাস-বছর, যেমন: ১২-০৫-২০২৪):\nPlease enter the planting date (DD-MM-YYYY, e.g., 12-05-2024):',
+      'রোপণের তারিখ লিখুন (দিন-মাস-বছর, যেমন: ১২-০৫-২০২৪):\nPlease enter the planting date (DD-MM-YYYY, e.g., 12-05-2024).\n\nবাতিল করতে /cancel বা /reset লিখুন।\nType /cancel or /reset to start over.',
     );
     return ctx.wizard.next();
   },

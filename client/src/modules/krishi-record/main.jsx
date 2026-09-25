@@ -5,7 +5,7 @@ import App from './App.jsx'
 import { TMAProvider } from '@shared/tma/TMAProvider'
 
 // Point to the bot's auth endpoint (proxied or absolute URL)
-const AUTH_ENDPOINT = import.meta.env.VITE_AUTH_ENDPOINT || 'https://agri-insight-app.onrender.com/api/auth/telegram';
+const AUTH_ENDPOINT = import.meta.env.VITE_AUTH_ENDPOINT || '/api/auth/telegram';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

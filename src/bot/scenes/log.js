@@ -32,7 +32,7 @@ export const logWizard = new Scenes.WizardScene(
 
       // Ask for activity type using inline buttons
       await ctx.reply(
-        'কী ধরনের কার্যক্রম লিপিবদ্ধ করতে চান?\nWhat type of activity do you want to log?',
+        'কী ধরনের কার্যক্রম লিপিবদ্ধ করতে চান?\nWhat type of activity do you want to log?\n\nবাতিল করতে /cancel বা /reset লিখুন।\nType /cancel or /reset to start over.',
         {
           reply_markup: {
             inline_keyboard: [

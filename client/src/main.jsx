@@ -37,7 +37,7 @@ class AppErrorBoundary extends Component {
   }
 }
 
-const AUTH_ENDPOINT = import.meta.env.VITE_AUTH_ENDPOINT || 'https://agri-insight-app.onrender.com/api/auth/telegram';
+const AUTH_ENDPOINT = import.meta.env.VITE_AUTH_ENDPOINT || '/api/auth/telegram';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

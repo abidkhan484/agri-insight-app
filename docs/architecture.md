@@ -92,7 +92,8 @@ Business logic is centralized in the database.
 - **PWA language support**: `client/src/shared/i18n/LanguageContext.jsx` provides persisted Bangla (`bn`) and English (`en`) selection, updates the document language, and controls bilingual UI content.
 
 ### P1 — Farm Scheduler Bot
-- **Commands**: `/register`, `/myplots`, `/deleteplot`, `/myreminders`, `/cancelreminder`, `/remind`
+- **Commands**: `/register`, `/cancel`, `/reset`, `/myplots`, `/deleteplot`, `/myreminders`, `/cancelreminder`, `/remind`
+- **Interactive safety**: `/cancel` and `/reset` leave any active registration or activity wizard and clear its in-memory state before persistence.
 - **Bot patterns**: Telegraf `Scenes.WizardScene` for multi-step plot registration
 - **Cron jobs**: Jeevamrutha (every 15 days), Neemastra (every 14 days), Mulch (every 7 days)
 - **Formula source**: `src/services/jeevamrutha.js` (synced with `skills/zbnf-formulation/SKILL.md`)

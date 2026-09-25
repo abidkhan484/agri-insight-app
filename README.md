@@ -19,6 +19,8 @@ The ZBNF Farming Assistant is a production-grade ecosystem supporting natural fa
 *   **Bangla AI Q&A Assistant**: Offline-first RAG querying ZBNF manuals natively in Bangla.
 *   **Bangla / English UI**: Use the language switcher in the PWA; the choice is saved on the device and defaults to Bangla.
 
+Interactive Telegram actions can be safely abandoned at any step with `/cancel` or `/reset`; no partial plot or activity data is saved.
+
 ---
 
 ## Tech Stack

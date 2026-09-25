@@ -39,6 +39,9 @@ Tap the bot and press the **START** button. This will register you.
 **English:**
 To add a plot, type `/register` and send. The bot will ask you step by step for name, area, crop, and planting date.
 
+ভুল হলে `/cancel` বা `/reset` লিখে চলমান নিবন্ধন বাতিল করুন। কোনো তথ্য সংরক্ষণ করা হবে না।
+If you make a mistake, send `/cancel` or `/reset` to stop and restart the current action. Nothing will be saved.
+
 ---
 
 ## ৩. AI সহকারী (প্রশ্ন-উত্তর) / AI Assistant (Q&A)
@@ -176,6 +179,7 @@ Use the 'ZBNF Knowledge Base' for offline dosage calculators and pest management
 |--------|-------|---------|
 | `/start` | শুরু করুন | Start |
 | `/register` | জমি নিবন্ধিত করুন | Register plot |
+| `/cancel` / `/reset` | চলমান কাজ বাতিল/নতুন করে শুরু | Cancel or reset current action |
 | `/ask` | প্রশ্ন করুন | Ask AI |
 | `/faq` | সাধারণ তথ্য | FAQ |
 | `/joinmap` | কৃষক ম্যাপে যোগ দিন | Join Map |

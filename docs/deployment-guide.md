@@ -74,8 +74,8 @@ Since this is a static site, environment variables are baked in at build time. Y
 - `VITE_SUPABASE_URL`: Your Supabase URL.
 - `VITE_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
 - `VITE_PLANTNET_API_KEY`: (Optional) Browser-side PlantNet key. The recommended path is the backend proxy, which uses `PLANTNET_API_KEY` on Render.
-- `VITE_API_BASE_URL`: (Optional) Public bot API base URL. Defaults to the deployed Render bot URL.
-- `VITE_AUTH_ENDPOINT`: The URL of your bot's auth endpoint (e.g., `https://agri-insight-app.onrender.com/api/auth/telegram`).
+- `VITE_API_BASE_URL`: Public bot API base URL. Leave unset only when the PWA and bot are served from the same origin; otherwise set it to the current bot URL.
+- `VITE_AUTH_ENDPOINT`: The URL of your bot's auth endpoint (for example, `${VITE_API_BASE_URL}/api/auth/telegram` when the PWA is hosted separately).
 
 ### Automatic Deployment
 
